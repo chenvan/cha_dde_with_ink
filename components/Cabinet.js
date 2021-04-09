@@ -75,7 +75,7 @@ const Cabinet = ({config, wbAccu}) => {
         logger.info(`${line} 出柜获取总量出错: ${err}`)
       }
     }
-  }, state === "待机" ? 10 * 1000 : null, true)
+  }, state === "待机" ? 10 * 1000 : null)
 
 
   useEffect(() => {

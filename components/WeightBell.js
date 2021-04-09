@@ -138,7 +138,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
 
   return (
     <>
-      <Text>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
+      <Text backgroundColor={isWarning ? "yellow" : "black"}>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
       {
         config.hasOwnProperty("cabinet") && (
           <Cabinet 
