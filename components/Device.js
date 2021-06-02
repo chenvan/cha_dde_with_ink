@@ -110,6 +110,7 @@ const TimeComparator = ({maxDuration, duration, isWarning, backgroundColor}) => 
     </Text>
   )
 }
+
 const StateCtrlByWbAccuSkin = ({brandName, wbAccu, parentState, cutoff, offsetConfig, children}) => {
   
   const [offset, setOffset] = useState(0)
