@@ -1,31 +1,31 @@
 const React = require("react")
 const { useEffect, useRef } = require("react")
+const { setAdvise } = require("./fetchDDE")
 const { logger } = require("./logger")
 
 function useInterval(callback, delay, isRunRightNow = false) {
-  const savedCallback = useRef();
+  const savedCallback = useRef()
 
   // 保存新回调
   useEffect(() => {
-    savedCallback.current = callback;
-  });
+    savedCallback.current = callback
+  })
 
   // 建立 interval
   useEffect(() => {
     function tick() {
-      savedCallback.current();
+      savedCallback.current()
     }
     
     if (delay !== null) {
       if(isRunRightNow) tick()
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
+      let id = setInterval(tick, delay)
+      return () => clearInterval(id)
     }
-  }, [delay]);
+  }, [delay])
 }
 
-// 先要检查一下是否可行
-function useTestServerConnect(serverName, setIsErr) {
+function useCheckServerConnect(line, serverName, setIsErr, delay) {
 
   const minute = useRef({
     now: 0,
@@ -40,7 +40,7 @@ function useTestServerConnect(serverName, setIsErr) {
         })
       } catch (err) {
         setIsErr(true)
-        logger.error(`${serverName} 建立测试服务连接出错`, err)
+        logger.error(`${serverName} 建立服务连接监控出错`, err)
       }
     }
   
@@ -48,12 +48,26 @@ function useTestServerConnect(serverName, setIsErr) {
   }, [])
 
   useInterval(() => {
-    if(minute.current.now === minute.current.last) setIsErr(true)
+    if(minute.current.now === minute.current.last) {
+      setIsErr(true)
+      logger.error(`${line} 连接中断`)
+    }
     minute.current.last = minute.current.now
-  }, 1000 * 60 * 2)
+  }, delay)
+}
+
+function usePrevious(value) {
+  const ref = useRef()
+
+  useEffect(() => {
+    ref.current = value //assign the value of ref to the argument
+  }, [value]) //this code will run when the value of 'value' changes
+
+  return ref.current //in the end, return the current ref value.
 }
 
 module.exports = {
   useInterval,
-  useTestServerConnect
+  useCheckServerConnect,
+  usePrevious
 }

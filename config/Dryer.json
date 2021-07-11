@@ -40,7 +40,7 @@
           "detectState": 1
         }
       },
-      "cabinet": {
+      "cabinetOut": {
         "outputNr": {
           "itemName": "Galaxy:ZY3_OutSilo1_JK.ProductUnit.SLOut1_Now"
         },

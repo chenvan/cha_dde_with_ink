@@ -16,7 +16,7 @@ const Context = require('./Context')
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
 
 const { Device, StateCtrlByWbAccuSkin, Margin } = require("./Device")
-const Cabinet = importJsx('./Cabinet.js')
+const { CabinetOut } = importJsx('./Cabinet.js')
 const State = importJsx('./State.js')
 
 const WeightBell = ({name, config, parentState, brandName, setParentState, isCabMon}) => {
@@ -25,7 +25,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
   const [setting, setSetting] = useState(0)
   const [real, setReal] = useState(0)
   const [accu, setAccu] = useState(0)
-  const [cutoff, setCutoff] = useState(undefined)
+  const [cutoff, setCutoff] = useState()
   const {setIsErr, serverName, line} = useContext(Context)
 
   const [isWarning, setIsWarning] = useState(false)
@@ -57,11 +57,14 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
   }, [])
 
   useInterval(async () => {
+    // 秤累积量大于截止数
     if(cutoff !== undefined && accu >= cutoff) setState("停止监控")
+    // 断流 -> 停止监控
     if(real === 0 ) setState("停止监控")
 
     // 检查流量波动
-    if(cutoff) {
+    // 没有 cutoff 的话, 最后尾料时肯定会报流量波动,
+    if(cutoff) { 
       if(Math.abs(setting - real) < 0.1 * setting && isWarning ) {
         setIsWarning(false)
       } else if (Math.abs(setting - real) >= 0.1 * setting && !isWarning ) {
@@ -83,8 +86,9 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
 
   useInterval(async () => {
 
-    if(real > 100) setState("监控")
-  
+    if(real > 100) {
+      setState("监控")
+    }
   }, state === "待机" ? 5 * 1000 : null)
 
   useEffect(() => {
@@ -124,7 +128,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
           setParentState(state)
         }
       } else if(state === "监控") {
-        // 进入监控先把 warning 设为 true 先
+        // 进入监控先把 warning 设为 true 先, 防止秤开始时就报流量波动
         setIsWarning(true)
 
         // 主秤
@@ -133,7 +137,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
           setParentState(state)
         }
 
-        // 薄片秤不会检测是否投入生产
+        // 对薄片秤检测是否投入生产
         if(name.includes("薄片")) {
           setTimeout(() => {
             if(setting > 0 && real === 0) {
@@ -156,13 +160,13 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
       <Text>
         <Text>{`${name}`}</Text>
         <State state={state} />
-        <Text color="blue">{` <${cutoff !== undefined ? cutoff : ""}>`}</Text>
-        <Text>{`: 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
+        <Text color="#c4a000">{` ${cutoff !== undefined ? "[" + cutoff + "]" : ""}`}</Text>
+        <Text>{`: 设定 / 实际 / 累计: ${setting} / ${real} / ${accu}`}</Text>
       </Text>
       {
-        config.hasOwnProperty("cabinet") && (
-          <Cabinet 
-            config={config.cabinet}
+        config.hasOwnProperty("cabinetOut") && (
+          <CabinetOut 
+            config={config.cabinetOut}
             wbAccu={accu}
             isCabMon={isCabMon}
           /> 
@@ -190,6 +194,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
             let data = {
               ...deviceConfig,
               "deviceName": deviceName,
+              "wbSetting": setting
             }
 
             return (
