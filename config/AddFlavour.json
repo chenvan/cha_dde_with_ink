@@ -194,7 +194,8 @@
       },
       "direction": {
         "right": 2,
-        "left": 1
+        "left": 1,
+        "stay": 16
       },
       "inputNr": {
         "itemName": "Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn1_Now"
