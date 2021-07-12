@@ -166,7 +166,7 @@
     },
     "cabinetIn": {
       "delay": {
-        "carMove": 55,
+        "carMove": 60,
         "findSQ": 300
       },
       "direction": {

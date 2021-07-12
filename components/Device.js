@@ -37,22 +37,32 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
     init()
   }, [])
 
+  // useEffect(() => {
+  //   // 如果没有指定的状态, 那么设备的状态就只由 parentState 决定
+  //   // detectState 在组件创建时就已经确定, 即使转牌号后也一样
+  //   if(detectState === undefined) {
+  //     if(parentState === "监控") {
+  //       setState("监控")
+  //       setLastUpdateMoment(Date.now()) // 更新最后更新时间
+  //     } else {
+  //       setState("停止")
+  //     }
+  //   }
+  // }, [parentState])
+
   useEffect(() => {
-    // 如果没有指定的状态, 那么设备的状态就只由 parentState 决定
     // detectState 在组件创建时就已经确定, 即使转牌号后也一样
-    if(detectState === undefined) {
+    if(detectState === undefined) { // 如果没有指定的状态, 那么设备的状态就只由 parentState 决定
       if(parentState === "监控") {
-        setState("监控")
+        if(state !== "监控") { 
+          setState("监控")
+        }
+        // 每次 deviceState 的变化都要重新更新时间
         setLastUpdateMoment(Date.now()) // 更新最后更新时间
       } else {
         setState("停止")
       }
-    }
-  }, [parentState])
-
-  useEffect(() => {
-    // 如果有指定的监控状态, 那么设备的状态由 parentState 和 deviceState 决定
-    if(detectState !== undefined) {
+    } else { // 如果有指定的监控状态, 那么设备的状态由 parentState 和 deviceState 决定
       if(parentState === "监控") {
           // 当设备处在非指定监控状态时, 为停止
           let temp = detectState === deviceState ? "监控" : "停止"
