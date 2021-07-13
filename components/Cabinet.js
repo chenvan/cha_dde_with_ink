@@ -348,17 +348,31 @@ const SupplyCar = ({itemNames, delay, direction}) => {
   // 对限位的监控
   useEffect(() => {
     let timeId
-    if((state === "寻柜" || state === "监控") && (rSQ === 1 || lSQ === 1)) {
 
+
+    // if((state === "寻柜" || state === "监控") && (rSQ === 1 || lSQ === 1)) {
+
+    //   // 防止限位开关损坏使分配跑车无法感应到
+    //   timeId = setTimeout(() => {
+    //     speakTwice(`${line} 分配跑车没有在规定时间找到${rSQ === 1 ? "左" : "右"}限位`)
+    //     logger.warn(`${line} 分配跑车没有在规定时间找到${rSQ === 1 ? "左" : "右"}限位`)
+    //   }, delay.findSQ * 1000)
+      
+    //   // timeIdRef 更新后, 才更新 state, 否则在状态转换时，会出现其中一个 timeId 没有被 clear 
+    //   if(state === "寻柜") setState("监控")
+    //   // shouldDIRN 要在 state 更新后才更新，否则会出现分配车反向行驶
+    //   setShouldDIRN(rSQ ? direction.left : direction.right)
+    // }
+    
+    if(state === "寻柜" && (rSQ === 1 || lSQ === 1)) {
+      setState("监控")
+    } else if(state === "监控" && (rSQ === 1 || lSQ === 1)) {
       // 防止限位开关损坏使分配跑车无法感应到
       timeId = setTimeout(() => {
         speakTwice(`${line} 分配跑车没有在规定时间找到${rSQ === 1 ? "左" : "右"}限位`)
         logger.warn(`${line} 分配跑车没有在规定时间找到${rSQ === 1 ? "左" : "右"}限位`)
       }, delay.findSQ * 1000)
-      
-      // timeIdRef 更新后, 才更新 state, 否则在状态转换时，会出现其中一个 timeId 没有被 clear 
-      if(state === "寻柜") setState("监控")
-      // shouldDIRN 要在 state 更新后才更新，否则会出现分配车反向行驶
+
       setShouldDIRN(rSQ ? direction.left : direction.right)
     }
     
