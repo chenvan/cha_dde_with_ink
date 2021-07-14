@@ -52,7 +52,7 @@ const logger = createLogger({
             level: 'info',
             format: format.combine(
                 format.timestamp({
-                    format: 'HH:mm'
+                    format: 'HH:mm:ss'
                 }),
                 format.colorize(),
                 format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)

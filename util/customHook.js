@@ -56,11 +56,18 @@ function useCheckServerConnect(line, serverName, setIsErr, delay) {
   }, delay)
 }
 
-function usePrevious(value) {
+function usePrevious(value, cb) {
   const ref = useRef()
 
   useEffect(() => {
-    ref.current = value //assign the value of ref to the argument
+    if(typeof cb === "function") {
+      if(cb(value)) {
+        ref.current = value
+      }
+    } else {
+      ref.current = value //assign the value of ref to the argument
+    }
+    
   }, [value]) //this code will run when the value of 'value' changes
 
   return ref.current //in the end, return the current ref value.

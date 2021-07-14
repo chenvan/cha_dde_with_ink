@@ -124,12 +124,13 @@ const AddWater = () => {
                 }
               )
             }
-            { config[line].cabinetIn && (
+            {/* { 
+              config[line].cabinetIn && (
                 <CabinetIn 
                   config={config[line].cabinetIn} 
                 />
               )
-            }
+            } */}
           </>
         )
       }
