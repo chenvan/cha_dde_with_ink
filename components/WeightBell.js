@@ -4,7 +4,7 @@ const VoiceTips = require("../config/VoiceTips.json")
 const Tail = require("../config/WeightBellTail.json")
 
 const React = require("react")
-const { useState, useEffect, useContext } = require("react")
+const { useState, useEffect, useContext, useRef } = require("react")
 const importJsx = require('import-jsx')
 const { Text } = require("ink")
 
@@ -29,6 +29,8 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
   const {setIsErr, serverName, line} = useContext(Context)
 
   const [isWarning, setIsWarning] = useState(false)
+
+  const isJoinedRef = useRef(false)
 
   useEffect(() => {
     const init = async () => {
@@ -97,17 +99,20 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
       setState("停止")
     }else if(parentState === "监控" && name.includes("薄片") && setting > 0) { // 检查薄片秤是否启动
       timeId = setTimeout(() => {
-        if(real === 0) {
+        logger.info("检查薄片秤")
+        if(!isJoinedRef.current) { // 检查薄片秤是否启动
           speakTwice(`${line} ${name} 没有启动`)
           logger.warn(`${line} ${name} 没有启动`)
         } 
-      }, 1000 * 90)
+      }, 1000 * 60 * 2)
     }
 
     return () => {
       if(timeId) clearTimeout(timeId)
     }
   }, [parentState])
+
+
 
 
   useEffect(() => {
@@ -140,12 +145,14 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
       } else if(state === "监控") {
         // 进入监控先把 warning 设为 true 先, 防止秤开始时就报流量波动
         setIsWarning(true)
-
+        isJoinedRef.current = true
         // 主秤
         if(setParentState !== undefined) {
           if(VoiceTips.hasOwnProperty(line)) timeIdList = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu)
           setParentState(state)
         }
+      } else if(state === "停止") {
+        isJoinedRef.current = false
       }
     } catch (err) {
       logger.error(`${line} ${name} 状态转换出现错误`, err)

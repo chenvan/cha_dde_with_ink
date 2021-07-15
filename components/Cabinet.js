@@ -360,37 +360,6 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
     }
   }, [])
 
-  // 对限位的监控
-  useEffect(() => {
-    let timeId
-    
-    logger.info(`${line} 限位 ${state} ${rSQ} ${lSQ}`)
-
-    if(state === "寻柜" && (rSQ === 1 || lSQ === 1)) {
-      setState("监控")
-    } else if(state === "监控" && (rSQ === 0 && lSQ === 0)) {
-      // 防止限位开关损坏使分配跑车无法感应到
-      // 用 rSQ, lSQ 的下降沿触发 setTimeout
-      timeId = setTimeout(() => {
-        speakTwice(`${line} 分配车没有在规定时间找到限位`)
-        logger.warn(`${line} 分配车没有在规定时间找到${shouldDIRN === direction.left ? "左" : "右"}限位`)
-      }, delay.findSQ * 1000)
-
-      setFindSQTime(0) // 重置 FindSQ 计时
-    } else if(state === "监控" && (rSQ === 1 || lSQ === 1)) {
-      setShouldDIRN(rSQ ? direction.left : direction.right)
-      // 记录 findSQ 最大时间
-      if(findSQTime > findSQMaxTime) {
-        setFindSQMaxTime(findSQTime)
-      }
-    }
-    
-    return () => {
-      // 用 rSQ, lSQ 的上升沿清掉 setTimeout
-      if(timeId) clearTimeout(timeId)
-    }
-  }, [state, rSQ, lSQ]) // 不加 state 的话, 第一次碰到 SQ 只会把状态变成 监控，
-
   // 对分配车的监控
   useEffect(() => {
     let timeId
@@ -427,6 +396,37 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
       if(timeId) clearTimeout(timeId)
     }
   }, [state, currentDIRN])
+
+  // 对限位的监控
+  useEffect(() => {
+    let timeId
+    
+    logger.info(`${line} 限位 ${state} ${rSQ}(右) ${lSQ}(左)`)
+
+    if(state === "寻柜" && (rSQ === 1 || lSQ === 1)) {
+      setState("监控")
+    } else if(state === "监控" && (rSQ === 0 && lSQ === 0)) {
+      // 防止限位开关损坏使分配跑车无法感应到
+      // 用 rSQ, lSQ 的下降沿触发 setTimeout
+      timeId = setTimeout(() => {
+        speakTwice(`${line} 分配车没有在规定时间找到限位`)
+        logger.warn(`${line} 分配车没有在规定时间找到${shouldDIRN === direction.left ? "左" : "右"}限位`)
+      }, delay.findSQ * 1000)
+
+      setFindSQTime(0) // 重置 FindSQ 计时
+    } else if(state === "监控" && (rSQ === 1 || lSQ === 1)) {
+      setShouldDIRN(rSQ ? direction.left : direction.right)
+      // 记录 findSQ 最大时间
+      if(findSQTime > findSQMaxTime) {
+        setFindSQMaxTime(findSQTime)
+      }
+    }
+    
+    return () => {
+      // 用 rSQ, lSQ 的上升沿清掉 setTimeout
+      if(timeId) clearTimeout(timeId)
+    }
+  }, [state, rSQ, lSQ]) // 不加 state 的话, 第一次碰到 SQ 只会把状态变成 监控，
 
   useEffect(() => {
     let timeId
