@@ -76,8 +76,9 @@
         "left": 1,
         "stay": 16
       },
-      "inputNr": {
-        "itemName": "Galaxy:ZY2_YPCylinder_JK.ProductUnit.SLIn1_Now"
+      "info": {
+        "Nr": "Galaxy:ZY2_YPCylinder_JK.ProductUnit.SLIn1_Now",
+        "mode": "Galaxy:ZY2_YPCylinder_JK.ProductUnit.SL_InMode_Now"
       },
       "2101": {
         "right": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.DM_Right",

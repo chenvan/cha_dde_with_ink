@@ -91,8 +91,10 @@
             "lowFreq": 21,
             "total": 6800
           },
-          "halfEye_": {
-
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.Middle_1",
+            "total": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabInfo.InWeight",
+            "diff": 450
           },
           "freq": {
             "low": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabOut.Bottom.LowFreq",
@@ -197,10 +199,16 @@
         "left": 1,
         "stay": 16
       },
-      "inputNr": {
-        "itemName": "Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn1_Now"
+      "info": {
+        "Nr": "Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn1_Now",
+        "mode": "Galaxy:ZY3_InSilo2_JK.ProductUnit.InMode_Now"
       },
       "1201": {
+        "right": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Right_1",
+        "left": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Left_1",
+        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
+      },
+      "1202": {
         "right": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Right_1",
         "left": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Left_1",
         "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
@@ -210,7 +218,17 @@
         "left": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1203.CabInSwitch.DM_Left_1",
         "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
       },
+      "1204": {
+        "right": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1203.CabInSwitch.DM_Right_1",
+        "left": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1203.CabInSwitch.DM_Left_1",
+        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
+      },
       "1205": {
+        "right": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1205.CabInSwitch.DM_Right_1",
+        "left": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1205.CabInSwitch.DM_Left_1",
+        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
+      },
+      "1206": {
         "right": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1205.CabInSwitch.DM_Right_1",
         "left": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1205.CabInSwitch.DM_Left_1",
         "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
@@ -220,7 +238,17 @@
         "left": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1215.CabInSwitch.DM_Left_1",
         "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
       },
+      "1216": {
+        "right": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1215.CabInSwitch.DM_Right_1",
+        "left": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1215.CabInSwitch.DM_Left_1",
+        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
+      },
       "1217": {
+        "right": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1217.CabInSwitch.DM_Right_1",
+        "left": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1217.CabInSwitch.DM_Left_1",
+        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
+      },
+      "1218": {
         "right": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1217.CabInSwitch.DM_Right_1",
         "left": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1217.CabInSwitch.DM_Left_1",
         "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
@@ -228,31 +256,6 @@
       "1219": {
         "right": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1219.CabInSwitch.DM_Right_1",
         "left": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1219.CabInSwitch.DM_Left_1",
-        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
-      },
-      "1202": {
-        "right": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Right_1",
-        "left": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Left_1",
-        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
-      },
-      "1204": {
-        "right": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1203.CabInSwitch.DM_Right_1",
-        "left": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1203.CabInSwitch.DM_Left_1",
-        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
-      },
-      "1206": {
-        "right": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1205.CabInSwitch.DM_Right_1",
-        "left": "Galaxy:ZY3_InSilo1_JK.CabinetIn_1205.CabInSwitch.DM_Left_1",
-        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
-      },
-      "1216": {
-        "right": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1215.CabInSwitch.DM_Right_1",
-        "left": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1215.CabInSwitch.DM_Left_1",
-        "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
-      },
-      "1218": {
-        "right": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1217.CabInSwitch.DM_Right_1",
-        "left": "Galaxy:ZY3_InSilo2_JK.CabinetIn_1217.CabInSwitch.DM_Left_1",
         "car": "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState"
       },
       "1220": {

@@ -15,7 +15,7 @@ const State = importJsx('./State.js')
 const CabinetOut = ({config, wbAccu, isCabMon}) => {
   const cabinetTotal = useRef(0)
 
-  const [cabinetNr, setCabinetNr] = useState("")
+  const [cabinetNr, setCabinetNr] = useState(0)
   const [state, setState] = useState("停止")
   const {setIsErr, serverName, line} = useContext(Context)
   const [isMon, setIsMon] = useState(false)
@@ -37,15 +37,17 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
 
   useEffect(() => {
     // 需要延时，否则烘丝转批是会报出柜没转高速
+    // 加料段, isCabMon 是 undefined
     let timeId = setTimeout(() => {
       setIsMon(isCabMon)
     }, 1000 * 5)
 
     return () => clearTimeout(timeId)
+
   }, [isCabMon])
 
   useEffect(() => {
-    if(cabinetNr === "") {
+    if(cabinetNr === 0) {
       if (state === "监控") {
         speakTwice(`${line} 监控状态下, 出柜号发生更换`)
         logger.warn(`${line} 监控状态下, 出柜号发生更换`)
@@ -60,6 +62,7 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
 
   useInterval(async () => {
     try {
+      // 96 线出现的问题
       cabinetTotal.current = await fetchDDE(
         serverName,
         config[cabinetNr]["total"].itemName,
@@ -71,7 +74,7 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
       // 检查出柜频率
 
     } catch (err) {
-      logger.error(`${line} 出柜获取总量出错`, err)
+      logger.error(`${line} ${cabinetNr} 出柜获取总量出错`, err)
     }
   }, state === "待机" ? 10 * 1000 : null)
 
@@ -79,8 +82,11 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
   useEffect(() => {
     const checkHalfEye = async () => {
       if(state === "监控" && isMon !== false && config.hasOwnProperty(cabinetNr) && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
-        // console.log(`${wbAccu}, 出柜号: ${cabinetNr}, 状态: ${state}, 监控: ${isMon}`)
+        
+        logger.info(`checkHalfEye ${state} ${isMon} ${wbAccu}`)
+        
         try{
+          // 这个耗费的时间太长, 导致还没检查完成并且修改状态后, 函数继续执行了几遍
           let halfEyeState = await fetchDDE(
             serverName, 
             config[cabinetNr]["halfEye"].itemName,
@@ -127,11 +133,22 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
 const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
 
   const [currCabNr, setCurrCabNr] = useState(0)
-  const [currCabNrAlt, setCurrCabNrAlt] = useState(0)
-  const [nextCabNr, setNextCabNr] = useState(0)
-  const [nextCabNrAlt, setNextCabNrAlt] = useState(0)
-  const {setIsErr, serverName, line} = useContext(Context)
-  const mountedRef = useRef(false)
+  // const [currCabNrAlt, setCurrCabNrAlt] = useState(0)
+  // const [nextCabNr, setNextCabNr] = useState(0)
+  // const [nextCabNrAlt, setNextCabNrAlt] = useState(0)
+  // const {setIsErr, serverName, line} = useContext(Context)
+  // const mountedRef = useRef(false)
+  const [isHalfEyeMon, setIsHalfEyeMon] = useState(false)
+
+  useEffect(() => {
+    // 需要延时，否则烘丝转批是会报出柜没转高速
+    // 加料段, isCabMon 是 undefined
+    let timeId = setTimeout(() => {
+      setIsHalfEyeMon(isCabMon)
+    }, 1000 * 5)
+
+    return () => clearTimeout(timeId)
+  }, [isCabMon])
 
   useEffect(() => {
     const init = async () => {
@@ -141,15 +158,15 @@ const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
           setAdvise(serverName, config["outputNr_"].curr, result => {
             setCurrCabNr(parseInt(result.data, 10))
           }),
-          setAdvise(serverName, config["outputNr_"].currAlt, result => {
-            setCurrCabNrAlt(parseInt(result.data, 10))
-          }),
-          setAdvise(serverName, config["outputNr_"].next, result => {
-            setNextCabNr(parseInt(result.data, 10))
-          }),
-          setAdvise(serverName, config["outputNr_"].nextAlt, result => {
-            setNextCabNrAlt(parseInt(result.data, 10))
-          })
+          // setAdvise(serverName, config["outputNr_"].currAlt, result => {
+          //   setCurrCabNrAlt(parseInt(result.data, 10))
+          // }),
+          // setAdvise(serverName, config["outputNr_"].next, result => {
+          //   setNextCabNr(parseInt(result.data, 10))
+          // }),
+          // setAdvise(serverName, config["outputNr_"].nextAlt, result => {
+          //   setNextCabNrAlt(parseInt(result.data, 10))
+          // })
         ])
       } catch (err) {
         setIsErr(true)
@@ -158,33 +175,22 @@ const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
     }
 
     init()
-    // return () => mountedRef.current = false
   }, [])
 
-
-  // // 引起报错
-  // useEffect(() => {
-  //   // 需要延时，否则烘丝转批是会报出柜没转高速
-  //   setTimeout(() => {
-  //     if(mountedRef.current) {
-  //       setIsMon(isCabMon)
-  //     }
-  //   }, 1000 * 5)
-  // }, [isCabMon])
 
   // 半柜电眼的监控
   return (
     <>
       { 
-        config.func.isHalfEyeMon && config.hasOwnProperty(currCabNr) && (
+        config.hasOwnProperty(currCabNr) && isHalfEyeMon !== false && (
           <HalfEyeMon 
             key={currCabNr}
-            config={config[currCabNr]}
+            config={config[currCabNr].halfEyeMon}
             wbAccu={wbAccu}
           />
         )
       }
-      {
+      {/* {
         config.func.isFreqMon && (
           <>
             { 
@@ -227,7 +233,7 @@ const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
             }
           </>
         )
-      }
+      } */}
     </>
   )
 }
@@ -243,30 +249,68 @@ const OutputFreq = ({config}) => {
 
 const HalfEyeMon = ({config, wbAccu}) => {
   
+  const [halfEye, setHalfEye] = useState()
+  const [total, setTotal] = useState()
+  const [isChecking, setIsChecking] = useState(true)
+  const {setIsErr, serverName, line} = useContext(Context)
+
+  useEffect(() => {
+    let init = async () => {
+      try {
+        await Promise.all([
+          setAdvise(serverName, config.halfEye, ({data}) => setHalfEye(parseInt(data, 10))),
+          setAdvise(serverName, config.total, ({data}) => setTotal(parseInt(data, 10)))
+        ])
+      } catch (err) {
+        setIsErr(true)
+        logger.error(`${line} 建立出柜监听出错`, err)
+      }
+    }
+  
+    init()
+
+    return () => {
+      Promise.all([
+        cancelAdvise(serverName, config.halfEye),
+        cancelAdvise(serverName, confg.total)
+      ]).catch(err => {
+        logger.error(err)
+      })
+    }
+  }, [])
+
+  useInterval(() => {
+    if(total - wbAccu < config.diff) {
+      setIsChecking(false)
+      if(halfEye === 1) {
+        speakTwice(`${line} 出柜未转高速`)
+        logger.warn(`${line} 出柜未转高速`)
+      }
+    }
+  }, isChecking ? 10 * 1000 : null)
+
+
   return (
-    <>
-      <Text></Text>
-    </>
+    <Text> {`半眼状态(${isChecking ? "监控中" : "监控完成"}): ${halfEye}`}</Text>
   )
 }
 
 
 const CabinetIn = ({config}) => {
 
-  const [cabinetNr, setCabinetNr] = useState(0)
-  const [cabInMode, setCabInMode] = useState(0)
+  const [cabNr, setCabNr] = useState(0)
+  const [cabMode, setCabMode] = useState(0)
   const [initFindSQTimeFac, setInitFindSQTimeFac] = useState(10)
 
   const {setIsErr, serverName, line} = useContext(Context)
-  const prevCabNr = usePrevious(cabinetNr, value => config.hasOwnProperty(value))
+  const prevCabNr = usePrevious(cabNr, value => config.hasOwnProperty(value))
 
   useEffect(() => {
     const init = async () => {
       try {
-        
         await Promise.all([
-          setAdvise(serverName, config["inputNr"].itemName, ({data}) => setCabinetNr(parseInt(data, 10))),
-        
+          setAdvise(serverName, config["info"].Nr, ({data}) => setCabNr(parseInt(data, 10))),
+          setAdvise(serverName, config["info"].mode, ({data}) => setCabMode(parseInt(data, 10)))
         ])
       } catch (err) {
         setIsErr(true)
@@ -278,29 +322,31 @@ const CabinetIn = ({config}) => {
   }, [])
 
   useEffect(() => {
-    if(config.hasOwnProperty(cabinetNr)) {
+    if(config.hasOwnProperty(cabNr)) {
       if(prevCabNr !== undefined) {
-        setInitFindSQTimeFac(Math.abs(Math.ceil(cabinetNr / 2) - Math.ceil(prevCabNr / 2)) + 1)
+        setInitFindSQTimeFac(Math.abs(Math.ceil(cabNr / 2) - Math.ceil(prevCabNr / 2)) + 1)
       } else {
         setInitFindSQTimeFac(10)
       }
     }
-  }, [cabinetNr])
+  }, [cabNr])
 
   return (
     <>
       <Text>
         <Text>{'入柜'}</Text>
-        <Text>{`: ${cabinetNr % 10}`}</Text>
+        <Text>{`: ${cabNr % 10}`}</Text>
+        <Text>{` ${cabMode}`}</Text>
       </Text>
       {
-        config.hasOwnProperty(cabinetNr) && (
+        config.hasOwnProperty(cabNr) && (
           <SupplyCar 
-            key={cabinetNr}
-            itemNames={config[cabinetNr]} 
+            key={cabNr}
+            itemNames={config[cabNr]} 
             delay={config.delay} 
             direction={config.direction} 
             initFindSQTimeFac={initFindSQTimeFac}
+            inMode={cabMode / 100 }
           />
         )
       }
@@ -312,7 +358,7 @@ const CabinetIn = ({config}) => {
   state:
   停止 -> 寻柜 -> 监控
 */
-const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
+const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac, inMode}) => {
   const [state, setState] = useState("停止")
   const [rSQ, setRSQ] = useState(0)
   const [lSQ, setLSQ] = useState(0)
@@ -354,9 +400,9 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
         cancelAdvise(serverName, itemNames.car)
       ]).catch(err => {
         logger.error(err)
+      }).finally(() => {
+        logger.info("supplyCar unmounted")
       })
-
-      logger.info("supplyCar unmounted")
     }
   }, [])
 
@@ -364,7 +410,7 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
   useEffect(() => {
     let timeId
     
-    logger.info(`${line} 车 ${state} ${currentDIRN}`)
+    // logger.info(`${line} 车 ${state} ${currentDIRN}`)
 
     if(state === "停止" && (currentDIRN === direction.right || currentDIRN === direction.left)) {
       setState("寻柜")
@@ -374,7 +420,7 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
         timeId = setTimeout(() => {
           speakTwice(`${line} 分配车长时间停留`)
           logger.warn(`${line} 分配车长时间停留，未按规定${shouldDIRN === 1 ? "左" : "右"}行`)
-        }, delay.carMove * 1000)
+        }, inMode * delay.carMove * 1000)
 
         setCarMoveTime(0) // 重置 carMove 计时
       } else if(!isWarned && currentDIRN === invDIRNRef.current[shouldDIRN]) { 
@@ -401,7 +447,7 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
   useEffect(() => {
     let timeId
     
-    logger.info(`${line} 限位 ${state} ${rSQ}(右) ${lSQ}(左)`)
+    // logger.info(`${line} 限位 ${state} ${rSQ}(右) ${lSQ}(左)`)
 
     if(state === "寻柜" && (rSQ === 1 || lSQ === 1)) {
       setState("监控")
@@ -411,7 +457,7 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
       timeId = setTimeout(() => {
         speakTwice(`${line} 分配车没有在规定时间找到限位`)
         logger.warn(`${line} 分配车没有在规定时间找到${shouldDIRN === direction.left ? "左" : "右"}限位`)
-      }, delay.findSQ * 1000)
+      }, inMode * delay.findSQ * 1000)
 
       setFindSQTime(0) // 重置 FindSQ 计时
     } else if(state === "监控" && (rSQ === 1 || lSQ === 1)) {
