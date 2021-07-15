@@ -57,23 +57,12 @@
           "isFreqMon": true
         },
         "outputNr": {
-          "itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.SLOut1_Now"
-        },
-        "outputNr_": {
           "curr": "Galaxy:ZY2_YPSpice_JK.ProductUnit.SLOut1_Now",
           "currAlt": "",
           "next": "",
           "nextAlt": ""
         },  
         "2101": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.Middle_1",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabInfo.InMode",
             "valueType": "int"
@@ -95,26 +84,9 @@
             "halfEye": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.Middle_1",
             "total": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabInfo.InWeight",
             "diff": 450
-          },
-          "freq": {
-            "low": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabOut.Bottom.LowFreq",
-            "high": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabOut.Bottom.HighFreq"
-          },
-          "info": {
-            "brandName": "",
-            "inMode": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabInfo.InMode",
-            "total": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabInfo.InWeight"
           }
         },
         "2102": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.Middle_2",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2102.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2102.CabInfo.InMode",
             "valueType": "int"
@@ -131,17 +103,14 @@
             "diff": 450,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.Middle_2",
+            "total": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2102.CabInfo.InWeight",
+            "diff": 450
           }
         },
         "2103": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.Middle_1",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2103.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2103.CabInfo.InMode",
             "valueType": "int"
@@ -158,17 +127,14 @@
             "diff": 450,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.Middle_1",
+            "total": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2103.CabInfo.InWeight",
+            "diff": 450
           }
         },
         "2104": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.Middle_2",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2104.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2104.CabInfo.InMode",
             "valueType": "int"
@@ -185,6 +151,11 @@
             "diff": 450,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.Middle_2",
+            "total": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2104.CabInfo.InWeight",
+            "diff": 450
           }
         }
       }
@@ -315,17 +286,12 @@
       },
       "cabinetOut": {
         "outputNr": {
-          "itemName": "Galaxy:ZY1_YPSpice_JK.ProductUnit.SLOut1_Now"
+          "curr": "Galaxy:ZY1_YPSpice_JK.ProductUnit.SLOut1_Now",
+          "currAlt": "",
+          "next": "",
+          "nextAlt": ""
         },
         "1101": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1101.CabInSwitch.Middle_1",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1101.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1101.CabInfo.InMode",
             "valueType": "int"
@@ -342,17 +308,14 @@
             "diff": 200,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1101.CabInSwitch.Middle_1",
+            "total": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1101.CabInfo.InWeight",
+            "diff": 200
           }
         },
         "1102": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1101.CabInSwitch.Middle_2",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1102.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1102.CabInfo.InMode",
             "valueType": "int"
@@ -369,17 +332,14 @@
             "diff": 200,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1101.CabInSwitch.Middle_2",
+            "total": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1102.CabInfo.InWeight",
+            "diff": 200
           }
         },
         "1103": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1103.CabInSwitch.Middle_1",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1103.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1103.CabInfo.InMode",
             "valueType": "int"
@@ -396,17 +356,14 @@
             "diff": 200,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1103.CabInSwitch.Middle_1",
+            "total": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1103.CabInfo.InWeight",
+            "diff": 200
           }
         },
         "1104": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1103.CabInSwitch.Middle_2",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1104.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1104.CabInfo.InMode",
             "valueType": "int"
@@ -423,17 +380,14 @@
             "diff": 200,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1103.CabInSwitch.Middle_2",
+            "total": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1104.CabInfo.InWeight",
+            "diff": 200
           }
         },
         "1105": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1105.CabInSwitch.Middle_1",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1105.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1105.CabInfo.InMode",
             "valueType": "int"
@@ -450,17 +404,14 @@
             "diff": 100,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1105.CabInSwitch.Middle_1",
+            "total": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1105.CabInfo.InWeight",
+            "diff": 100
           }
         },
         "1106": {
-          "halfEye":{
-            "itemName": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1105.CabInSwitch.Middle_2",
-            "valueType": "int"
-          },
-          "total": {
-            "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1106.CabInfo.InWeight",
-            "valueType": "int"
-          },
           "inMode": {
             "itemName": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1106.CabInfo.InMode",
             "valueType": "int"
@@ -477,6 +428,11 @@
             "diff": 100,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY1_YPCylinder_JK.CabinetIn_1105.CabInSwitch.Middle_2",
+            "total": "Galaxy:ZY1_YPOutSilo_JK.CabinetOut_1106.CabInfo.InWeight",
+            "diff": 200
           }
         }
       }

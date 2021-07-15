@@ -12,132 +12,16 @@ const importJsx = require("import-jsx")
 
 const State = importJsx('./State.js')
 
-const CabinetOut = ({config, wbAccu, isCabMon}) => {
-  const cabinetTotal = useRef(0)
-
-  const [cabinetNr, setCabinetNr] = useState(0)
-  const [state, setState] = useState("停止")
-  const {setIsErr, serverName, line} = useContext(Context)
-  const [isMon, setIsMon] = useState(false)
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        await setAdvise(serverName, config["outputNr"].itemName, result => {
-          setCabinetNr(parseInt(result.data, 10))
-        })
-      } catch (err) {
-        setIsErr(true)
-        logger.error(`${line} 建立出柜监听出错`, err)
-      }
-    }
-
-    init()
-  }, [])
-
-  useEffect(() => {
-    // 需要延时，否则烘丝转批是会报出柜没转高速
-    // 加料段, isCabMon 是 undefined
-    let timeId = setTimeout(() => {
-      setIsMon(isCabMon)
-    }, 1000 * 5)
-
-    return () => clearTimeout(timeId)
-
-  }, [isCabMon])
-
-  useEffect(() => {
-    if(cabinetNr === 0) {
-      if (state === "监控") {
-        speakTwice(`${line} 监控状态下, 出柜号发生更换`)
-        logger.warn(`${line} 监控状态下, 出柜号发生更换`)
-      }
-      setState("停止")
-    } else {
-      if(config.hasOwnProperty(cabinetNr)) {
-        setState("待机") 
-      }
-    }
-  }, [cabinetNr])
-
-  useInterval(async () => {
-    try {
-      // 96 线出现的问题
-      cabinetTotal.current = await fetchDDE(
-        serverName,
-        config[cabinetNr]["total"].itemName,
-        config[cabinetNr]["total"].valueType
-      )
-
-      setState("监控")
-      
-      // 检查出柜频率
-
-    } catch (err) {
-      logger.error(`${line} ${cabinetNr} 出柜获取总量出错`, err)
-    }
-  }, state === "待机" ? 10 * 1000 : null)
-
-
-  useEffect(() => {
-    const checkHalfEye = async () => {
-      if(state === "监控" && isMon !== false && config.hasOwnProperty(cabinetNr) && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
-        
-        logger.info(`checkHalfEye ${state} ${isMon} ${wbAccu}`)
-        
-        try{
-          // 这个耗费的时间太长, 导致还没检查完成并且修改状态后, 函数继续执行了几遍
-          let halfEyeState = await fetchDDE(
-            serverName, 
-            config[cabinetNr]["halfEye"].itemName,
-            config[cabinetNr]["halfEye"].valueType,
-          )
-          
-          logger.info(`${line} 半柜电眼状态: ${halfEyeState}`)
-    
-          if(halfEyeState === 1) {
-            speakTwice(`${line} 出柜未转高速`)
-            logger.warn(`${line} 出柜未转高速`)
-            setState("未转高速")
-          } else {
-            setState("完成")
-          }
-        } catch(err) {
-          setState("检查失败")
-          speakTwice(`${line} 检查半柜电眼状态时出错, 请人工检查`)
-          logger.error(`${line} 检查半柜电眼状态时出错`, err)
-        }
-      }
-    }
-
-    checkHalfEye()
-
-  }, [wbAccu, state, cabinetNr, isMon])
-
-
-  return (
-    <>
-      <Text>
-        <Text>{`出柜`}</Text>
-        <State state={state} />
-        <Text>{`: ${cabinetNr % 10}`}</Text>
-      </Text>
-      <Text>{`${cabinetTotal.current} - ${wbAccu} = ${cabinetTotal.current - wbAccu}`}</Text>
-    </>
-  )
-}
-
 /*
   两个出柜号
 */
-const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
+const CabinetOut= ({config, wbAccu, isCabMon}) => {
 
   const [currCabNr, setCurrCabNr] = useState(0)
   // const [currCabNrAlt, setCurrCabNrAlt] = useState(0)
   // const [nextCabNr, setNextCabNr] = useState(0)
   // const [nextCabNrAlt, setNextCabNrAlt] = useState(0)
-  // const {setIsErr, serverName, line} = useContext(Context)
-  // const mountedRef = useRef(false)
+  const {setIsErr, serverName, line} = useContext(Context)
   const [isHalfEyeMon, setIsHalfEyeMon] = useState(false)
 
   useEffect(() => {
@@ -153,18 +37,17 @@ const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
   useEffect(() => {
     const init = async () => {
       try {
-        // mountedRef.current = true 
         await Promise.all([
-          setAdvise(serverName, config["outputNr_"].curr, result => {
+          setAdvise(serverName, config["outputNr"].curr, result => {
             setCurrCabNr(parseInt(result.data, 10))
           }),
-          // setAdvise(serverName, config["outputNr_"].currAlt, result => {
+          // setAdvise(serverName, config["outputNr"].currAlt, result => {
           //   setCurrCabNrAlt(parseInt(result.data, 10))
           // }),
-          // setAdvise(serverName, config["outputNr_"].next, result => {
+          // setAdvise(serverName, config["outputNr"].next, result => {
           //   setNextCabNr(parseInt(result.data, 10))
           // }),
-          // setAdvise(serverName, config["outputNr_"].nextAlt, result => {
+          // setAdvise(serverName, config["outputNr"].nextAlt, result => {
           //   setNextCabNrAlt(parseInt(result.data, 10))
           // })
         ])
@@ -181,6 +64,7 @@ const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
   // 半柜电眼的监控
   return (
     <>
+      <Text>{`出柜: ${currCabNr % 10}`}</Text>
       { 
         config.hasOwnProperty(currCabNr) && isHalfEyeMon !== false && (
           <HalfEyeMon 
@@ -287,11 +171,11 @@ const HalfEyeMon = ({config, wbAccu}) => {
         logger.warn(`${line} 出柜未转高速`)
       }
     }
-  }, isChecking ? 10 * 1000 : null)
+  }, isChecking && wbAccu > 10 ? 30 * 1000 : null)
 
 
   return (
-    <Text> {`半眼状态(${isChecking ? "监控中" : "监控完成"}): ${halfEye}`}</Text>
+    <Text>{`${total} ${halfEye}`}</Text>
   )
 }
 
@@ -334,9 +218,7 @@ const CabinetIn = ({config}) => {
   return (
     <>
       <Text>
-        <Text>{'入柜'}</Text>
-        <Text>{`: ${cabNr % 10}`}</Text>
-        <Text>{` ${cabMode}`}</Text>
+        <Text>{`入柜: ${cabNr % 10} ${cabMode}`}</Text>
       </Text>
       {
         config.hasOwnProperty(cabNr) && (
