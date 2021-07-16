@@ -9,18 +9,10 @@
     },
     "weightBell": {
       "主秤": {
-        "setting": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.ProductUnit.Flux_ZYS_Now"
-        },
-        "accu": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Total"
-        },
-        "real": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Flux"
-        },
-        "margin": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.ZX4_Box_Tobacco_Weight"
-        },
+        "setting": "Galaxy:ZX4_Flavor_JK.ProductUnit.Flux_ZYS_Now",
+        "accu": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Total",
+        "real": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Flux",
+        "margin": "Galaxy:ZX4_Flavor_JK.Balance_CP105.ZX4_Box_Tobacco_Weight",
         "device": {
           "叶丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP103_1.Feed.Switch.Tran",
@@ -32,15 +24,9 @@
         }
       },
       "梗丝秤": {
-        "setting": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.FluxSP"
-        },
-        "accu": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Total"
-        },
-        "real": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Flux"
-        },
+        "setting": "Galaxy:ZX4_Flavor_JK.Balance_CP205.FluxSP",
+        "accu": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Total",
+        "real": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Flux",
         "device": {
           "梗丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.IOBox.CP203.Switch.RaiseUp",
@@ -59,15 +45,9 @@
         }
       },
       "膨丝秤": {
-        "setting": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.FluxSP"
-        },
-        "accu": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Total"
-        },
-        "real": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Flux"
-        },
+        "setting": "Galaxy:ZX4_Flavor_JK.Balance_CP415.FluxSP",
+        "accu": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Total",
+        "real": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Flux",
         "device": {
           "膨丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.Bottom",
@@ -95,20 +75,12 @@
     "id": {
       "itemName": "Galaxy:ZX5_Flavor_JK.ProductUnit.Batch_Now"
     },
-    "margin": {
-      "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP110.ZX5_Box_Tobacco_Weight"
-    },
     "weightBell": {
       "主秤": {
-        "setting": {
-          "itemName": "Galaxy:ZX5_Flavor_JK.ProductUnit.Flux_ZYS_Now"
-        },
-        "accu": {
-          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP110.Total"
-        },
-        "real": {
-          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP110.Flux"
-        },
+        "setting": "Galaxy:ZX5_Flavor_JK.ProductUnit.Flux_ZYS_Now",
+        "accu": "Galaxy:ZX5_Flavor_JK.Balance_CP110.Total",
+        "real": "Galaxy:ZX5_Flavor_JK.Balance_CP110.Flux",
+        "margin": "Galaxy:ZX5_Flavor_JK.Balance_CP110.ZX5_Box_Tobacco_Weight",
         "device": {
           "叶丝提升带": {
             "itemName": "Galaxy:ZX5_Flavor_JK.Feed_CP108_1.Feed.Switch.Tran",
@@ -120,15 +92,9 @@
         }
       },
       "梗丝秤": {
-        "setting": {
-          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP211.FluxSP"
-        },
-        "accu": {
-          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP211.Total"
-        },
-        "real": {
-          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP211.Flux"
-        },
+        "setting": "Galaxy:ZX5_Flavor_JK.Balance_CP211.FluxSP",
+        "accu": "Galaxy:ZX5_Flavor_JK.Balance_CP211.Total",
+        "real": "Galaxy:ZX5_Flavor_JK.Balance_CP211.Flux",
         "device": {
           "梗丝提升带": {
             "itemName": "Galaxy:ZX5_Flavor_JK.IOBox.CP209.Switch.RaiseUp",
@@ -147,15 +113,9 @@
         }
       },
       "膨丝秤": {
-        "setting": {
-          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP421.FluxSP"
-        },
-        "accu": {
-          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP421.Total"
-        },
-        "real": {
-          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP421.Flux"
-        },
+        "setting": "Galaxy:ZX5_Flavor_JK.Balance_CP421.FluxSP",
+        "accu": "Galaxy:ZX5_Flavor_JK.Balance_CP421.Total",
+        "real": "Galaxy:ZX5_Flavor_JK.Balance_CP421.Flux",
         "device": {
           "膨丝提升带": {
             "itemName": "Galaxy:ZX5_Flavor_JK.Feed_CP419.Switch.Bottom",

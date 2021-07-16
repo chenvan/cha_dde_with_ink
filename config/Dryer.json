@@ -22,15 +22,9 @@
     },
     "device": {},
     "mainWeightBell": {
-      "setting": {
-        "itemName": "Galaxy:rHN_Z7.HN.ZX_DB1Value_1"
-      },
-      "accu": {
-        "itemName": "Galaxy:rHN_Z7.HN.ZX_DB1Value_4"
-      },
-      "real": {
-        "itemName": "Galaxy:rHN_Z7.HN.ZX_TT1Value_18"
-      },
+      "setting": "Galaxy:rHN_Z7.HN.ZX_DB1Value_1",
+      "accu": "Galaxy:rHN_Z7.HN.ZX_DB1Value_4",
+      "real": "Galaxy:rHN_Z7.HN.ZX_TT1Value_18",
       "device": {        
         "提升带电眼": {
           "itemName": "Galaxy:ZX2_YSCut2_JK.FeedCabinet_YS216.Feed.Switch.Bottom",
@@ -218,15 +212,9 @@
     },
     "device": {},
     "mainWeightBell": {
-      "setting": {
-        "itemName": "Galaxy:rHN_Z4.HN4.Z4_ZKLD_DB1Value_1"
-      },
-      "accu": {
-        "itemName": "Galaxy:rHN_Z4.HN4.Z4_ZKLD_DB1Value_2"
-      },
-      "real": {
-        "itemName": "Galaxy:rHN_Z4.HN4.Z4_ZKLD_DB1Value_3"
-      },
+      "setting": "Galaxy:rHN_Z4.HN4.Z4_ZKLD_DB1Value_1",
+      "accu": "Galaxy:rHN_Z4.HN4.Z4_ZKLD_DB1Value_2",
+      "real": "Galaxy:rHN_Z4.HN4.Z4_ZKLD_DB1Value_3",
       "device": {        
         "提升带电眼": {
           "itemName": "Galaxy:ZX1_YSCut2_JK.FeedCabinet_YS116.Feed.Switch.Bottom",

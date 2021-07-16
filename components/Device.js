@@ -200,7 +200,7 @@ const Margin = ({config, parentState, CutoffComp}) => {
   useEffect(() => {
     const init = async () => {
       try {
-        await setAdvise(serverName, config.itemName, result => {
+        await setAdvise(serverName, config, result => {
           setMargin(parseInt(result.data, 10))
         })
       } catch (err) {

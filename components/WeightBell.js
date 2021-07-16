@@ -36,13 +36,13 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
     const init = async () => {
       try {
         await Promise.all([
-          setAdvise(serverName, config.setting.itemName, result => {
+          setAdvise(serverName, config.setting, result => {
             setSetting(parseInt(result.data, 10))
           }),
-          setAdvise(serverName, config.real.itemName, result => {
+          setAdvise(serverName, config.real, result => {
             setReal(parseInt(result.data, 10))
           }),
-          setAdvise(serverName, config.accu.itemName, result => {
+          setAdvise(serverName, config.accu, result => {
             setAccu(parseInt(result.data, 10))
           })
         ])

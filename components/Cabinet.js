@@ -12,13 +12,10 @@ const importJsx = require("import-jsx")
 
 const State = importJsx('./State.js')
 
-/*
-  两个出柜号
-*/
 const CabinetOut= ({config, wbAccu, isCabMon}) => {
 
   const [currCabNr, setCurrCabNr] = useState(0)
-  // const [currCabNrAlt, setCurrCabNrAlt] = useState(0)
+  const [currCabNrAlt, setCurrCabNrAlt] = useState(0)
   // const [nextCabNr, setNextCabNr] = useState(0)
   // const [nextCabNrAlt, setNextCabNrAlt] = useState(0)
   const {setIsErr, serverName, line} = useContext(Context)
@@ -65,38 +62,47 @@ const CabinetOut= ({config, wbAccu, isCabMon}) => {
   return (
     <>
       <Text>{`出柜: ${currCabNr % 10}`}</Text>
+      {/* <Text>{`预备出柜: ${currCabNrAlt % 10}`}</Text> */}
       { 
-        config.hasOwnProperty(currCabNr) && isHalfEyeMon !== false && (
-          <HalfEyeMon 
-            key={currCabNr}
-            config={config[currCabNr].halfEyeMon}
-            wbAccu={wbAccu}
-          />
-        )
-      }
-      {/* {
-        config.func.isFreqMon && (
+        config.hasOwnProperty(currCabNr) && (
           <>
-            { 
-              config.hasOwnProperty(currCabNr) && (
-                <OutputFreq 
-                  key={currCabNr}
-                  config={config[currCabNr]}
+            {
+              config[currCabNr].hasOwnProperty("halfEyeMon") && isHalfEyeMon !== false && (
+                <HalfEyeMon 
+                  key={"halfEyeMon" + currCabNr}
+                  config={config[currCabNr].halfEyeMon}
+                  wbAccu={wbAccu}
                 />
               )
             }
             {
-              config.hasOwnProperty(currCabNrAlt) && (
-                <OutputFreq 
-                  key={currCabNrAlt}
-                  config={config[currCabNrAlt]}
+              config[currCabNr].hasOwnProperty("beltFreqMon") && (
+                <BeltFreqMon 
+                  key={"beltFreqMon" + currCabNr}
+                  config={config[currCabNr].beltFreqMon}
                 />
               )
             }
           </>
         )
       }
+      {/* { 
+        config.hasOwnProperty(currCabNr) && (
+          <BeltFreqMon 
+            key={currCabNr}
+            config={config[currCabNr]}
+          />
+        )
+      }
       {
+        config.hasOwnProperty(currCabNrAlt) && (
+          <BeltFreqMon 
+            key={currCabNrAlt}
+            config={config[currCabNrAlt]}
+          />
+        )
+      } */}
+      {/* {
         config.func.isDeadLineMon && (
           <>
             {
@@ -123,12 +129,12 @@ const CabinetOut= ({config, wbAccu, isCabMon}) => {
 }
 
 const DeadLineMon = ({config}) => {
-
+  return null
 }
 
 
-const OutputFreq = ({config}) => {
-
+const BeltFreqMon = ({config}) => {
+  return null
 }
 
 const HalfEyeMon = ({config, wbAccu}) => {
@@ -138,12 +144,22 @@ const HalfEyeMon = ({config, wbAccu}) => {
   const [isChecking, setIsChecking] = useState(true)
   const {setIsErr, serverName, line} = useContext(Context)
 
+  const isUnmountingRef = useRef(false)
+
   useEffect(() => {
     let init = async () => {
       try {
         await Promise.all([
-          setAdvise(serverName, config.halfEye, ({data}) => setHalfEye(parseInt(data, 10))),
-          setAdvise(serverName, config.total, ({data}) => setTotal(parseInt(data, 10)))
+          setAdvise(serverName, config.halfEye, ({data}) => {
+            if(!isUnmountingRef.current) { 
+              setHalfEye(parseInt(data, 10)) 
+            }
+          }),
+          setAdvise(serverName, config.total, ({data}) => {
+            if(!isUnmountingRef.current) {
+              setTotal(parseInt(data, 10))
+            }
+          })
         ])
       } catch (err) {
         setIsErr(true)
@@ -154,11 +170,15 @@ const HalfEyeMon = ({config, wbAccu}) => {
     init()
 
     return () => {
+      isUnmountingRef.current = true
+
       Promise.all([
         cancelAdvise(serverName, config.halfEye),
         cancelAdvise(serverName, confg.total)
       ]).catch(err => {
         logger.error(err)
+      }).finally(() => {
+        logger.info("halfEyeMon unmount")
       })
     }
   }, [])
@@ -166,9 +186,12 @@ const HalfEyeMon = ({config, wbAccu}) => {
   useInterval(() => {
     if(total - wbAccu < config.diff) {
       setIsChecking(false)
-      if(halfEye === 1) {
+      if (halfEye === 1) {
         speakTwice(`${line} 出柜未转高速`)
         logger.warn(`${line} 出柜未转高速`)
+      } else if(halfEye !== 0 && halfEye !== 1) {
+        speakTwice(`${line} 人工检查出柜电眼`)
+        logger.warn(`${line} 人工检查出柜电眼`)
       }
     }
   }, isChecking && wbAccu > 10 ? 30 * 1000 : null)
@@ -258,13 +281,27 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac, inMode}) => 
     [direction.left]: direction.right
   })
 
+  const isUnmountingRef = useRef(false)
+
   useEffect(() => {
     const init = async () => {
       try {
         await Promise.all([
-          setAdvise(serverName, itemNames.right, ({data}) => setRSQ(parseInt(data, 10))),
-          setAdvise(serverName, itemNames.left, ({data}) => setLSQ(parseInt(data, 10))),
-          setAdvise(serverName, itemNames.car, ({data}) => setCurrentDIRN(parseInt(data, 10)))
+          setAdvise(serverName, itemNames.right, ({data}) => {
+            if(!isUnmountingRef.current) {
+              setRSQ(parseInt(data, 10))
+            }
+          }),
+          setAdvise(serverName, itemNames.left, ({data}) => {
+            if(!isUnmountingRef.current) {
+              setLSQ(parseInt(data, 10))
+            }
+          }),
+          setAdvise(serverName, itemNames.car, ({data}) => {
+            if(!isUnmountingRef.current) {
+              setCurrentDIRN(parseInt(data, 10))
+            }
+          })
         ])
         
       } catch (err) {
@@ -276,6 +313,8 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac, inMode}) => 
     init()
 
     return () => {
+      isUnmountingRef.current = true
+
       Promise.all([
         cancelAdvise(serverName, itemNames.left),
         cancelAdvise(serverName, itemNames.right),
