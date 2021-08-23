@@ -9,7 +9,7 @@
       "除杂": {"itemName": "Galaxy:ZY2_YPCylinder_JK.ProductUnit.Batch_Now"}
     },
     "device": {
-      "切片前输送带": {
+      "解包后输送带": {
         "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP1_M1_STATE",
         "maxDurationConfig": {
           "33": 90
