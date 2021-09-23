@@ -72,7 +72,7 @@ const AddWater = ({line}) => {
   }, [state])
 
   return (
-    <Box key={line} flexDirection="column">
+    <Box key={line} flexDirection="column" margin={1} padding={1} borderStyle="single" width="50%">
       <Text>{`${line}(${state})`}</Text>
       <ErrProvider serverName={config[line].serverName}>
         <WeightBell 
@@ -102,7 +102,7 @@ const AddWater = ({line}) => {
                 "parentState": state
               }
 
-              return <Device {...data} />
+              return <Device key={deviceName} {...data} />
             }
           )
         }

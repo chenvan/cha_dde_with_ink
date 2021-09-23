@@ -32,7 +32,7 @@
         "valueType": "int"
       },
       "electEye": {
-        "name":"主秤定量管高电眼",
+        "deviceName":"主秤定量管高电眼",
         "itemName": "Galaxy:ZY2_YPOutSilo_JK.Limit_YX226.High",
         "maxDuration": 40
       }

@@ -83,9 +83,10 @@ const Cabinet = ({line, serverName, config, weightBellAccu}) => {
 
 
   return (
-    <Text>
-      {`出柜(${state}): ${cabinetNr % 10} ${cabinetTotal.current} - ${weightBellAccu} = ${cabinetTotal.current - weightBellAccu}`}
-    </Text>
+    <>
+      <Text>{`出柜(${state}): ${cabinetNr % 10}`}</Text>
+      <Text>{`${cabinetTotal.current} - ${weightBellAccu} = ${cabinetTotal.current - weightBellAccu}`}</Text>
+    </>
   )
 }
 

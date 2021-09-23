@@ -6,7 +6,7 @@ const React= require("react")
 const { useState, useEffect } = require("react")
 const importJsx = require('import-jsx')
 const { setAdvise, fetchDDE } = require("../util/fetchDDE")
-const { Box, Text } = require('ink')
+const { Box, Text, useStdout } = require('ink')
 
 const Device = importJsx('./Device.js')
 const Cabinet = importJsx('./Cabinet.js')
@@ -24,7 +24,7 @@ const AddFlavour = ({line}) => {
   const [id, setId] = useState("")
   const [brandName, setBrandName] = useState("")
   const [weightBellAccu, setWeightBellAccu] = useState(0)
-  
+  // const { stdout, write} = useStdout()
   // const voiceTimeIdList = useRef([])
 
   useEffect(() => {
@@ -36,6 +36,12 @@ const AddFlavour = ({line}) => {
 
     init()
   }, [])
+
+  // useEffect(() => {
+  //   const timer = setInterval(() => {write("hello from ink stdout")}, 1000)
+
+  //   return () => {clearInterval(timer)}
+  // }, [])
 
   useEffect(() => {
     let state = id ? "待机" : "停止" 
@@ -67,7 +73,7 @@ const AddFlavour = ({line}) => {
   }, [state])
 
   return (
-    <Box key={line} flexDirection="column">
+    <Box key={line} flexDirection="column" margin={1} padding={1} borderStyle="single" width="50%">
       <Text>{`${line}(${state})`}</Text>
       <ErrProvider serverName={config[line].serverName} >
         <WeightBell 
@@ -96,7 +102,7 @@ const AddFlavour = ({line}) => {
                 "parentState": state
               }
 
-              return <Device {...data} />
+              return <Device key={deviceName} {...data} />
             }
           )
         }

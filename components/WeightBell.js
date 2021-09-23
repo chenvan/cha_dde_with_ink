@@ -82,13 +82,11 @@ const WeightBell = ({line, serverName, name, config, parentState, setParentState
 
   return (
     <>
-      <Text>{`${name}(${state}) 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
+      <Text>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
       <Device 
         line={line}
         serverName={serverName}
-        deviceName={config["electEye"].name}
-        maxDuration={config["electEye"].maxDuration}
-        itemName={config["electEye"].itemName}
+        {... config["electEye"]}
         parentState={state}
       />
     </>

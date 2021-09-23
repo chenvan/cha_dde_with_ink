@@ -12,13 +12,11 @@
     "device": {
       "切片前输送带": {
         "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP1_M1_STATE",
-        "type": "device",
         "maxDuration": 90,
         "detectState": 33
       },
       "切片出口电眼": {
         "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_1",
-        "type": "device",
         "maxDuration": 20,
         "detectState": 0
       }
@@ -38,9 +36,8 @@
           "valueType": "int"
         },
         "electEye": {
-          "name":"主秤入口电眼",
+          "deviceName":"主秤入口电眼",
           "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_2",
-          "type": "device",
           "maxDuration": 20,
           "detectState": 0
         }
@@ -59,9 +56,8 @@
           "valueType": "int"
         },
         "electEye": {
-          "name":"薄片秤定量管高电眼",
+          "deviceName":"薄片秤定量管高电眼",
           "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.Feed205.Switch.High",
-          "type": "device",
           "maxDuration": 40
         }
       }

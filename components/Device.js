@@ -34,8 +34,9 @@ const Device = ({line, serverName, deviceName, maxDuration, itemName, parentStat
 
   useEffect(() => {
     if(parentState === "监控") {
-      if(detectState !== undefined && detectState === deviceState) {
-        setState("监控")
+      if(detectState !== undefined) {
+        let state = detectState === deviceState ? "监控" : "停止"
+        setState(state)
       } else if(detectState === undefined) {
         setState("监控")
       }
@@ -61,8 +62,8 @@ const Device = ({line, serverName, deviceName, maxDuration, itemName, parentStat
   }, [duration, state]) // 需要把 state 放在这里吗 
 
   return (
-    <Text color={isWarning? "red" : "black"}>
-      <Text>{`${deviceName}(${state}) ${detectState !== undefined ? "监控值: " + detectState : ""}探测值: ${deviceState} `}</Text>
+    <Text color={isWarning? "red" : "white"}>
+      <Text>{`${deviceName}(${state}) [${detectState !== undefined ?  detectState + " " : ""}${deviceState}]: `}</Text>
       {
         state === "监控" && 
             <TimeComparator maxDuration={maxDuration} duration={duration} isWarning={isWarning} />
