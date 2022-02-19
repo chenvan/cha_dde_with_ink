@@ -5,20 +5,14 @@
       "itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.BrandName_Now",
       "valueType": "string"
     },
-    "advise": {
-      "加料批号": {
-        "itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.Batch_Now",
-        "type": "id"
-      },
+    "device": {
       "提升带电眼": {
         "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Bottom",
-        "type": "device",
-        "maxTime": 20
+        "maxDuration": 20
       },
       "暂存柜进柜电眼": {
         "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Full",
-        "type": "device",
-        "maxTime": 40
+        "maxDuration": 40
       }
     },
     "mainWeightBell": {
@@ -37,8 +31,7 @@
       "electEye": {
         "name":"主秤定量管高电眼",
         "itemName": "Galaxy:ZY2_YPOutSilo_JK.Limit_YX226.High",
-        "type": "device",
-        "maxTime": 40
+        "maxDuration": 40
       }
     },
     "cabinet": {

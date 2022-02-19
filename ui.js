@@ -4,7 +4,7 @@ const importJsx = require('import-jsx');
 const { observer } = require('mobx-react')
 const { Box, Text } = require('ink');
 
-const AddFlavour = importJsx('./class/AddFlavour.js')
+const AddFlavour = importJsx('./components/AddFlavour.js')
 
 let setting = {
   "回潮": ["六四回潮"],

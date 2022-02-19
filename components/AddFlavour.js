@@ -6,9 +6,9 @@ const React= require('react')
 const importJsx = require('import-jsx');
 const { observer } = require('mobx-react')
 const { makeObservable, observable, action  } = require('mobx')
-const { Box, Text } = require('ink')
+const { Box, Text, Newline } = require('ink')
 
-const { Device } = importJsx('./Device.js')
+const Device = importJsx('./Device.js')
 
 const AddFlavour = observer(
   class AddFlavour extends React.Component {
@@ -23,13 +23,28 @@ const AddFlavour = observer(
       })
       
       this.status = "停止"
+      this.serverName = config[this.props.line]["serverName"]
     }
 
     render () {
       return (
-        <Box key={this.props.line}>
+        <Box key={this.props.line} flexDirection="column">
           <Text>{`${this.props.line}(${this.status})`}</Text>
-        
+          {
+            Object.entries(config[this.props.line].device).map(
+              ([deviceName, config]) => {
+                let data = {
+                  ...config,
+                  "line": this.props.line,
+                  "serverName": this.serverName,
+                  "deviceName": deviceName,
+                  "parentState": this.status
+                }
+
+                return <Device {...data} />
+              }
+            )
+          }
         </Box>
       )
     }
@@ -44,7 +59,7 @@ const AddFlavour = observer(
 
     componentDidMount() {
       // this.init()
-      this.timeId = setInterval(() => this.updateStatus(), 1000 * 2)
+      this.timeId = setInterval(() => this.updateStatus(), 1000 * 5)
     }
 
     componentWillUnmount() {
