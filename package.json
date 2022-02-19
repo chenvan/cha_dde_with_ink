@@ -7,7 +7,7 @@
 		"node": ">=10"
 	},
 	"scripts": {
-		"test": "xo && ava",
+		"test": "SET NODE_ENV=test&&node cli.js",
 		"dev": "SET NODE_ENV=dev&&node cli.js"
 	},
 	"files": [
