@@ -5,6 +5,9 @@
       "itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.BrandName_Now",
       "valueType": "string"
     },
+    "id": {
+      "itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.Batch_Now"
+    },
     "device": {
       "提升带电眼": {
         "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Bottom",

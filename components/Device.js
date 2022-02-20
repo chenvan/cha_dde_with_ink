@@ -7,7 +7,6 @@ const React = require("react")
 const { useState, useEffect, useRef } = require("react")
 const { Box, Text } = require("ink")
 const { useInterval } = require("../util/customHook.js")
-const { initSetAdvice } = require("../util/fetchUtil")
 
 const Device = ({line, serverName, deviceName, maxDuration, itemName, parentState, detectState}) => {
 

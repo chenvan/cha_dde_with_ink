@@ -1,7 +1,7 @@
 'use strict'
 const React = require('react')
 const importJsx = require('import-jsx');
-const { observer } = require('mobx-react')
+// const { observer } = require('mobx-react')
 const { Box, Text } = require('ink');
 
 const AddFlavour = importJsx('./components/AddFlavour.js')
@@ -19,7 +19,7 @@ function returnComponent(type, line) {
 	}
 }
 
-const App = observer(() => (
+const App = () => (
 	<Box key="root" flexDirection='column'>{
 		Object.keys(setting).map(type => {
 			return <Box key={type} flexDirection='row'>{
@@ -28,6 +28,6 @@ const App = observer(() => (
 		})
 		}
 	</Box>
-))
+)
 
 module.exports = App
