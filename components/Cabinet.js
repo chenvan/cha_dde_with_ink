@@ -7,6 +7,11 @@ const { setAdvise, fetchDDE } = require("../util/fetchDDE")
 const { logger } = require("../util/loggerHelper")
 const { speakTwice } = require("../util/speak")
 
+/*
+出柜状态: 停止 > (出柜号) > 监控 > (检查半柜电眼完成) > 完成 > (出柜号为空) > 停止
+                               > (出柜号为空) > 停止
+*/
+
 const Cabinet = ({line, serverName, config, weightBellAccu}) => {
   const cabinetTotal = useRef(0)
 
@@ -83,7 +88,5 @@ const Cabinet = ({line, serverName, config, weightBellAccu}) => {
     </Text>
   )
 }
-
-
 
 module.exports = Cabinet

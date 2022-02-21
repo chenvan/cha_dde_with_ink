@@ -8,11 +8,14 @@ const { useState, useEffect, useRef } = require("react")
 const { Box, Text } = require("ink")
 const { useInterval } = require("../util/customHook.js")
 
+/*
+设备状态: 停止 > (父状态为监控) > 监控 > (父状态为其他) > 停止
+*/
+
 const Device = ({line, serverName, deviceName, maxDuration, itemName, parentState, detectState}) => {
 
-  const isDetect = useRef(detectState !== undefined)
-
-  const [state, setState] = useState(null)
+  const [state, setState] = useState("停止")
+  const [deviceState, setDeviceState] = useState(null)
   const [lastUpdateMoment, setLastUpdateMoment] = useState(Date.now())
   const [duration, setDuration] = useState(0)
   const [isWarning, setIsWarning] = useState(false)
@@ -21,7 +24,7 @@ const Device = ({line, serverName, deviceName, maxDuration, itemName, parentStat
   useEffect(() => {
     const init = async () => {
       await setAdvise(serverName, itemName, result => {
-        setState(parseInt(result.data, 10))
+        setDeviceState(parseInt(result.data, 10))
         setLastUpdateMoment(Date.now())
       })
     }
@@ -29,29 +32,39 @@ const Device = ({line, serverName, deviceName, maxDuration, itemName, parentStat
     init()
   }, [])
 
+  useEffect(() => {
+    if(parentState === "监控") {
+      if(detectState !== undefined && detectState === deviceState) {
+        setState("监控")
+      } else if(detectState === undefined) {
+        setState("监控")
+      }
+    } else {
+      if(state !== "停止") setState("停止")
+    }
+  }, [parentState, deviceState])
+
   // set interval to update duration
   useInterval(() => {
     setDuration((Date.now() - lastUpdateMoment) / 1000)
-  }, parentState === "监控" ? 1000 : null)
+  }, state === "监控" ? 1000 : null)
 
   useEffect(() => {
-    if((isDetect.current && detectState === state) || !isDetect.current) {
-      if(duration > maxDuration && !isWarning && parentState === "监控") {
-        logger.error(`${line} ${deviceName} 状态长时间不变.`)
-        speakTwice(`${line} ${deviceName} 状态长时间不变.`)
-        setIsWarning(true)
-      } else if(duration <= maxDuration /*|| parentState !== "监控"*/) {
-        // 在测试的时候可能逻辑不对, 但正常运行的时候应该没有问题
-        setIsWarning(false)
-      }
+    if(duration > maxDuration && !isWarning && state === "监控") {
+      logger.error(`${line} ${deviceName} 状态长时间不变.`)
+      speakTwice(`${line} ${deviceName} 状态长时间不变.`)
+      setIsWarning(true)
+    } else if(duration <= maxDuration || state === "停止") {
+      if(isWarning) setIsWarning(false)
     }
-  }, [duration, parentState])
+    
+  }, [duration, state]) // 需要把 state 放在这里吗 
 
   return (
     <Text color={isWarning? "red" : "black"}>
-      <Text>{`${deviceName}(${state}${isDetect.current ? " " + detectState : ""}) `}</Text>
+      <Text>{`${deviceName}(${state}) ${detectState !== undefined ? "监控值: " + detectState : ""}探测值: ${deviceState} `}</Text>
       {
-        !(isDetect.current && detectState !== state) && parentState === "监控" && 
+        state === "监控" && 
             <TimeComparator maxDuration={maxDuration} duration={duration} isWarning={isWarning} />
       }
     </Text>

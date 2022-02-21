@@ -43,10 +43,8 @@ const WeightBell = ({line, serverName, name, config, parentState, setParentState
     // }
     
     if(real > 10) {
-      // setParentState("监控")
       if(state === "待机" || state === "停止监控") setState("监控")
     } else if(real === 0 ) {
-      // setParentState("运行停止")
       if(state === "监控") setState("停止监控")
     } 
 

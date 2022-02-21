@@ -5,25 +5,21 @@
       "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_CurrRecName",
       "valueType": "string"
     },
-    "advise": {
-      "回潮批号": {
-        "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_CurrBatchNo",
-        "type": "id"
-      },
-      "除杂批号": {
-        "itemName": "Galaxy:ZY2_YPCylinder_JK.ProductUnit.Batch_Now",
-        "type": "id"
-      },
+    "id": {
+      "回潮": {"itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_CurrBatchNo"},
+      "除杂": {"itemName": "Galaxy:ZY2_YPCylinder_JK.ProductUnit.Batch_Now"}
+    },
+    "device": {
       "切片前输送带": {
         "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP1_M1_STATE",
         "type": "device",
-        "maxTime": 90,
+        "maxDuration": 90,
         "detectState": 33
       },
       "切片出口电眼": {
         "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_1",
         "type": "device",
-        "maxTime": 20,
+        "maxDuration": 20,
         "detectState": 0
       }
     },
@@ -45,7 +41,7 @@
           "name":"主秤入口电眼",
           "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_2",
           "type": "device",
-          "maxTime": 20,
+          "maxDuration": 20,
           "detectState": 0
         }
       },
@@ -66,7 +62,7 @@
           "name":"薄片秤定量管高电眼",
           "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.Feed205.Switch.High",
           "type": "device",
-          "maxTime": 40
+          "maxDuration": 40
         }
       }
     }
