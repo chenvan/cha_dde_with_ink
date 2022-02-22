@@ -1,13 +1,14 @@
 'use strict'
 
 const React = require("react")
-const { useState, useEffect, useRef } = require("react")
+const { useState, useEffect, useContext } = require("react")
 const { Box, Text } = require("ink")
 const { fetchDDE } = require("../util/fetchDDE")
 const { logger } = require("../util/loggerHelper")
 const { useInterval } = require("../util/customHook.js")
 const importJsx = require('import-jsx')
 const { speakTwice } = require("../util/speak")
+const ErrContext = require('./ErrorContext')
 
 const Device = importJsx('./Device.js')
 
@@ -25,6 +26,7 @@ const WeightBell = ({line, serverName, name, config, parentState, setParentState
   const [setting, setSetting] = useState(0)
   const [real, setReal] = useState(0)
   const [accu, setAccu] = useState(0)
+  const errHandler = useContext(ErrContext)
 
   const [isWarning, setIsWarning] = useState(false)
 

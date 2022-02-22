@@ -3,15 +3,15 @@
 const config = require("../config/AddFlavour.json")
 
 const React= require("react")
-const { useState, useEffect, useRef } = require("react")
+const { useState, useEffect } = require("react")
 const importJsx = require('import-jsx')
-const { useInterval } = require("../util/customHook.js")
 const { setAdvise, fetchDDE } = require("../util/fetchDDE")
-const { Box, Text, Newline } = require('ink')
+const { Box, Text } = require('ink')
 
 const Device = importJsx('./Device.js')
 const Cabinet = importJsx('./Cabinet.js')
 const WeightBell = importJsx('./WeightBell.js')
+const ErrProvider = importJsx('./ErrorProvider.js')
 
 /*
   状态: 停止 > (获得Id) > 待机 > (主秤实际流量大于0) > 监控 > (主秤流量等于0) > 停止监控 > (主秤实际流量大于0) > 监控
@@ -69,36 +69,38 @@ const AddFlavour = ({line}) => {
   return (
     <Box key={line} flexDirection="column">
       <Text>{`${line}(${state})`}</Text>
-      <WeightBell 
-        line={line}
-        serverName={config[line].serverName}
-        name={"主秤"}
-        config={config[line].mainWeightBell}
-        parentState={state}
-        setParentState={setState}
-        setAccuFromParent={setWeightBellAccu}
-      />
-      <Cabinet 
-        line={line}
-        serverName={config[line].serverName}
-        config={config[line].cabinet}
-        weightBellAccu={weightBellAccu}
-      />
-      {
-        Object.entries(config[line].device).map(
-          ([deviceName, deviceConfig]) => {
-            let data = {
-              ...deviceConfig,
-              "line": line,
-              "serverName": config[line].serverName,
-              "deviceName": deviceName,
-              "parentState": state
-            }
+      <ErrProvider serverName={config[line].serverName} >
+        <WeightBell 
+          line={line}
+          serverName={config[line].serverName}
+          name={"主秤"}
+          config={config[line].mainWeightBell}
+          parentState={state}
+          setParentState={setState}
+          setAccuFromParent={setWeightBellAccu}
+        />
+        <Cabinet 
+          line={line}
+          serverName={config[line].serverName}
+          config={config[line].cabinet}
+          weightBellAccu={weightBellAccu}
+        />
+        {
+          Object.entries(config[line].device).map(
+            ([deviceName, deviceConfig]) => {
+              let data = {
+                ...deviceConfig,
+                "line": line,
+                "serverName": config[line].serverName,
+                "deviceName": deviceName,
+                "parentState": state
+              }
 
-            return <Device {...data} />
-          }
-        )
-      }
+              return <Device {...data} />
+            }
+          )
+        }
+      </ErrProvider>
     </Box>
   )
 }
