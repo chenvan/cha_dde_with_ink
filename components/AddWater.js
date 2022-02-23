@@ -1,4 +1,5 @@
 'use strict'
+
 const config = require("../config/AddWater.json")
 
 const React= require("react")
@@ -8,9 +9,8 @@ const { setAdvise, fetchDDE } = require("../util/fetchDDE")
 const { Box, Text } = require('ink')
 
 const Device = importJsx('./Device.js')
-const Cabinet = importJsx('./Cabinet.js')
 const WeightBell = importJsx('./WeightBell.js')
-const ErrProvider = importJsx('./ErrorProvider.js')
+const Provider = importJsx('./Provider.js')
 
 /*
   状态: 停止 > (两Id一致且不为空) > 待机 > (主秤实际流量大于0) > 监控 > (主秤流量等于0) > 停止监控 > (主秤实际流量大于0) > 监控
@@ -21,7 +21,6 @@ const AddWater = ({line}) => {
   const [state, setState] = useState("停止")
   const [idList, setIdList] = useState(["", ""])
   const [brandName, setBrandName] = useState("")
-  const [weightBellAccu, setWeightBellAccu] = useState(0)
 
   useEffect(() => {
     const init = async () => {
@@ -74,19 +73,15 @@ const AddWater = ({line}) => {
   return (
     <Box key={line} flexDirection="column" margin={1} padding={1} borderStyle="single" width="50%">
       <Text>{`${line}(${state})`}</Text>
-      <ErrProvider serverName={config[line].serverName}>
+      <Text>{brandName}</Text>
+      <Provider serverName={config[line].serverName} line={line}>
         <WeightBell 
-          line={line}
-          serverName={config[line].serverName}
           name={"主秤"}
           config={config[line].weightBell["主秤"]}
           parentState={state}
           setParentState={setState}
-          setAccuFromParent={setWeightBellAccu}
         />
         <WeightBell 
-          line={line}
-          serverName={config[line].serverName}
           name={"薄片秤"}
           config={config[line].weightBell["薄片秤"]}
           parentState={state}
@@ -96,8 +91,6 @@ const AddWater = ({line}) => {
             ([deviceName, deviceConfig]) => {
               let data = {
                 ...deviceConfig,
-                "line": line,
-                "serverName": config[line].serverName,
                 "deviceName": deviceName,
                 "parentState": state
               }
@@ -106,7 +99,7 @@ const AddWater = ({line}) => {
             }
           )
         }
-      </ErrProvider>
+      </Provider>
     </Box>
   )
 }

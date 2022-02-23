@@ -11,7 +11,7 @@ const { Box, Text, useStdout } = require('ink')
 const Device = importJsx('./Device.js')
 const Cabinet = importJsx('./Cabinet.js')
 const WeightBell = importJsx('./WeightBell.js')
-const ErrProvider = importJsx('./ErrorProvider.js')
+const Provider = importJsx('./Provider.js')
 
 /*
   状态: 停止 > (获得Id) > 待机 > (主秤实际流量大于0) > 监控 > (主秤流量等于0) > 停止监控 > (主秤实际流量大于0) > 监控
@@ -75,10 +75,9 @@ const AddFlavour = ({line}) => {
   return (
     <Box key={line} flexDirection="column" margin={1} padding={1} borderStyle="single" width="50%">
       <Text>{`${line}(${state})`}</Text>
-      <ErrProvider serverName={config[line].serverName} >
+      <Text>{brandName}</Text>
+      <Provider serverName={config[line].serverName} line={line} >
         <WeightBell 
-          line={line}
-          serverName={config[line].serverName}
           name={"主秤"}
           config={config[line].mainWeightBell}
           parentState={state}
@@ -86,8 +85,6 @@ const AddFlavour = ({line}) => {
           setAccuFromParent={setWeightBellAccu}
         />
         <Cabinet 
-          line={line}
-          serverName={config[line].serverName}
           config={config[line].cabinet}
           weightBellAccu={weightBellAccu}
         />
@@ -96,8 +93,6 @@ const AddFlavour = ({line}) => {
             ([deviceName, deviceConfig]) => {
               let data = {
                 ...deviceConfig,
-                "line": line,
-                "serverName": config[line].serverName,
                 "deviceName": deviceName,
                 "parentState": state
               }
@@ -106,7 +101,7 @@ const AddFlavour = ({line}) => {
             }
           )
         }
-      </ErrProvider>
+      </Provider>
     </Box>
   )
 }

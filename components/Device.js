@@ -4,22 +4,24 @@ const { setAdvise } = require("../util/fetchDDE")
 const { logger } = require("../util/loggerHelper")
 const { speakTwice } = require("../util/speak")
 const React = require("react")
-const { useState, useEffect, useRef } = require("react")
+const { useState, useEffect, useContext } = require("react")
 const { Box, Text } = require("ink")
 const { useInterval } = require("../util/customHook.js")
+const Context = require('./Context')
 
 /*
 设备状态: 停止 > (父状态为监控) > 监控 > (父状态为其他) > 停止
 */
 
-const Device = ({line, serverName, deviceName, maxDuration, itemName, parentState, detectState}) => {
+const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) => {
 
   const [state, setState] = useState("停止")
   const [deviceState, setDeviceState] = useState(null)
   const [lastUpdateMoment, setLastUpdateMoment] = useState(Date.now())
   const [duration, setDuration] = useState(0)
   const [isWarning, setIsWarning] = useState(false)
-  
+  const {setIsErr, serverName, line} = useContext(Context)
+
   // init state listen
   useEffect(() => {
     const init = async () => {

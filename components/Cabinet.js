@@ -1,22 +1,25 @@
 'use strict'
 
 const React = require("react")
-const { useState, useEffect, useRef } = require("react")
+const { useState, useEffect, useContext, useRef } = require("react")
 const { Box, Text } = require("ink")
 const { setAdvise, fetchDDE } = require("../util/fetchDDE")
 const { logger } = require("../util/loggerHelper")
 const { speakTwice } = require("../util/speak")
+const Context = require('./Context')
 
 /*
-出柜状态: 停止 > (出柜号) > 监控 > (检查半柜电眼完成) > 完成 > (出柜号为空) > 停止
+出柜状态: 停止 > (出柜号) > 监控 > (检查半柜电眼为空) > 完成 > (出柜号为空) > 停止
+                               > (检查半柜电眼为亮) > 未转高速                            
                                > (出柜号为空) > 停止
 */
 
-const Cabinet = ({line, serverName, config, weightBellAccu}) => {
+const Cabinet = ({config, weightBellAccu}) => {
   const cabinetTotal = useRef(0)
 
   const [cabinetNr, setCabinetNr] = useState("")
   const [state, setState] = useState("停止")
+  const {setIsErr, serverName, line} = useContext(Context)
   // const [isWarning, setIsWarning] = useState(false)
 
   useEffect(() => {
@@ -31,12 +34,12 @@ const Cabinet = ({line, serverName, config, weightBellAccu}) => {
 
   useEffect(() => {
     const updateCabinetInfo = async () => {
-      if (state === "监控") {
-        logger.error(`监控状态下, 出柜号发生更换`)
-        speakTwice(`${line} 监控状态下, 出柜号发生更换`)
-      }
 
       if(cabinetNr === "") {
+        if (state === "监控") {
+          logger.error(`${line} 监控状态下, 出柜号发生更换`)
+          speakTwice(`${line} 监控状态下, 出柜号发生更换`)
+        }
         setState("停止")
       }
 
@@ -66,7 +69,7 @@ const Cabinet = ({line, serverName, config, weightBellAccu}) => {
           config[cabinetNr]["halfEye"].valueType,
         )
         
-        logger.info(`halfEyeState: ${halfEyeState}`)
+        logger.info(`${line} halfEyeState: ${halfEyeState}`)
   
         if(halfEyeState === 1) {
           logger.error(`${line} 加料出柜未转高速`)

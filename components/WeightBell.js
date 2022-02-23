@@ -8,7 +8,7 @@ const { logger } = require("../util/loggerHelper")
 const { useInterval } = require("../util/customHook.js")
 const importJsx = require('import-jsx')
 const { speakTwice } = require("../util/speak")
-const ErrContext = require('./ErrorContext')
+const Context = require('./Context')
 
 const Device = importJsx('./Device.js')
 
@@ -20,13 +20,13 @@ const Device = importJsx('./Device.js')
   主秤有 setParentState 和 setAccuFromParent
 
 */
-const WeightBell = ({line, serverName, name, config, parentState, setParentState, setAccuFromParent}) => {
+const WeightBell = ({name, config, parentState, setParentState, setAccuFromParent}) => {
   
   const [state, setState] = useState("停止")
   const [setting, setSetting] = useState(0)
   const [real, setReal] = useState(0)
   const [accu, setAccu] = useState(0)
-  const errHandler = useContext(ErrContext)
+  const {setIsErr, serverName, line} = useContext(Context)
 
   const [isWarning, setIsWarning] = useState(false)
 
@@ -84,8 +84,6 @@ const WeightBell = ({line, serverName, name, config, parentState, setParentState
     <>
       <Text>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
       <Device 
-        line={line}
-        serverName={serverName}
         {... config["electEye"]}
         parentState={state}
       />
