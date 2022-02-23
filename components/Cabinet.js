@@ -14,7 +14,7 @@ const Context = require('./Context')
                                > (出柜号为空) > 停止
 */
 
-const Cabinet = ({config, weightBellAccu}) => {
+const Cabinet = ({config, wbAccu}) => {
   const cabinetTotal = useRef(0)
 
   const [cabinetNr, setCabinetNr] = useState("")
@@ -61,7 +61,7 @@ const Cabinet = ({config, weightBellAccu}) => {
 
   useEffect(() => {
     const checkHalfEyeState = async () => {
-      if(state === "监控" && cabinetTotal.current - weightBellAccu < config[cabinetNr].reference.diff) {
+      if(state === "监控" && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
       
         let halfEyeState = await fetchDDE(
           serverName, 
@@ -82,13 +82,13 @@ const Cabinet = ({config, weightBellAccu}) => {
     }
     
     checkHalfEyeState()
-  }, [weightBellAccu])
+  }, [wbAccu])
 
 
   return (
     <>
       <Text>{`出柜(${state}): ${cabinetNr % 10}`}</Text>
-      <Text>{`${cabinetTotal.current} - ${weightBellAccu} = ${cabinetTotal.current - weightBellAccu}`}</Text>
+      <Text>{`${cabinetTotal.current} - ${wbAccu} = ${cabinetTotal.current - wbAccu}`}</Text>
     </>
   )
 }

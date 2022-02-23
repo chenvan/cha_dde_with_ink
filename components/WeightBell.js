@@ -20,7 +20,7 @@ const Device = importJsx('./Device.js')
   主秤有 setParentState 和 setAccuFromParent
 
 */
-const WeightBell = ({name, config, parentState, setParentState, setAccuFromParent}) => {
+const WeightBell = ({name, config, parentState, setParentState, setAccuFromParent, setSettingFromParent}) => {
   
   const [state, setState] = useState("停止")
   const [setting, setSetting] = useState(0)
@@ -70,8 +70,10 @@ const WeightBell = ({name, config, parentState, setParentState, setAccuFromParen
       if (state === "待机") {
         const setting =  await fetchDDE(serverName, config.setting.itemName, config.setting.valueType)
         setSetting(setting)
+        if(setSettingFromParent !== undefined) setSettingFromParent(setting)
       } else if(state === "停止") {
         setSetting(0)
+        if(setSettingFromParent !== undefined) setSettingFromParent(0)
       } else if(state === "监控" || state === "停止监控") {
         if(setParentState !== undefined) setParentState(state)
       }

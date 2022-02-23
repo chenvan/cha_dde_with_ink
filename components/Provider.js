@@ -1,8 +1,10 @@
 const React = require("react")
-const { useState } = require("react")
+const { useState, useContext } = require("react")
 const { Text } = require('ink')
+const { testServerConnect } = require("../util/fetchUtil")
 const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
+const { logger } = require("../util/loggerHelper")
 
 const Provider = ({serverName, line, children}) => {
   const [isErr, setIsErr] = useState(false)
@@ -10,12 +12,13 @@ const Provider = ({serverName, line, children}) => {
   useInterval(async () => {
     try {
       if(isErr) {
-
+        await testServerConnect(serverName)
+        setIsErr(false)
       } 
-    } catch(err) {
-
+    } catch(err) { 
+      logger.error(`${line} ${err}`)
     }
-  }, isErr ? 1000 * 10 : null)
+  }, isErr ? 1000 * 60 : null)
   
   return (
     <Context.Provider value={{setIsErr, line, serverName}}>

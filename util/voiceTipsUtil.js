@@ -24,11 +24,6 @@ VoiceTips的结构
 */
 
 
-function loadVoiceTips(line, fileName) {
-    const voiceTipsConfig =  require(`../config/VoiceTips/${fileName}.json`)
-    return voiceTipsConfig[line]
-}
-
 function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu) {
     let passSeconds = accu / setting * 3600
     
@@ -59,13 +54,12 @@ function setReadyVoiceTips(readyVoiceTips, brandName) {
     })
 }
 
-function clearVoiceTips(timeoutList) {
-    timeoutList.forEach(timeout => clearTimeout(timeout))
+function clearVoiceTips(timeIdList) {
+    timeIdList.forEach(timeId => clearTimeout(timeId))
 }
 
 module.exports = {
     setRunningVoiceTips,
     setReadyVoiceTips,
-    clearVoiceTips,
-    loadVoiceTips
+    clearVoiceTips
 }

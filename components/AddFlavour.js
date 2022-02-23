@@ -1,11 +1,14 @@
 'use strict'
 
 const config = require("../config/AddFlavour.json")
+const VoiceTips = require("../config/VoiceTips/加料.json")
 
 const React= require("react")
-const { useState, useEffect } = require("react")
+const { useState, useEffect, useRef } = require("react")
 const importJsx = require('import-jsx')
-const { setAdvise, fetchDDE } = require("../util/fetchDDE")
+const { setAdvise } = require("../util/fetchDDE")
+const { fetchBrandName } = require("../util/fetchUtil")
+const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
 const { Box, Text, useStdout } = require('ink')
 
 const Device = importJsx('./Device.js')
@@ -15,7 +18,7 @@ const Provider = importJsx('./Provider.js')
 
 /*
   状态: 停止 > (获得Id) > 待机 > (主秤实际流量大于0) > 监控 > (主秤流量等于0) > 停止监控 > (主秤实际流量大于0) > 监控
-                                                                                    > (获得空Id) > 停止
+                                                                                     > (获得空Id) > 停止
 */
 
 const AddFlavour = ({line}) => {
@@ -23,9 +26,12 @@ const AddFlavour = ({line}) => {
   const [state, setState] = useState("停止")
   const [id, setId] = useState("")
   const [brandName, setBrandName] = useState("")
-  const [weightBellAccu, setWeightBellAccu] = useState(0)
+  const [wbAccu, setWbAccu] = useState(0)
+  const [wbSetting, setWbSetting] = useState(0)
   // const { stdout, write} = useStdout()
   // const voiceTimeIdList = useRef([])
+  const readyTimeIdList = useRef([])
+  const runningTimeIdList = useRef([])
 
   useEffect(() => {
     const init = async () => {
@@ -51,20 +57,29 @@ const AddFlavour = ({line}) => {
   useEffect(() => {
     const stateChangeEffect = async () => {
       if(state === "待机") {
-        // 加载准备语音
-  
+        
         // 获取烟牌名字
-        let brandName = await fetchDDE(config[line].serverName, config[line].brandName.itemName, config[line].brandName.valueType)
+        let brandName = await fetchBrandName(config[line].serverName, config[line].brandName.itemName, config[line].brandName.valueType)
         setBrandName(brandName)
+        
+        // 加载准备语音
+        readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName)
         
         // 检查各种参数
   
       } else if(state === "监控") {
+        // 清除准备语音
+        clearVoiceTips(readyTimeIdList.current)
+        
         // 加载监控语音
+        runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu)
+      
       } else if(state === "停止监控") {
         // 清除监控语音
+        clearVoiceTips(runningTimeIdList.current)
       } else if(state === "停止") {
         // 清除监控语音
+        clearVoiceTips(runningTimeIdList.current)
       }
     }
 
@@ -82,11 +97,12 @@ const AddFlavour = ({line}) => {
           config={config[line].mainWeightBell}
           parentState={state}
           setParentState={setState}
-          setAccuFromParent={setWeightBellAccu}
+          setAccuFromParent={setWbAccu}
+          setSettingFromParent={setWbSetting}
         />
         <Cabinet 
           config={config[line].cabinet}
-          weightBellAccu={weightBellAccu}
+          wbAccu={wbAccu}
         />
         {
           Object.entries(config[line].device).map(

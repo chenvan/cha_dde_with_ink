@@ -11,14 +11,9 @@ async function testServerConnect(serverName) {
     let seconds = await fetchDDE(serverName, "$Second", "int")
 }
 
-// async function initSetAdvice(serverName, itemName, setState) {
-//     await setAdvise(serverName, itemName, result => {
-//         setState(parseInt(result.data, 10))
-//     })
-// }
+
 
 module.exports = {
     fetchBrandName,
     testServerConnect
-    // initSetAdvice
 }
