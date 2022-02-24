@@ -8,7 +8,7 @@ const { useState, useEffect, useRef } = require("react")
 const importJsx = require('import-jsx')
 const { setAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
-const { Box, Text } = require('ink')
+const { Box, Text, useStdout } = require('ink')
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
 
 const Device = importJsx('./Device.js')
@@ -28,6 +28,7 @@ const AddWater = ({line}) => {
   const [wbSetting, setWbSetting] = useState(0)
   const readyTimeIdList = useRef([])
   const runningTimeIdList = useRef([])
+  const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
@@ -61,7 +62,7 @@ const AddWater = ({line}) => {
         setBrandName(brandName)
 
         // 加载准备语音
-        readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName)
+        readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
         
         // 检查各种参数
   
@@ -70,7 +71,7 @@ const AddWater = ({line}) => {
         readyTimeIdList.current = clearVoiceTips(readyTimeIdList.current)
         
         // 加载监控语音
-        runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu)
+        runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu, write)
       } else if(state === "停止监控") {
         // 清除监控语音
         runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)

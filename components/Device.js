@@ -5,7 +5,7 @@ const { logger } = require("../util/loggerHelper")
 const { speakTwice } = require("../util/speak")
 const React = require("react")
 const { useState, useEffect, useContext } = require("react")
-const { Box, Text } = require("ink")
+const { Box, Text, useStdout } = require("ink")
 const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
 
@@ -21,6 +21,7 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
   const [duration, setDuration] = useState(0)
   const [isWarning, setIsWarning] = useState(false)
   const {setIsErr, serverName, line} = useContext(Context)
+  const { write } = useStdout()
 
   // init state listen
   useEffect(() => {
@@ -54,8 +55,9 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
 
   useEffect(() => {
     if(duration > maxDuration && !isWarning && state === "监控") {
-      logger.error(`${line} ${deviceName} 状态长时间不变.`)
-      speakTwice(`${line} ${deviceName} 状态长时间不变.`)
+      logger.error(`${line} ${deviceName} 异常.`)
+      speakTwice(`${line} ${deviceName} 异常.`)
+      write(`${line} ${deviceName} 异常.\n`)
       setIsWarning(true)
     } else if(duration <= maxDuration || state === "停止") {
       if(isWarning) setIsWarning(false)

@@ -32,6 +32,7 @@ const AddFlavour = ({line}) => {
   // const voiceTimeIdList = useRef([])
   const readyTimeIdList = useRef([])
   const runningTimeIdList = useRef([])
+  const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
@@ -63,7 +64,7 @@ const AddFlavour = ({line}) => {
         setBrandName(brandName)
         
         // 加载准备语音
-        readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName)
+        readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
         
         // 检查各种参数
   
@@ -72,7 +73,7 @@ const AddFlavour = ({line}) => {
         readyTimeIdList.current = clearVoiceTips(readyTimeIdList.current)
         
         // 加载监控语音
-        runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu)
+        runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu, write)
       
       } else if(state === "停止监控") {
         // 清除监控语音

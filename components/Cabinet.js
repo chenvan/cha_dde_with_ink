@@ -2,7 +2,7 @@
 
 const React = require("react")
 const { useState, useEffect, useContext, useRef } = require("react")
-const { Box, Text } = require("ink")
+const { Box, Text, useStdout } = require("ink")
 const { setAdvise, fetchDDE } = require("../util/fetchDDE")
 const { logger } = require("../util/loggerHelper")
 const { speakTwice } = require("../util/speak")
@@ -21,6 +21,7 @@ const Cabinet = ({config, wbAccu}) => {
   const [state, setState] = useState("停止")
   const {setIsErr, serverName, line} = useContext(Context)
   // const [isWarning, setIsWarning] = useState(false)
+  const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
@@ -39,6 +40,7 @@ const Cabinet = ({config, wbAccu}) => {
         if (state === "监控") {
           logger.error(`${line} 监控状态下, 出柜号发生更换`)
           speakTwice(`${line} 监控状态下, 出柜号发生更换`)
+          write(`${line} 监控状态下, 出柜号发生更换\n`)
         }
         setState("停止")
       }
@@ -74,6 +76,7 @@ const Cabinet = ({config, wbAccu}) => {
         if(halfEyeState === 1) {
           logger.error(`${line} 加料出柜未转高速`)
           speakTwice(`${line} 加料出柜未转高速`)
+          write(`${line} 加料出柜未转高速`)
           setState("未转高速")
         } else {
           setState("完成")

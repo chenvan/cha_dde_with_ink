@@ -68,9 +68,17 @@ const WeightBell = ({name, config, parentState, setParentState, setAccuFromParen
   useEffect(() => {
     const stateChangeEffect = async() => {
       if (state === "待机") {
-        const setting =  await fetchDDE(serverName, config.setting.itemName, config.setting.valueType)
+        // 在这里需要获取累积量， 是因为在运行期间开Mon，没有第一时间更新累计值，会导致语音出问题
+        const [setting, accu] =  await Promise.all([
+          fetchDDE(serverName, config.setting.itemName, config.setting.valueType),
+          fetchDDE(serverName, config.accu.itemName, config.accu.valueType)
+        ])
+        
         setSetting(setting)
+        setAccu(accu)
+
         if(setSettingFromParent !== undefined) setSettingFromParent(setting)
+        if(setAccuFromParent !== undefined) setAccuFromParent(accu)
       } else if(state === "停止") {
         setSetting(0)
         if(setSettingFromParent !== undefined) setSettingFromParent(0)

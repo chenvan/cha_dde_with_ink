@@ -24,7 +24,7 @@ VoiceTips的结构
 */
 
 
-function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu) {
+function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu, write) {
     let passSeconds = accu / setting * 3600
     
     return runningVoiceTips.filter(voiceTip => {
@@ -35,21 +35,25 @@ function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu) {
         return false
     }).map(voiceTip => {
         return setTimeout(() => {
+            let now = new Date()
             speakTwice(voiceTip.content)
             logger.info(`运行语音: ${voiceTip.content}`)
+            write(`${now.toDateString()}: ${voiceTip.content}\n`)
         }, (voiceTip.offset - passSeconds) * 1000)
     })
 }
 
-function setReadyVoiceTips(readyVoiceTips, brandName) {
+function setReadyVoiceTips(readyVoiceTips, brandName, write) {
     return readyVoiceTips.filter(voiceTip => {
         if(!voiceTip.hasOwnProperty("filter")) return true
         if(voiceTip.filter.includes(brandName)) return true
         return false
     }).map(voiceTip => {
         return setTimeout(() => {
+            let now = new Date()
             speakTwice(voiceTip.content)
             logger.info(`准备语音: ${voiceTip.content}`)
+            write(`${now.toDateString()}: ${voiceTip.content}\n`)
         }, voiceTip.offset * 1000)
     })
 }
