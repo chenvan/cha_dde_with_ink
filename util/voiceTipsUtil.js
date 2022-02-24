@@ -56,6 +56,7 @@ function setReadyVoiceTips(readyVoiceTips, brandName) {
 
 function clearVoiceTips(timeIdList) {
     timeIdList.forEach(timeId => clearTimeout(timeId))
+    return []
 }
 
 module.exports = {

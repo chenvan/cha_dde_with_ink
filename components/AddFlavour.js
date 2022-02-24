@@ -69,17 +69,17 @@ const AddFlavour = ({line}) => {
   
       } else if(state === "监控") {
         // 清除准备语音
-        clearVoiceTips(readyTimeIdList.current)
+        readyTimeIdList.current = clearVoiceTips(readyTimeIdList.current)
         
         // 加载监控语音
         runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu)
       
       } else if(state === "停止监控") {
         // 清除监控语音
-        clearVoiceTips(runningTimeIdList.current)
+        runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
       } else if(state === "停止") {
         // 清除监控语音
-        clearVoiceTips(runningTimeIdList.current)
+        runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
       }
     }
 
