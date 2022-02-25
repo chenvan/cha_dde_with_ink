@@ -1,5 +1,4 @@
-const { speakTwice } = require('./speak.js')
-const { logger } = require('./loggerHelper')
+const { speakVoiceTip } = require('./speak.js')
 
 /* 
 VoiceTips 包含 准备段 和 运行段
@@ -23,8 +22,7 @@ VoiceTips的结构
 }
 */
 
-
-function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu, write) {
+function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu, writeToStdout) {
     let passSeconds = accu / setting * 3600
     
     return runningVoiceTips.filter(voiceTip => {
@@ -35,25 +33,19 @@ function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu, write) 
         return false
     }).map(voiceTip => {
         return setTimeout(() => {
-            let now = new Date()
-            speakTwice(voiceTip.content)
-            logger.info(`运行语音: ${voiceTip.content}`)
-            write(`${now.toDateString()}: ${voiceTip.content}\n`)
+            speakVoiceTip(voiceTip.content, writeToStdout)
         }, (voiceTip.offset - passSeconds) * 1000)
     })
 }
 
-function setReadyVoiceTips(readyVoiceTips, brandName, write) {
+function setReadyVoiceTips(readyVoiceTips, brandName, writeToStdout) {
     return readyVoiceTips.filter(voiceTip => {
         if(!voiceTip.hasOwnProperty("filter")) return true
         if(voiceTip.filter.includes(brandName)) return true
         return false
     }).map(voiceTip => {
         return setTimeout(() => {
-            let now = new Date()
-            speakTwice(voiceTip.content)
-            logger.info(`准备语音: ${voiceTip.content}`)
-            write(`${now.toDateString()}: ${voiceTip.content}\n`)
+            speakVoiceTip(voiceTip.content, writeToStdout)
         }, voiceTip.offset * 1000)
     })
 }

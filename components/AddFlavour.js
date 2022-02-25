@@ -24,12 +24,11 @@ const Provider = importJsx('./Provider.js')
 const AddFlavour = ({line}) => {
 
   const [state, setState] = useState("停止")
+  const [isErr, setIsErr] = useState(false)
   const [id, setId] = useState("")
   const [brandName, setBrandName] = useState("")
   const [wbAccu, setWbAccu] = useState(0)
   const [wbSetting, setWbSetting] = useState(0)
-  // const { stdout, write} = useStdout()
-  // const voiceTimeIdList = useRef([])
   const readyTimeIdList = useRef([])
   const runningTimeIdList = useRef([])
   const { write } = useStdout()
@@ -44,12 +43,6 @@ const AddFlavour = ({line}) => {
     init()
   }, [])
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => {write("hello from ink stdout")}, 1000)
-
-  //   return () => {clearInterval(timer)}
-  // }, [])
-
   useEffect(() => {
     let state = id ? "待机" : "停止" 
     setState(state)
@@ -57,30 +50,35 @@ const AddFlavour = ({line}) => {
 
   useEffect(() => {
     const stateChangeEffect = async () => {
-      if(state === "待机") {
+      try {
+        if(state === "待机") {
+          // 获取烟牌名字
+          let brandName = await fetchBrandName(config[line].serverName, config[line].brandName.itemName, config[line].brandName.valueType)
+          setBrandName(brandName)
+          
+          // 加载准备语音
+          readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
+          
+          // 检查各种参数
+    
+        } else if(state === "监控") {
+          // 清除准备语音
+          readyTimeIdList.current = clearVoiceTips(readyTimeIdList.current)
+          
+          // 加载监控语音
+          runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu, write)
         
-        // 获取烟牌名字
-        let brandName = await fetchBrandName(config[line].serverName, config[line].brandName.itemName, config[line].brandName.valueType)
-        setBrandName(brandName)
-        
-        // 加载准备语音
-        readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
-        
-        // 检查各种参数
-  
-      } else if(state === "监控") {
-        // 清除准备语音
-        readyTimeIdList.current = clearVoiceTips(readyTimeIdList.current)
-        
-        // 加载监控语音
-        runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu, write)
-      
-      } else if(state === "停止监控") {
-        // 清除监控语音
-        runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
-      } else if(state === "停止") {
-        // 清除监控语音
-        runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
+        } else if(state === "停止监控") {
+          // 清除监控语音
+          runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
+        } else if(state === "停止") {
+          // 清除监控语音
+          runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
+        }
+      } catch(err) {
+        setIsErr(true)
+        speakErr(`${line} 状态转换出现问题`, write)
+        logger.error(`${line} ${err}`)
       }
     }
 
@@ -92,7 +90,7 @@ const AddFlavour = ({line}) => {
     <Box key={line} flexDirection="column" margin={1} padding={1} borderStyle="single" width="50%">
       <Text>{`${line}(${state})`}</Text>
       <Text>{brandName}</Text>
-      <Provider serverName={config[line].serverName} line={line} >
+      <Provider serverName={config[line].serverName} line={line} isErr={isErr} setIsErr={setIsErr}>
         <WeightBell 
           name={"主秤"}
           config={config[line].mainWeightBell}

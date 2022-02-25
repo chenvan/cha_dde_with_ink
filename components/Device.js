@@ -2,7 +2,7 @@
 
 const { setAdvise } = require("../util/fetchDDE")
 const { logger } = require("../util/loggerHelper")
-const { speakTwice } = require("../util/speak")
+const { speakWarning } = require("../util/speak")
 const React = require("react")
 const { useState, useEffect, useContext } = require("react")
 const { Box, Text, useStdout } = require("ink")
@@ -20,7 +20,7 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
   const [lastUpdateMoment, setLastUpdateMoment] = useState(Date.now())
   const [duration, setDuration] = useState(0)
   const [isWarning, setIsWarning] = useState(false)
-  const {setIsErr, serverName, line} = useContext(Context)
+  const { serverName, line } = useContext(Context)
   const { write } = useStdout()
 
   // init state listen
@@ -55,9 +55,7 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
 
   useEffect(() => {
     if(duration > maxDuration && !isWarning && state === "监控") {
-      logger.error(`${line} ${deviceName} 异常.`)
-      speakTwice(`${line} ${deviceName} 异常.`)
-      write(`${line} ${deviceName} 异常.\n`)
+      speakWarning(`${line} ${deviceName} 异常.`, write)
       setIsWarning(true)
     } else if(duration <= maxDuration || state === "停止") {
       if(isWarning) setIsWarning(false)

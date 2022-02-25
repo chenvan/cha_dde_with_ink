@@ -2,11 +2,11 @@
 
 const React = require("react")
 const { useState, useEffect, useContext, useRef } = require("react")
-const { Box, Text, useStdout } = require("ink")
+const { Text, useStdout } = require("ink")
 const { setAdvise, fetchDDE } = require("../util/fetchDDE")
-const { logger } = require("../util/loggerHelper")
-const { speakTwice } = require("../util/speak")
+const { speakErr } = require("../util/speak")
 const Context = require('./Context')
+const { logger } = require("../util/loggerHelper")
 
 /*
 出柜状态: 停止 > (出柜号) > 监控 > (检查半柜电眼为空) > 完成 > (出柜号为空) > 停止
@@ -20,7 +20,6 @@ const Cabinet = ({config, wbAccu}) => {
   const [cabinetNr, setCabinetNr] = useState("")
   const [state, setState] = useState("停止")
   const {setIsErr, serverName, line} = useContext(Context)
-  // const [isWarning, setIsWarning] = useState(false)
   const { write } = useStdout()
 
   useEffect(() => {
@@ -35,25 +34,28 @@ const Cabinet = ({config, wbAccu}) => {
 
   useEffect(() => {
     const updateCabinetInfo = async () => {
-
-      if(cabinetNr === "") {
-        if (state === "监控") {
-          logger.error(`${line} 监控状态下, 出柜号发生更换`)
-          speakTwice(`${line} 监控状态下, 出柜号发生更换`)
-          write(`${line} 监控状态下, 出柜号发生更换\n`)
+      try {
+        if(cabinetNr === "") {
+          if (state === "监控") {
+            speakErr(`${line} 监控状态下, 出柜号发生更换`, write)
+          }
+          setState("停止")
         }
-        setState("停止")
-      }
 
-      if(config.hasOwnProperty(cabinetNr)) {
-        cabinetTotal.current = await fetchDDE(
-          serverName,
-          config[cabinetNr]["total"].itemName,
-          config[cabinetNr]["total"].valueType
-        )
-        
-        setState("监控")
-        // 检查出柜频率
+        if(config.hasOwnProperty(cabinetNr)) {
+          cabinetTotal.current = await fetchDDE(
+            serverName,
+            config[cabinetNr]["total"].itemName,
+            config[cabinetNr]["total"].valueType
+          )
+          
+          setState("监控")
+          // 检查出柜频率
+        }
+      } catch(err) {
+        setIsErr(true)
+        speakErr(`${line} 获取出柜信息时发生错误`, write)
+        logger.error(`${line} ${err}`)
       }
     }
 
@@ -63,24 +65,28 @@ const Cabinet = ({config, wbAccu}) => {
 
   useEffect(() => {
     const checkHalfEyeState = async () => {
-      if(state === "监控" && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
-      
-        let halfEyeState = await fetchDDE(
-          serverName, 
-          config[cabinetNr]["halfEye"].itemName,
-          config[cabinetNr]["halfEye"].valueType,
-        )
+      try {
+        if(state === "监控" && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
         
-        logger.info(`${line} halfEyeState: ${halfEyeState}`)
-  
-        if(halfEyeState === 1) {
-          logger.error(`${line} 加料出柜未转高速`)
-          speakTwice(`${line} 加料出柜未转高速`)
-          write(`${line} 加料出柜未转高速`)
-          setState("未转高速")
-        } else {
-          setState("完成")
+          let halfEyeState = await fetchDDE(
+            serverName, 
+            config[cabinetNr]["halfEye"].itemName,
+            config[cabinetNr]["halfEye"].valueType,
+          )
+          
+          logger.info(`${line} 半柜电眼状态: ${halfEyeState}`)
+    
+          if(halfEyeState === 1) {
+            speakErr(`${line} 加料出柜未转高速`, write)
+            setState("未转高速")
+          } else {
+            setState("完成")
+          }
         }
+      } catch(err) {
+        setIsErr(true)
+        speakErr(`${line} 检查半柜电眼状态是出错`, write)
+        logger.error(`${line} ${err}`)
       }
     }
     

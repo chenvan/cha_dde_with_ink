@@ -6,8 +6,8 @@ const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
 const { logger } = require("../util/loggerHelper")
 
-const Provider = ({serverName, line, children}) => {
-  const [isErr, setIsErr] = useState(false)
+const Provider = ({serverName, line, isErr, setIsErr, children}) => {
+  // const [isErr, setIsErr] = useState(false)
 
   useInterval(async () => {
     try {
