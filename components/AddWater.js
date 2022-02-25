@@ -19,7 +19,7 @@ const Provider = importJsx('./Provider.js')
 
 /*
   状态: 停止 > (两Id一致且不为空) > 待机 > (主秤实际流量大于0) > 监控 > (主秤流量等于0) > 停止监控 > (主秤实际流量大于0) > 监控
-                                                                                             > (两Id为空Id) > 停止
+                                       > (主秤累计量大于0) > 停止监控                                                      > (两Id为空Id) > 停止
 */
 
 const AddWater = ({line}) => {
@@ -78,6 +78,7 @@ const AddWater = ({line}) => {
           runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu, write)
         } else if(state === "停止监控") {
           // 清除监控语音
+          readyTimeIdList.current = clearVoiceTips(readyTimeIdList.current)
           runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
         } else if(state === "停止") {
           // 清除监控语音

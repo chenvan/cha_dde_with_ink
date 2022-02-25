@@ -38,10 +38,10 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
   useEffect(() => {
     if(parentState === "监控") {
       if(detectState !== undefined) {
-        let state = detectState === deviceState ? "监控" : "停止"
-        setState(state)
+        let temp = detectState === deviceState ? "监控" : "停止"
+        if(state !== temp) setState(temp)
       } else if(detectState === undefined) {
-        setState("监控")
+        if(state !== "监控") setState("监控")
       }
     } else {
       if(state !== "停止") setState("停止")
@@ -51,7 +51,7 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
   // set interval to update duration
   useInterval(() => {
     setDuration((Date.now() - lastUpdateMoment) / 1000)
-  }, state === "监控" ? 1000 : null)
+  }, 1000)
 
   useEffect(() => {
     if(duration > maxDuration && !isWarning && state === "监控") {
@@ -61,7 +61,7 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
       if(isWarning) setIsWarning(false)
     }
     
-  }, [duration, state]) // 需要把 state 放在这里吗 
+  }, [duration]) // 需要把 state 放在这里吗 
 
   return (
     <Text color={isWarning? "red" : "white"}>

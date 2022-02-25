@@ -14,7 +14,8 @@ const Device = importJsx('./Device.js')
 
 /*
   秤的状态: 停止 > (父状态为待机) > 待机 > (实际流量大于0) > 监控 > (实际流量等于0) > 停止监控 > (实际流量大于 0) > 监控 
-                                                                                         > (父状态为停止) > 停止
+                                                                                       
+                                                                                           > (父状态为停止) > 停止
 
   主秤与普通秤的区别
   主秤有 setParentState 和 setAccuFromParent
@@ -46,7 +47,7 @@ const WeightBell = ({name, config, parentState, setParentState, setAccuFromParen
         setIsWarning(false)
       }
       
-      if(real > 10) {
+      if(real > 100) {
         if(state === "待机" || state === "停止监控") setState("监控")
       } else if(real === 0 ) {
         if(state === "监控") setState("停止监控")
@@ -61,7 +62,7 @@ const WeightBell = ({name, config, parentState, setParentState, setAccuFromParen
       logger.error(`${line} ${name} ${err}`)
     }
 
-  }, setting > 0 ? 1000 * 5 : null)
+  }, setting > 0 ? 1000 : null)
 
 
   useEffect(() => {
@@ -85,6 +86,8 @@ const WeightBell = ({name, config, parentState, setParentState, setAccuFromParen
           setSetting(setting)
           setAccu(accu)
 
+          // if(setting === 0) setState("停止")
+          if (accu > 0) setState("停止监控")
           if(setSettingFromParent !== undefined) setSettingFromParent(setting)
           if(setAccuFromParent !== undefined) setAccuFromParent(accu)
         } else if(state === "停止") {

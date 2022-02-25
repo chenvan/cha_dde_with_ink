@@ -18,7 +18,7 @@ const Provider = importJsx('./Provider.js')
 
 /*
   状态: 停止 > (获得Id) > 待机 > (主秤实际流量大于0) > 监控 > (主秤流量等于0) > 停止监控 > (主秤实际流量大于0) > 监控
-                                                                                     > (获得空Id) > 停止
+                              > (主秤累计流量大于0) > 停止监控                                                       > (获得空Id) > 停止
 */
 
 const AddFlavour = ({line}) => {
@@ -70,6 +70,7 @@ const AddFlavour = ({line}) => {
         
         } else if(state === "停止监控") {
           // 清除监控语音
+          readyTimeIdList.current = clearVoiceTips(readyTimeIdList.current)
           runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
         } else if(state === "停止") {
           // 清除监控语音

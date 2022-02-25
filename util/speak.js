@@ -27,7 +27,7 @@ function speakWarning(msg, writeToStdout) {
 
 function speakVoiceTip(tip, writeToStdout) {
   speakTwice(tip)
-  if(writeToStdout !== undefined) writeToStdout(`${now()} ${msg}\n`)
+  if(writeToStdout !== undefined) writeToStdout(`${now()} ${tip}\n`)
 }
 
 module.exports = {

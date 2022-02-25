@@ -8,7 +8,7 @@ const path = require('path')
     prod: 生产
 */
 
-let rootPath = path.join("D:","cha_dde","logs")
+let rootPath = path.join("D:","cha_dde_with_ink","logs")
 
 let infix = process.env.NODE_ENV === "dev" ? ".dev." : "test" ? ".test." : ".prod."
 
