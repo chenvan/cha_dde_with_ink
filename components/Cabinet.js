@@ -3,7 +3,7 @@
 const React = require("react")
 const { useState, useEffect, useContext, useRef } = require("react")
 const { Text, useStdout } = require("ink")
-const { setAdvise, fetchDDE } = require("../util/fetchDDE")
+const { setAdvise, fetchDDE, cancelAdvise } = require("../util/fetchDDE")
 const { speakErr } = require("../util/speak")
 const Context = require('./Context')
 const { logger } = require("../util/loggerHelper")
@@ -30,6 +30,8 @@ const Cabinet = ({config, wbAccu}) => {
     }
 
     init()
+
+    return () => cancelAdvise(serverName, config["outputNr"].itemName)
   }, [])
 
   useEffect(() => {

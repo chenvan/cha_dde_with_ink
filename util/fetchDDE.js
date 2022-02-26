@@ -2,7 +2,8 @@ const { NetDDEClient, Constants } = require('netdde')
 const fakeDataConfig = require("../config/test.json")
 const { logger } = require("../util/loggerHelper")
 
-const serverNameList = ["VMGZZSHMI3", "VMGZZSHMI6"]
+const serverNameList = ["VMGZZSHMI1", "VMGZZSHMI2","VMGZZSHMI3", "VMGZZSHMI4", "VMGZZSHMI5",
+                        "VMGZZSHMI6", "VMGZZSHMI7","VMGZZSHMI8", "VMGZZSHMI9", "VMGZZSHMI10"]
 
 var connectingServers = {}
 
@@ -108,6 +109,10 @@ async function setAdviseTest(serverName, itemName, callback) {
     }
 }
 
+async function cancelAdviseTest(serverName, itemName) {
+
+}
+
 async function disconnectAllClientsTest() {
     
 }
@@ -116,7 +121,8 @@ if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === "dev") {
     module.exports = {
         fetchDDE: fetchDDETest,
         setAdvise: setAdviseTest,
-        disconnectAllClients: disconnectAllClientsTest
+        disconnectAllClients: disconnectAllClientsTest,
+        cancelAdvise: cancelAdviseTest
     }
 } else {
     module.exports = {

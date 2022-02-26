@@ -6,7 +6,7 @@ const VoiceTips = require("../config/VoiceTips/回潮.json")
 const React= require("react")
 const { useState, useEffect, useRef } = require("react")
 const importJsx = require('import-jsx')
-const { setAdvise } = require("../util/fetchDDE")
+const { setAdvise, cancelAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { Box, Text, useStdout } = require('ink')
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
@@ -46,6 +46,11 @@ const AddWater = ({line}) => {
     }
 
     init()
+
+    return () => {
+      cancelAdvise(config[line].serverName, config[line].id["回潮"].itemName)
+      cancelAdvise(config[line].serverName, config[line].id["除杂"].itemName)
+    } 
   }, [])
 
   useEffect(() => {

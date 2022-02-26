@@ -1,3 +1,9 @@
+# 2022/2/26
+
+- [] 1.完善组件 state 的转换文档
+
+- [x] 2. stdout 的小时数, 分钟数要两位
+
 # 2022/2/25
 
 - [] 1. 检查出柜频率
@@ -8,7 +14,7 @@
 
 - [x] 4. 完善组件的 try-catch
 
-- [] 5. 各组件 unmount 的时候, init 监听的退出
+- [x] 5. 各组件 unmount 的时候, init 的监听需要 clean up
 
 - [x] 6. 把 isErr, setIsErr 提升到 AddXXX 组件上
 

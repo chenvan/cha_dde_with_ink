@@ -18,7 +18,7 @@ const Provider = ({serverName, line, isErr, setIsErr, children}) => {
     } catch(err) { 
       logger.error(`${line} ${err}`)
     }
-  }, isErr ? 1000 * 60 : null)
+  }, isErr ? 1000 * 30 : null)
   
   return (
     <Context.Provider value={{setIsErr, line, serverName}}>

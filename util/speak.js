@@ -8,9 +8,13 @@ function speakTwice(msg) {
   voiceObj.speak(msg, 1)
 }
 
+function leadingZero (num) {
+  return String(num).padStart(2, "0")
+}
+
 function now() {
   let today = new Date()
-  return `${today.getHours()}:${today.getMinutes()}`
+  return [today.getHours(), today.getMinutes()].map(leadingZero).join(":")
 }
 
 function speakErr(msg, writeToStdout) {

@@ -4,9 +4,9 @@ const config = require("../config/AddFlavour.json")
 const VoiceTips = require("../config/VoiceTips/加料.json")
 
 const React= require("react")
-const { useState, useEffect, useRef } = require("react")
 const importJsx = require('import-jsx')
-const { setAdvise } = require("../util/fetchDDE")
+const { useState, useEffect, useRef } = require("react")
+const { setAdvise, cancelAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
 const { Box, Text, useStdout } = require('ink')
@@ -41,6 +41,8 @@ const AddFlavour = ({line}) => {
     }
 
     init()
+
+    return () => cancelAdvise(config[line].serverName, config[line].id.itemName)
   }, [])
 
   useEffect(() => {

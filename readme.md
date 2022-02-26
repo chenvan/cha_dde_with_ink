@@ -24,3 +24,6 @@ DDE 获取数据的方式是 fetch 和 set advice, 为了方便开发需要在 t
 
 使用 [ink](https://github.com/vadimdemedes/ink) 来展示UI
 
+# 探讨
+
+## 电子秤与电眼的关系

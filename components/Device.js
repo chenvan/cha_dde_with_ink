@@ -1,11 +1,10 @@
 'use strict'
 
-const { setAdvise } = require("../util/fetchDDE")
-const { logger } = require("../util/loggerHelper")
+const { setAdvise, cancelAdvise } = require("../util/fetchDDE")
 const { speakWarning } = require("../util/speak")
 const React = require("react")
 const { useState, useEffect, useContext } = require("react")
-const { Box, Text, useStdout } = require("ink")
+const { Text, useStdout } = require("ink")
 const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
 
@@ -33,6 +32,8 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
     }
 
     init()
+
+    return () => cancelAdvise(serverName, itemName)
   }, [])
 
   useEffect(() => {
@@ -50,18 +51,18 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
 
   // set interval to update duration
   useInterval(() => {
-    setDuration((Date.now() - lastUpdateMoment) / 1000)
-  }, 1000)
+    // 之前 计算duration 与 发声警告 分两处. 出的问题是 state 转为监控的时候, 会立刻发出警报
+    // 现在这样合并似乎与之前也一样? 如果还是不行, 就一直监控吧
+    let tempDuration = (Date.now() - lastUpdateMoment) / 1000
+    setDuration(tempDuration)
 
-  useEffect(() => {
-    if(duration > maxDuration && !isWarning && state === "监控") {
+    if(tempDuration > maxDuration && !isWarning && state === "监控") {
       speakWarning(`${line} ${deviceName} 异常.`, write)
       setIsWarning(true)
-    } else if(duration <= maxDuration || state === "停止") {
+    } else if(tempDuration <= maxDuration || state === "停止") {
       if(isWarning) setIsWarning(false)
     }
-    
-  }, [duration]) // 需要把 state 放在这里吗 
+  }, state === "监控" ? 1000 : null)
 
   return (
     <Text color={isWarning? "red" : "white"}>
