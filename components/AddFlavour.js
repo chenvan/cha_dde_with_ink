@@ -1,7 +1,6 @@
 'use strict'
 
 const config = require("../config/AddFlavour.json")
-// const VoiceTips = require("../config/VoiceTips/加料.json")
 
 const React= require("react")
 const importJsx = require('import-jsx')
@@ -70,7 +69,7 @@ const AddFlavour = ({line}) => {
         } else if(state === "停止监控") {
 
         } else if(state === "停止") {
-          
+
         }
       } catch(err) {
         setIsErr(true)
