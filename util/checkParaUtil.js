@@ -1,18 +1,14 @@
 const { fetchDDE } = require('./fetchDDE')
-const {speakTwice } = require('./speak')
-const { logger } = require("../util/loggerHelper")
+const {speakErr } = require('./speak')
 
 async function checkMoistureMeter(line, serverName, config) {
-  for(let name in config) {
-    let [temp1, temp2] = await Promise.all([
-      fetchDDE(serverName, config[name]['itemName'][0], 'string'),
-      fetchDDE(serverName, config[name]['itemName'][1], 'string'),
+  for (const [name, itemNameList] of Object.entries(config)) {
+    let [zeroPoint1, zeroPoint2] = await Promise.all([
+      fetchDDE(serverName, itemNameList[0], 'string'),
+      fetchDDE(serverName, itemNameList[1], 'string'),
     ])
 
-    if (temp1 !== temp2) {
-      logger.info(`${line}, ${name} 状态异常`)
-      speakTwice(`${line}, ${name} 状态异常`)
-    }
+    if(zeroPoint1 !== zeroPoint2) speakErr(`${line}, ${name} 状态异常`)
   }
 }
 

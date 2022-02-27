@@ -4,9 +4,10 @@ const config = require("../config/AddFlavour.json")
 
 const React= require("react")
 const importJsx = require('import-jsx')
-const { useState, useEffect, useRef } = require("react")
+const { useState, useEffect } = require("react")
 const { setAdvise, cancelAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
+const { checkPara } = require("../util/checkParaUtil")
 const { Box, Text, useStdout } = require('ink')
 
 const Device = importJsx('./Device.js')
@@ -63,7 +64,7 @@ const AddFlavour = ({line}) => {
     const stateChangeEffect = async () => {
       try {
         if(state === "待机") { 
-    
+          await checkPara(line, config[line].serverName, config[line].para)
         } else if(state === "监控") {
           
         } else if(state === "停止监控") {
