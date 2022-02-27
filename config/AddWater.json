@@ -2,7 +2,7 @@
   "六四回潮": {
     "serverName": "VMGZZSHMI3",
     "brandName": {
-      "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_CurrRecName",
+      "itemName": "Galaxy:ZY2_YPCylinder_JK.ProductUnit.BrandName_Now",
       "valueType": "string"
     },
     "id": {
@@ -14,11 +14,6 @@
         "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP1_M1_STATE",
         "maxDuration": 90,
         "detectState": 33
-      },
-      "切片出口电眼": {
-        "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_1",
-        "maxDuration": 20,
-        "detectState": 0
       }
     },
     "weightBell": {
@@ -35,11 +30,17 @@
           "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_2",
           "valueType": "int"
         },
-        "electEye": {
-          "deviceName":"主秤入口电眼",
-          "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_2",
-          "maxDuration": 20,
-          "detectState": 0
+        "device": {
+          "主秤入口电眼": {
+            "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_2",
+            "maxDuration": 20,
+            "detectState": 0
+          },
+          "切片出口电眼": {
+            "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_1",
+            "maxDuration": 20,
+            "detectState": 0
+          }
         }
       },
       "薄片秤": {
@@ -55,10 +56,11 @@
           "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.Flux",
           "valueType": "int"
         },
-        "electEye": {
-          "deviceName":"薄片秤定量管高电眼",
-          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.Feed205.Switch.High",
-          "maxDuration": 40
+        "device": {
+          "薄片秤定量管高电眼": {
+            "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.Feed205.Switch.High",
+            "maxDuration": 40
+          }
         }
       }
     }

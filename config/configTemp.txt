@@ -24,7 +24,7 @@
 加料筒生产状态: Galaxy:rZY2_JLJ.JL.SJ_STA_WORK
 加料秤有料：Galaxy:ZY2_YPCylinder_JK.ZY2_WB_YX227.STAT4_Have
 加料秤实际流量：Galaxy:ZY2_YPSpice_JK.Balance_YX227.Flux
-
+主秤定量管高电眼: Galaxy:ZY2_YPOutSilo_JK.Limit_YX226.High
 
 
 {

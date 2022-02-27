@@ -1,7 +1,6 @@
 'use strict'
 
 const config = require("../config/AddWater.json")
-const VoiceTips = require("../config/VoiceTips/回潮.json")
 
 const React= require("react")
 const { useState, useEffect, useRef } = require("react")
@@ -9,7 +8,6 @@ const importJsx = require('import-jsx')
 const { setAdvise, cancelAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { Box, Text, useStdout } = require('ink')
-const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 
@@ -27,10 +25,6 @@ const AddWater = ({line}) => {
   const [isErr, setIsErr] = useState(false)
   const [idList, setIdList] = useState(["", ""])
   const [brandName, setBrandName] = useState("")
-  const [wbAccu, setWbAccu] = useState(0)
-  const [wbSetting, setWbSetting] = useState(0)
-  const readyTimeIdList = useRef([])
-  const runningTimeIdList = useRef([])
   const { write } = useStdout()
 
   useEffect(() => {
@@ -54,40 +48,38 @@ const AddWater = ({line}) => {
   }, [])
 
   useEffect(() => {
-    if(idList[0] === idList[1] && idList[1] !== "") {
-      setState("待机")
-    } else if(idList[1] === "") {
-      // 这个逻辑可能不对
-      if(state !== "停止") setState("停止")
+    // 确保 brandName 在 转待机前先获取, 这样主秤转待机时确保已经有牌号
+    const idChange = async () => {
+      try {
+        if(idList[0] === idList[1] && idList[1] !== "") {
+          let brandName = await fetchBrandName(config[line].serverName, config[line].brandName.itemName, config[line].brandName.valueType)
+          setBrandName(brandName)
+          setState("待机")
+        } else if(idList[1] === "") {
+          setState("停止")
+        }
+      } catch(err) {
+        setIsErr(true)
+        speakErr(`${line} 获取牌号时出现问题`, write)
+        logger.error(`${line} ${err}`)
+      }
     }
+
+    idChange()
   }, [idList])
 
   useEffect(() => {
     const stateChangeEffect = async () => {
       try {
         if(state === "待机") {
-          // 获取烟牌名字
-          let brandName = await fetchBrandName(config[line].serverName, config[line].brandName.itemName, config[line].brandName.valueType)
-          setBrandName(brandName)
-
-          // 加载准备语音
-          readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
-          
           // 检查各种参数
     
         } else if(state === "监控") {
-          // 清除准备语音
-          readyTimeIdList.current = clearVoiceTips(readyTimeIdList.current)
           
-          // 加载监控语音
-          runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, wbSetting, wbAccu, write)
         } else if(state === "停止监控") {
-          // 清除监控语音
-          readyTimeIdList.current = clearVoiceTips(readyTimeIdList.current)
-          runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
+ 
         } else if(state === "停止") {
-          // 清除监控语音
-          runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
+          
         }
       } catch(err) {
         setIsErr(true)
@@ -109,9 +101,8 @@ const AddWater = ({line}) => {
           name={"主秤"}
           config={config[line].weightBell["主秤"]}
           parentState={state}
+          brandName={brandName}
           setParentState={setState}
-          setAccuFromParent={setWbAccu}
-          setSettingFromParent={setWbSetting}
         />
         <WeightBell 
           name={"薄片秤"}

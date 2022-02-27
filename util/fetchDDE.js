@@ -94,7 +94,7 @@ async function fetchDDETest(serverName, itemName, returnType) {
         return fakeDataConfig[itemName]
     } else {
         if(returnType === "int"){
-            return 1000
+            return 100
         } else {
             return "test"
         }
