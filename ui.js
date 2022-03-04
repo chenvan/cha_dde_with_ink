@@ -6,6 +6,7 @@ const { Box } = require('ink');
 
 const AddFlavour = importJsx('./components/AddFlavour.js')
 const AddWater = importJsx('./components/AddWater.js')
+const Provider = importJsx('./components/Provider.js')
 
 let setting = {
   "回潮": ["六四回潮"],
@@ -14,9 +15,9 @@ let setting = {
 
 function returnComponent(type, line) {
 	if(type === "回潮") {
-		return <AddWater key={line} line={line} />
+		return <Provider key={line} line={line} ><AddWater line={line} /></Provider>
 	}else if(type === "加料") {
-		return <AddFlavour key={line} line={line} />
+		return <Provider key={line} line={line} ><AddFlavour line={line} /></Provider>
 	}
 }
 

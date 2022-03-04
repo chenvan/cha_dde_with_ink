@@ -63,6 +63,8 @@ async function cancelAdvise(serverName, itemName) {
     }
 
     await connectingServers[serverName].stopAdvise('tagname', itemName, Constants.dataType.CF_TEXT)
+
+    logger.info(`${serverName} ${itemName} cancel advise success`)
 }
 
 async function connectServer(serverName) {

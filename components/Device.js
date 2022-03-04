@@ -1,12 +1,13 @@
 'use strict'
 
 const { setAdvise, cancelAdvise } = require("../util/fetchDDE")
-const { speakWarning } = require("../util/speak")
+const { speakWarning, speakErr } = require("../util/speak")
 const React = require("react")
 const { useState, useEffect, useContext } = require("react")
 const { Text, useStdout } = require("ink")
 const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
+const { logger } = require("../util/loggerHelper.js")
 
 /*
 设备状态: 停止 > (父状态为监控) > 监控 > (父状态为其他) > 停止
@@ -19,21 +20,27 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
   const [lastUpdateMoment, setLastUpdateMoment] = useState(Date.now())
   const [duration, setDuration] = useState(0)
   const [isWarning, setIsWarning] = useState(false)
-  const { serverName, line } = useContext(Context)
+  const { serverName, line, setIsErr } = useContext(Context)
   const { write } = useStdout()
 
   // init state listen
   useEffect(() => {
     const init = async () => {
-      await setAdvise(serverName, itemName, result => {
-        setDeviceState(parseInt(result.data, 10))
-        setLastUpdateMoment(Date.now())
-      })
+      try {
+        await setAdvise(serverName, itemName, result => {
+          setDeviceState(parseInt(result.data, 10))
+          setLastUpdateMoment(Date.now())
+        })
+      } catch (err) {
+        setIsErr(true)
+        speakErr(`${line} 建立 ${deviceName} 监听的时候出现错误`, write)
+        logger.error(`${line} ${err}`)
+      }
     }
 
     init()
 
-    return () => cancelAdvise(serverName, itemName)
+    return async () => await cancelAdvise(serverName, itemName)
   }, [])
 
   useEffect(() => {
@@ -65,22 +72,22 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
   }, state === "监控" ? 1000 : null)
 
   return (
-    <Text color={isWarning? "red" : "white"}>
+    <Text>
       <Text>{`${deviceName}(${state}) [${detectState !== undefined ?  detectState + " " : ""}${deviceState}]: `}</Text>
       {
         state === "监控" && 
-            <TimeComparator maxDuration={maxDuration} duration={duration} isWarning={isWarning} />
+            <TimeComparator color={isWarning? "red" : "white"} maxDuration={maxDuration} duration={duration} isWarning={isWarning} />
       }
     </Text>
   )
 }
 
-const TimeComparator = ({maxDuration, duration, isWarning}) => {
+const TimeComparator = ({maxDuration, duration, isWarning, color}) => {
   return (
     <>
-      <Text>{maxDuration}</Text>
-      {isWarning ? <Text>{" < "}</Text> : <Text>{" >= "}</Text>}
-      <Text>{duration}</Text>
+      <Text color={color} >{maxDuration}</Text>
+      <Text color={color}>{ isWarning ? " < " : " >= "}</Text>
+      <Text color={color}>{duration}</Text>
     </>
   )
 }

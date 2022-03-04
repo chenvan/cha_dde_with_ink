@@ -25,9 +25,15 @@ const Cabinet = ({config, wbAccu}) => {
 
   useEffect(() => {
     const init = async () => {
-      await setAdvise(serverName, config["outputNr"].itemName, result => {
-        setCabinetNr(parseInt(result.data, 10))
-      })
+      try {
+        await setAdvise(serverName, config["outputNr"].itemName, result => {
+          setCabinetNr(parseInt(result.data, 10))
+        })
+      } catch (err) {
+        setIsErr(true)
+        speakErr(`${line} 建立出柜号监听的时候出现错误`, write)
+        logger.error(`${line} ${err}`)
+      }
     }
 
     init()
@@ -72,36 +78,6 @@ const Cabinet = ({config, wbAccu}) => {
 
     stateChangeEffect()
   }, [state])
-
-  // useEffect(() => {
-  //   const checkHalfEyeState = async () => {
-  //     try {
-  //       if(state === "监控" && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
-        
-  //         let halfEyeState = await fetchDDE(
-  //           serverName, 
-  //           config[cabinetNr]["halfEye"].itemName,
-  //           config[cabinetNr]["halfEye"].valueType,
-  //         )
-          
-  //         logger.info(`${line} 半柜电眼状态: ${halfEyeState}`)
-    
-  //         if(halfEyeState === 1) {
-  //           speakErr(`${line} 加料出柜未转高速`, write)
-  //           setState("未转高速")
-  //         } else {
-  //           setState("完成")
-  //         }
-  //       }
-  //     } catch(err) {
-  //       setIsErr(true)
-  //       speakErr(`${line} 检查半柜电眼状态是出错`, write)
-  //       logger.error(`${line} ${err}`)
-  //     }
-  //   }
-    
-  //   checkHalfEyeState()
-  // }, [wbAccu, state])
 
   useInterval(async () => {
     if(cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {

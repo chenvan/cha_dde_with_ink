@@ -47,14 +47,6 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         fetchDDE(serverName, config.accu.itemName, config.accu.valueType)
       ])
 
-      let diff = Math.abs(setting - real)
-      if(state === "监控" && diff >= 100 && !isWarning) {
-        speakWarning(`${line} ${name} 流量不稳定`, write)
-        setIsWarning(true)
-      } else if(diff < 100 && isWarning) {
-        setIsWarning(false)
-      }
-      
       if(real > 100) {
         if(state === "待机" || state === "停止监控") setState("监控")
       } else if(real === 0 ) {

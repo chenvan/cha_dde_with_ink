@@ -4,39 +4,41 @@ const config = require("../config/AddFlavour.json")
 
 const React= require("react")
 const importJsx = require('import-jsx')
-const { useState, useEffect } = require("react")
+const { useState, useEffect, useContext } = require("react")
 const { setAdvise, cancelAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { checkPara } = require("../util/checkParaUtil")
+const Context = require('./Context')
 const { Box, Text, useStdout } = require('ink')
 
 const Device = importJsx('./Device.js')
 const WeightBell = importJsx('./WeightBell.js')
-const Provider = importJsx('./Provider.js')
 
-/*
-  状态: 停止 > (获得Id) > 待机 > (主秤实际流量大于0) > 监控 > (主秤流量等于0) > 停止监控 > (主秤实际流量大于0) > 监控
-                              > (主秤累计流量大于0) > 停止监控                                                       > (获得空Id) > 停止
-*/
 
-const AddFlavour = ({line}) => {
+const AddFlavour = () => {
 
   const [state, setState] = useState("停止")
-  const [isErr, setIsErr] = useState(false)
   const [id, setId] = useState("")
   const [brandName, setBrandName] = useState("")
+  const {setIsErr, serverName, line} = useContext(Context)
   const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
-      await setAdvise(config[line].serverName, config[line].id.itemName, result => {
-        setId(result.data.slice(0, -3))
-      })
+      try {
+        await setAdvise(serverName, config[line].id.itemName, result => {
+          setId(result.data.slice(0, -3))
+        })
+      } catch (err) {
+        setIsErr(true)
+        speakErr(`${line} 建立批号监听的时候出现错误`, write)
+        logger.error(`${line} ${err}`)
+      }
     }
 
     init()
 
-    return () => cancelAdvise(config[line].serverName, config[line].id.itemName)
+    return async () => await cancelAdvise(serverName, config[line].id.itemName)
   }, [])
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const AddFlavour = ({line}) => {
     const idChange = async () => {
       try {
         if(id !== "") {
-          let brandName = await fetchBrandName(config[line].serverName, config[line].brandName.itemName, config[line].brandName.valueType)
+          let brandName = await fetchBrandName(serverName, config[line].brandName.itemName, config[line].brandName.valueType)
           setBrandName(brandName)
           setState("待机")
         } else {
@@ -64,7 +66,7 @@ const AddFlavour = ({line}) => {
     const stateChangeEffect = async () => {
       try {
         if(state === "待机") { 
-          await checkPara(line, config[line].serverName, config[line].para)
+          setTimeout(async () => await checkPara(line, serverName, config[line].para), 2000)
         } else if(state === "监控") {
           
         } else if(state === "停止监控") {
@@ -84,10 +86,9 @@ const AddFlavour = ({line}) => {
   }, [state])
 
   return (
-    <Box key={line} flexDirection="column" margin={1} padding={1} borderStyle="single" width="50%">
+    <>
       <Text>{`${line}(${state})`}</Text>
       <Text>{brandName}</Text>
-      <Provider serverName={config[line].serverName} line={line} isErr={isErr} setIsErr={setIsErr}>
         <WeightBell 
           name={"主秤"}
           config={config[line].mainWeightBell}
@@ -108,8 +109,7 @@ const AddFlavour = ({line}) => {
             }
           )
         }
-      </Provider>
-    </Box>
+    </>
   )
 }
 
