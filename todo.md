@@ -1,16 +1,23 @@
+# 2022/3/5
+
+- [] 1. 减低 useInterval 的频次
+
+- [] 2. 修改 useInterval, 可以让定时执行函数先执行一次
+
+- [] 3. 电眼转为监控是, 需要 reset 一次 lastUpdateMoment
 # 2022/3/4
 
-- [] 1. 水分仪经常报故障
+- [x] 1. 水分仪经常报故障
 
 # 2022/3/3
 
-- [] 1. NetDDE Server 经常在96回潮加料电脑崩溃
+- [] 1. 取消cancel Advice, 因为 cancel Advice 会引起 netdde Server 闪退 
 
 # 2022/3/2
 
 - [] 1. 完善 log 的信息
 
-- [] 2. 如何确认 ummount 的时候成功的 cancel advice
+- [] 2. 如何确认 ummount 的时候成功的 cancel advice (取消, 见3月3号的待办)
 
 - [x] 3. Provider 应该提升到 AddXXX 组件上
 
