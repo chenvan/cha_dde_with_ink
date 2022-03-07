@@ -10,22 +10,13 @@ const { Text, useStdout } = require("ink")
 const { fetchDDE } = require("../util/fetchDDE")
 const { logger } = require("../util/loggerHelper")
 const { useInterval } = require("../util/customHook.js")
-const { speakWarning, speakErr } = require("../util/speak")
+const { speakErr } = require("../util/speak")
 const Context = require('./Context')
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
 
 const Device = importJsx('./Device.js')
 const Cabinet = importJsx('./Cabinet.js')
 
-/*
-  秤的状态: 停止 > (父状态为待机) > 待机 > (实际流量大于0) > 监控 > (实际流量等于0) > 停止监控 > (实际流量大于 0) > 监控 
-                                                                                       
-                                                                                           > (父状态为停止) > 停止
-
-  主秤与普通秤的区别
-  主秤有 brandName 和 setParentState 
-
-*/
 const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   
   const [state, setState] = useState("停止")
@@ -39,6 +30,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   
   const readyTimeIdList = useRef([])
   const runningTimeIdList = useRef([])
+  const warningCount = useRef(0)
 
   useInterval(async () => {
     try {
@@ -56,62 +48,87 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
       setReal(real)
       setAccu(accu)
 
-    } catch(err) {
-      setIsErr(true)
-      speakErr(`${line} ${name} 获取流量与累积量时出错`, write)
-      logger.error(`${line} ${name} ${err}`)
-    }
+      if(warningCount.current !== 0) warningCount.current = 0
 
-  }, setting > 0 ? 1000 : null)
+    } catch(err) {
+      if(!isWarning) setIsWarning(true) 
+     
+      if(warningCount.current++ > 3) {
+        setIsErr(true)
+        speakErr(`${line} ${name} 尝试3次获取实际流量与累积量均出错`, write)
+        logger.error(`${line} ${name} ${err}`)
+        warningCount.current = 0
+      } else {
+        logger.info(`${line} ${name} 获取实际流量与累积量时出错: ${err}`)
+      }  
+    }
+  }, setting > 0 ? 30 * 1000 : null, true)
+
+
+  useInterval(async () => {
+    try {
+      // 需要第一时间更新累计值，否则会导致语音出问题
+      const [setting, accu] =  await Promise.all([
+        fetchDDE(serverName, config.setting.itemName, config.setting.valueType),
+        fetchDDE(serverName, config.accu.itemName, config.accu.valueType)
+      ])
+      
+      setSetting(setting)
+      setAccu(accu)
+      setState("待机")
+
+      if(warningCount.current !== 0) warningCount.current = 0
+    } catch (err) {
+      if(!isWarning) setIsWarning(true) 
+     
+      if(warningCount.current++ > 3) {
+        setIsErr(true)
+        speakErr(`${line} ${name} 尝试3次获取设定流量与累积量均出错`, write)
+        logger.error(`${line} ${name} ${err}`)
+        warningCount.current = 0
+      } else {
+        logger.info(`${line} ${name} 获取设定流量与累积量时出错: ${err}`)
+      }
+    }
+  }, state === "获取参数" ? 10 * 1000 : null, true)
 
 
   useEffect(() => {
-    if(parentState === "待机" || parentState === "停止") {
-      setState(parentState)
+    if(parentState === "待机" ) {
+      setState("获取参数")
+    }else if(parentState === "停止") {
+      setState("停止")
     }
-
   }, [parentState])
 
 
   useEffect(() => {
-    const stateChangeEffect = async() => {
-      try {
-        if (state === "待机") {
-          // 需要第一时间更新累计值，否则会导致语音出问题
-          const [setting, accu] =  await Promise.all([
-            fetchDDE(serverName, config.setting.itemName, config.setting.valueType),
-            fetchDDE(serverName, config.accu.itemName, config.accu.valueType)
-          ])
-          
-          setSetting(setting)
-          setAccu(accu)
-
-          if (accu === 0 && setParentState !== undefined) {
-            readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
-          } else if(accu > 0) {
-            setState("停止监控")
-          }
-        } else if(state === "停止监控") {
-          if(setParentState !== undefined) {
-            runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
-            setParentState(state)
-          }
-        } else if(state === "监控") {
-          if(setParentState !== undefined) {
-            runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu, write)
-            setParentState(state)
-          }
-        } else if(state === "停止") {
-          setSetting(0)
+    try {
+      if (state === "待机") {
+        if (accu === 0 && setParentState !== undefined) {
+          // 是主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
+          readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
+        } else if(setting === 0 || (setting !== 0 && accu > 0)) {
+          // 秤的设定量为0时, 表示秤不需要监控
+          // 秤有累积量, 且设定量不为0时, 表示软件是机器工作中打开的, 先统一去到停止监控那里, 等获取到实际流量后转到监控
+          setState("停止监控")
         }
-      } catch(err) {
-          setIsErr(true)
-          speakErr(`${line} ${name} 状态变换时出现错误`, write)
-          logger.error(`${line} ${name} ${err}`)
+      } else if(state === "停止监控") {
+        if(setParentState !== undefined) {
+          runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
+          setParentState(state)
+        }
+      } else if(state === "监控") {
+        if(setParentState !== undefined) {
+          runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu, write)
+          setParentState(state)
+        }
+      } else if(state === "停止") {
+        setSetting(0)
       }
+    } catch (err) {
+      
     }
-
-    stateChangeEffect()
   }, [state])
 
   return (

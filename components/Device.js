@@ -1,6 +1,6 @@
 'use strict'
 
-const { setAdvise, cancelAdvise } = require("../util/fetchDDE")
+const { setAdvise } = require("../util/fetchDDE")
 const { speakWarning, speakErr } = require("../util/speak")
 const React = require("react")
 const { useState, useEffect, useContext } = require("react")
@@ -8,10 +8,6 @@ const { Text, useStdout } = require("ink")
 const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
 const { logger } = require("../util/loggerHelper.js")
-
-/*
-设备状态: 停止 > (父状态为监控) > 监控 > (父状态为其他) > 停止
-*/
 
 const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) => {
 
@@ -39,23 +35,34 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
     }
 
     init()
-
-    return async () => await cancelAdvise(serverName, itemName)
   }, [])
 
+  // 对于没有特定监控状态的设备
   useEffect(() => {
-    if(parentState === "监控") {
-      if(detectState !== undefined) {
+    if(!detectState) {
+      if(parentState === "监控") {
+        setState("监控")
+        // 需要重设 lastUpdateMoment, 因为预填完成后, 设备已经处于超时状态, 当进入监控状态, 会立刻报警
+        setLastUpdateMoment(Date.now())
+      } else {
+        setState("停止")
+      }
+    }
+  }, [parentState])
+  
+  // 对于有特定监控状态的设备
+  useEffect(() => {
+    if(detectState !== undefined) {
+      if(parentState === "监控") {
         let temp = detectState === deviceState ? "监控" : "停止"
         if(state !== temp) setState(temp)
-      } else if(detectState === undefined) {
+      } else {
         if(state !== "监控") setState("监控")
       }
-    } else {
-      if(state !== "停止") setState("停止")
     }
   }, [parentState, deviceState])
 
+  
   // set interval to update duration
   useInterval(() => {
     // 之前 计算duration 与 发声警告 分两处. 出的问题是 state 转为监控的时候, 会立刻发出警报
@@ -69,7 +76,7 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
     } else if(tempDuration <= maxDuration || state === "停止") {
       if(isWarning) setIsWarning(false)
     }
-  }, state === "监控" ? 1000 : null)
+  }, state === "监控" ? 10 * 1000 : null, true)
 
   return (
     <Text>

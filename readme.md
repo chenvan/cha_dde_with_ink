@@ -51,6 +51,6 @@ DDE 获取数据的方式是 fetch 和 set advice, 为了方便开发需要在 t
 
   - fetch 出现的地方 useInterval 或者 stateChange. stateChange 类似与上升沿触发, 一旦 fetch 没有成功就没有第二次机会, 因此需要改变这个函数
 
-  
+## 秤有点问题
 
 

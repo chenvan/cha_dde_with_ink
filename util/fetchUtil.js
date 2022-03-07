@@ -12,7 +12,6 @@ async function testServerConnect(serverName) {
 }
 
 
-
 module.exports = {
     fetchBrandName,
     testServerConnect

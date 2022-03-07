@@ -11,6 +11,7 @@ const { Box, Text, useStdout } = require('ink')
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
+const { useInterval } = require("../util/customHook")
 
 const Device = importJsx('./Device.js')
 const WeightBell = importJsx('./WeightBell.js')
@@ -41,58 +42,30 @@ const AddWater = () => {
     }
 
     init()
-
-    return async () => {
-      await Promise.all([
-        cancelAdvise(serverName, config[line].id["回潮"].itemName),
-        cancelAdvise(serverName, config[line].id["除杂"].itemName)
-      ])
-    } 
   }, [])
 
   useEffect(() => {
-    // 确保 brandName 在 转待机前先获取, 这样主秤转待机时确保已经有牌号
-    const idChange = async () => {
-      try {
-        if(idList[0] === idList[1] && idList[1] !== "") {
-          let brandName = await fetchBrandName(serverName, config[line].brandName.itemName, config[line].brandName.valueType)
-          setBrandName(brandName)
-          setState("待机")
-        } else if(idList[1] === "") {
-          setState("停止")
-        }
-      } catch(err) {
-        setIsErr(true)
-        speakErr(`${line} 获取牌号时出现问题`, write)
-        logger.error(`${line} ${err}`)
-      }
+    if(idList[0] === idList[1] && idList[1] !== "") {
+      setState("获取参数")
+    } else if(idList[1] === "") {
+      setState("停止")
     }
-
-    idChange()
   }, [idList])
 
-  useEffect(() => {
-    const stateChangeEffect = async () => {
-      try {
-        if(state === "待机") {
-          // 检查各种参数
-    
-        } else if(state === "监控") {
-          
-        } else if(state === "停止监控") {
- 
-        } else if(state === "停止") {
-          
-        }
-      } catch(err) {
-        setIsErr(true)
-        speakErr(`${line} 状态转换出现问题`, write)
-        logger.error(`${line} ${err}`)
-      }
+  useInterval(async () => {
+    try {
+      let brandName = await fetchBrandName(serverName, config[line].brandName.itemName, config[line].brandName.valueType)
+      setBrandName(brandName)
+      setState("待机") 
+    } catch (err) {
+      
     }
+  }, state === "获取参数" ? 1000 * 10 : null, true)
 
-    stateChangeEffect()
-
+  useEffect(() => {
+    if(state === "待机") {
+      // 检查各种参数
+    } 
   }, [state])
 
   return (

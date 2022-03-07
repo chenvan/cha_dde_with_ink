@@ -1,17 +1,24 @@
+# 2022/3/7
+
+- [] 1. 把需要 fetch 的都使用 useInterval 包装 
+
+- [] 2. 建一个统一的对于 catch error 后的处理
+
 # 2022/3/5
 
-- [] 1. 减低 useInterval 的频次
+- [x] 1. 减低 useInterval 的频次
 
-- [] 2. 修改 useInterval, 可以让定时执行函数先执行一次
+- [x] 2. 修改 useInterval, 可以让定时执行函数先执行一次
 
-- [] 3. 电眼转为监控是, 需要 reset 一次 lastUpdateMoment
+- [x] 3. 电眼转为监控时, 需要 reset 一次 lastUpdateMoment
+
 # 2022/3/4
 
-- [x] 1. 水分仪经常报故障
+- [x] 1. 水分仪经常报故障, 使用 setTimeout 延迟检查的时间
 
 # 2022/3/3
 
-- [] 1. 取消cancel Advice, 因为 cancel Advice 会引起 netdde Server 闪退 
+- [x] 1. 取消cancel Advice, 因为 cancel Advice 会引起 netdde Server 闪退 
 
 # 2022/3/2
 
@@ -33,7 +40,7 @@
 
 # 2022/2/26
 
-- [] 1. 完善组件 state 的转换文档
+- [x] 1. 完善组件 state 的转换文档
 
 - [x] 2. stdout 的小时数, 分钟数要两位
 
