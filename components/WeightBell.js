@@ -34,6 +34,35 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
 
   useInterval(async () => {
     try {
+      // 需要第一时间更新累计值，否则会导致语音出问题
+      const [setting, real, accu] =  await Promise.all([
+        fetchDDE(serverName, config.setting.itemName, config.setting.valueType),
+        fetchDDE(serverName, config.real.itemName, config.real.valueType),
+        fetchDDE(serverName, config.accu.itemName, config.accu.valueType)
+      ])
+      
+      setSetting(setting)
+      setReal(real)
+      setAccu(accu)
+      setState("待机")
+
+      if(warningCount.current !== 0) warningCount.current = 0
+    } catch (err) {
+      if(!isWarning) setIsWarning(true) 
+     
+      if(warningCount.current++ > 3) {
+        setIsErr(true)
+        speakErr(`${line} ${name} 尝试3次获取设定流量与累积量均出错`, write)
+        logger.error(`${line} ${name} ${err}`)
+        warningCount.current = 0
+      } else {
+        logger.info(`${line} ${name} 获取设定流量与累积量时出错: ${err}`)
+      }
+    }
+  }, state === "获取参数" ? 5 * 1000 : null) 
+
+  useInterval(async () => {
+    try {
       const [real, accu] = await Promise.all([
         fetchDDE(serverName, config.real.itemName, config.real.valueType),
         fetchDDE(serverName, config.accu.itemName, config.accu.valueType)
@@ -65,34 +94,6 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   }, setting > 0 ? 30 * 1000 : null, true)
 
 
-  useInterval(async () => {
-    try {
-      // 需要第一时间更新累计值，否则会导致语音出问题
-      const [setting, accu] =  await Promise.all([
-        fetchDDE(serverName, config.setting.itemName, config.setting.valueType),
-        fetchDDE(serverName, config.accu.itemName, config.accu.valueType)
-      ])
-      
-      setSetting(setting)
-      setAccu(accu)
-      setState("待机")
-
-      if(warningCount.current !== 0) warningCount.current = 0
-    } catch (err) {
-      if(!isWarning) setIsWarning(true) 
-     
-      if(warningCount.current++ > 3) {
-        setIsErr(true)
-        speakErr(`${line} ${name} 尝试3次获取设定流量与累积量均出错`, write)
-        logger.error(`${line} ${name} ${err}`)
-        warningCount.current = 0
-      } else {
-        logger.info(`${line} ${name} 获取设定流量与累积量时出错: ${err}`)
-      }
-    }
-  }, state === "获取参数" ? 10 * 1000 : null, true)
-
-
   useEffect(() => {
     if(parentState === "待机" ) {
       setState("获取参数")
@@ -104,14 +105,18 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
 
   useEffect(() => {
     try {
-      if (state === "待机") {
+      // write(`${line}, ${name}, ${state}, ${setting}, ${real}, ${accu}\n`)
+
+      if (state === "待机") {  
         if (accu === 0 && setParentState !== undefined) {
           // 是主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
           readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
-        } else if(setting === 0 || (setting !== 0 && accu > 0)) {
+        } else if(setting === 0 || (setting !== 0 && real === 0 && accu > 0)) {
           // 秤的设定量为0时, 表示秤不需要监控
-          // 秤有累积量, 且设定量不为0时, 表示软件是机器工作中打开的, 先统一去到停止监控那里, 等获取到实际流量后转到监控
+          // 秤有累积量, 设定量不为0, 但实际流量为0时, 表示断流
           setState("停止监控")
+        } else if(setting !== 0 && real !== 0) {
+          setState("监控")
         }
       } else if(state === "停止监控") {
         if(setParentState !== undefined) {
@@ -127,7 +132,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         setSetting(0)
       }
     } catch (err) {
-      
+      write(err)
     }
   }, [state])
 

@@ -1,3 +1,7 @@
+# 2022/3/9
+
+- [] 1. 解决96回潮换批时,无法 fetch 秤 setting 和 accu 的问题
+
 # 2022/3/7
 
 - [] 1. 把需要 fetch 的都使用 useInterval 包装 

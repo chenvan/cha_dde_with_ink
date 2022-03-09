@@ -5,7 +5,7 @@ const config = require("../config/AddWater.json")
 const React= require("react")
 const { useState, useEffect, useRef, useContext } = require("react")
 const importJsx = require('import-jsx')
-const { setAdvise, cancelAdvise } = require("../util/fetchDDE")
+const { setAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { Box, Text, useStdout } = require('ink')
 const { speakErr } = require("../util/speak")
@@ -56,11 +56,13 @@ const AddWater = () => {
     try {
       let brandName = await fetchBrandName(serverName, config[line].brandName.itemName, config[line].brandName.valueType)
       setBrandName(brandName)
+      // 九六回潮换批时候, 主秤获取 设定流量, 累积量 会失败, 导致 DDE Server 出现问题
+      // 延迟进入 待机 状态
       setState("待机") 
     } catch (err) {
       
     }
-  }, state === "获取参数" ? 1000 * 10 : null, true)
+  }, state === "获取参数" ? 1000 * 10 : null)
 
   useEffect(() => {
     if(state === "待机") {
