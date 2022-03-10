@@ -12,10 +12,15 @@ async function checkMoistureMeter(line, serverName, config) {
   }
 }
 
-async function checkPara(line, serverName, paraConfig) {
+async function checkPara(line, serverName, paraConfig, writeToStdout) {
+  try {
     if(paraConfig.hasOwnProperty("MoistureMeter")) {
-        await checkMoistureMeter(line, serverName, paraConfig['MoistureMeter'])
+      await checkMoistureMeter(line, serverName, paraConfig['MoistureMeter'])
     }
+  } catch (err) {
+    writeToStdout(`${line} check para occur error， Error: ${err} \n`)
+  }
+    
 }
 
 
