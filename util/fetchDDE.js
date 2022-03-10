@@ -59,7 +59,7 @@ async function setAdvise(serverName, itemName, callback){
 
 async function cancelAdvise(serverName, itemName) {
     if(connectingServers.hasOwnProperty(serverName)) {
-        await await connectingServers[serverName].stopAdvise('tagname', itemName, Constants.dataType.CF_TEXT)
+        await connectingServers[serverName].stopAdvise('tagname', itemName, Constants.dataType.CF_TEXT)
     }
 
     logger.info(`${serverName} ${itemName} cancel advise success`)

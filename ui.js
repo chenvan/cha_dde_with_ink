@@ -10,7 +10,7 @@ const Provider = importJsx('./components/Provider.js')
 
 let setting = {
   "回潮": ["六四回潮"],
-  "加料": ["六四加料"]
+  "加料": ["六四加料", "九六加料"]
 }
 
 function returnComponent(type, line) {

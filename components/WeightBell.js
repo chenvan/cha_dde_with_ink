@@ -59,7 +59,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         logger.info(`${line} ${name} 获取设定流量与累积量时出错: ${err}`)
       }
     }
-  }, state === "获取参数" ? 5 * 1000 : null) 
+  }, state === "获取参数" ? 10 * 1000 : null) 
 
   useInterval(async () => {
     try {
@@ -91,7 +91,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         logger.info(`${line} ${name} 获取实际流量与累积量时出错: ${err}`)
       }  
     }
-  }, setting > 0 ? 30 * 1000 : null, true)
+  }, setting > 0 ? 30 * 1000 : null)
 
 
   useEffect(() => {
@@ -108,7 +108,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
       // write(`${line}, ${name}, ${state}, ${setting}, ${real}, ${accu}\n`)
 
       if (state === "待机") {  
-        if (accu === 0 && setParentState !== undefined) {
+        if (setting !==0 && accu === 0 && setParentState !== undefined) {
           // 是主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
           readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
         } else if(setting === 0 || (setting !== 0 && real === 0 && accu > 0)) {
@@ -138,7 +138,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
 
   return (
     <>
-      <Text>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
+      <Text backgroundColor={isWarning ? "yellow" : "black"}>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
       {
         config.hasOwnProperty("cabinet") && (
           <Cabinet 
