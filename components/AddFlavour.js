@@ -59,7 +59,7 @@ const AddFlavour = () => {
 
   useEffect(() => {
     if(state === "待机") { 
-      setTimeout(() => checkPara(line, serverName, config[line].para, write), 5000)
+      setTimeout(() => checkPara(line, serverName, config[line].para, write), 10 * 1000)
     }
   }, [state])
 
