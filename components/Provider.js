@@ -18,7 +18,7 @@ const Provider = ({line, children}) => {
         setIsErr(false)
       } 
     } catch(err) { 
-      logger.error(`${line} ${err}`)
+      logger.error(`${line}`, err)
     }
   }, isErr ? 1000 * 60 : null)
   
