@@ -1,0 +1,85 @@
+{
+  "六四加香": {
+    "brandName": {
+      "itemName": "Galaxy:ZX4_Flavor_JK.ProductUnit.BrandName_Now",
+      "valueType": "string"
+    },
+    "id": {
+      "itemName": "Galaxy:ZX4_Flavor_JK.ProductUnit.Batch_Now"
+    },
+    "margin": {
+      "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.ZX4_Box_Tobacco_Weight",
+      "valueType": "int"
+    },
+    "weightBell": {
+      "主秤": {
+        "setting": {
+          "itemName": "Galaxy:ZX4_Flavor_JK.ProductUnit.Flux_ZYS_Now",
+          "valueType": "int"
+        },
+        "accu": {
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Total",
+          "valueType": "int"
+        },
+        "real": {
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Flux",
+          "valueType": "int"
+        },
+        "device": {
+          "提升带电眼": {
+            "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP103_1.Feed.Switch.RaiseUp",
+            "maxDuration": 20
+          }
+        }
+      },
+      "梗丝秤": {
+        "setting": {
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.FluxSP",
+          "valueType": "int"
+        },
+        "accu": {
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Total",
+          "valueType": "int"
+        },
+        "real": {
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Flux",
+          "valueType": "int"
+        },
+        "device": {
+          "提升带电眼": {
+            "itemName": "Galaxy:ZX4_Flavor_JK.IOBox.CP203.Switch.RaiseUp",
+            "maxDuration": 40
+          },
+          "暂存柜进柜电眼": {
+            "itemName": "Galaxy:ZX4_Flavor_JK.IOBox.CP203.Switch.Full",
+            "maxDuration": 40
+          }
+        }
+      },
+      "膨丝秤": {
+        "setting": {
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.FluxSP",
+          "valueType": "int"
+        },
+        "accu": {
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Total",
+          "valueType": "int"
+        },
+        "real": {
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Flux",
+          "valueType": "int"
+        },
+        "device": {
+          "提升带电眼": {
+            "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.RaiseUp",
+            "maxDuration": 40
+          },
+          "暂存柜进柜电眼": {
+            "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.full",
+            "maxDuration": 40
+          }
+        }
+      }
+    }
+  }
+}

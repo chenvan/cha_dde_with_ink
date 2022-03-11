@@ -8,6 +8,8 @@ const { useState, useEffect, useContext } = require("react")
 const { setAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { checkPara } = require("../util/checkParaUtil")
+const { speakErr } = require("../util/speak")
+const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
 const { Box, Text, useStdout } = require('ink')
 const { useInterval } = require("../util/customHook")
@@ -32,7 +34,7 @@ const AddFlavour = () => {
       } catch (err) {
         setIsErr(true)
         speakErr(`${line} 建立批号监听的时候出现错误`, write)
-        logger.error(`${line} ${err}`)
+        logger.error(`${line}`, err)
       }
     }
 
@@ -55,7 +57,7 @@ const AddFlavour = () => {
     } catch (err) {
       
     }
-  }, state === "获取参数" ? 10 * 1000 : null, true)
+  }, state === "获取参数" ? 10 * 1000 : null)
 
   useEffect(() => {
     if(state === "待机") { 

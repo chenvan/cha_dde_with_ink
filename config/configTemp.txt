@@ -1,32 +1,3 @@
-64回潮：
-回潮筒批号 Galaxy:rHN_Z6.HN6.Z6_ZCBC_CurrBatchNo
-回潮筒牌号 Galaxy:rHN_Z6.HN6.Z6_ZCBC_CurrRecName
-除杂批号 Galaxy:ZY2_YPCylinder_JK.ProductUnit.Batch_Now
-除杂牌号 Galaxy:ZY2_YPCylinder_JK.ProductUnit.BrandName_Now
-电子秤实际流量 Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_1
-电子秤设定流量 Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_2
-电子秤累积量 Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_3
-切片机入口电机 Galaxy:ZY2KT.Topic_ZS6.FT_DP1_M1_STATE
-切片机出口电眼低（假） Galaxy:ZY2KT.Topic_ZS6.FT_DP4_B1_1
-切片机出口电眼中 Galaxy:ZY2KT.Topic_ZS6.FT_DP4_B1_2
-切片机出口电眼高 Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_1
-切片机出口电眼最高 Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_2
-
-64加料：
-牌号：Galaxy:ZY2_YPSpice_JK.ProductUnit.BrandName_Now
-入口水分仪状态：Galaxy:ZY2_YPSpice_JK.ProductUnit.MoistureMeter_JLQ.Read_Trim<>Galaxy:ZY2_YPSpice_JK.ProductUnit.MoistureMeter_JLQ.Write_Trim
-入口水分仪牌号：Galaxy:ZY2_YPSpice_JK.ProductUnit.MoistureMeter_JLQ.Read_BrandName
-出口水分仪状态：Galaxy:ZY2_YPSpice_JK.ProductUnit.MoistureMeter_JLH.Read_Trim<>Galaxy:ZY2_YPSpice_JK.ProductUnit.MoistureMeter_JLH.Write_Trim
-出口水分仪牌号：Galaxy:ZY2_YPSpice_JK.ProductUnit.MoistureMeter_JLH.Read_BrandName
-后仓低料位：Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Stuff
-后仓高料位：Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Full
-前仓高料位：Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Bottom
-加料筒生产状态: Galaxy:rZY2_JLJ.JL.SJ_STA_WORK
-加料秤有料：Galaxy:ZY2_YPCylinder_JK.ZY2_WB_YX227.STAT4_Have
-加料秤实际流量：Galaxy:ZY2_YPSpice_JK.Balance_YX227.Flux
-主秤定量管高电眼: Galaxy:ZY2_YPOutSilo_JK.Limit_YX226.High
-
-
 {
   "64暂存柜出柜号": {
     "serverName": "VMGZZSHMI3",

@@ -8,9 +8,22 @@ const AddFlavour = importJsx('./components/AddFlavour.js')
 const AddWater = importJsx('./components/AddWater.js')
 const Provider = importJsx('./components/Provider.js')
 
+// let setting = {
+//   	"prod": {
+// 		"回潮": ["六四回潮"],
+// 		"加料": ["六四加料", "九六加料"]
+// 	},
+// 	"dev": {
+// 		"加香": ["六四加香"]
+// 	},
+// 	"test": {
+// 		"回潮": ["九六回潮"]
+// 	}
+// }
+
 let setting = {
-  "回潮": ["六四回潮"],
-  "加料": ["六四加料", "九六加料"]
+	"回潮": ["六四回潮"],
+	"加料": ["六四加料", "九六加料"]
 }
 
 function returnComponent(type, line) {
@@ -21,7 +34,7 @@ function returnComponent(type, line) {
 	}
 }
 
-const App = () => (
+const App = ({unit}) => (
 	<Box key="root" flexDirection='column' width="100%">{
 		Object.keys(setting).map(type => {
 			return <Box key={type} flexDirection='row' width="100%">{

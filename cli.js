@@ -13,12 +13,22 @@ const cli = meow(`
 	  $ cha_dde_with_ink
 
 	Options
-		--name  Your name
+		--unit all
+		--unit dev
+		--unit test
 
 	Examples
-	  $ cha_dde_with_ink --name=Jane
-	  Hello, Jane
-`)
+	  $ cha_dde_with_ink --unit prod
+	  $ cha_dde_with_ink --unit dev
+	  $ cha_dde_with_ink --unit test
+`, {
+	flags: {
+		unit: {
+			type: "string",
+			default: "all"
+		}
+	}
+})
 
 
 

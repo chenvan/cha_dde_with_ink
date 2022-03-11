@@ -53,10 +53,10 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
       if(warningCount.current++ > 3) {
         setIsErr(true)
         speakErr(`${line} ${name} 尝试3次获取设定流量与累积量均出错`, write)
-        logger.error(`${line} ${name} ${err}`)
+        logger.error(`${line} ${name}`, err)
         warningCount.current = 0
       } else {
-        logger.info(`${line} ${name} 获取设定流量与累积量时出错: ${err}`)
+        logger.info(`${line} ${name} 获取设定流量与累积量时出错`, err)
       }
     }
   }, state === "获取参数" ? 10 * 1000 : null) 
@@ -85,10 +85,10 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
       if(warningCount.current++ > 3) {
         setIsErr(true)
         speakErr(`${line} ${name} 尝试3次获取实际流量与累积量均出错`, write)
-        logger.error(`${line} ${name} ${err}`)
+        logger.error(`${line} ${name}`, err)
         warningCount.current = 0
       } else {
-        logger.info(`${line} ${name} 获取实际流量与累积量时出错: ${err}`)
+        logger.info(`${line} ${name} 获取实际流量与累积量时出错`, err)
       }  
     }
   }, setting > 0 ? 30 * 1000 : null)

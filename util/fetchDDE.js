@@ -74,7 +74,7 @@ async function connectServer(serverName) {
             
     tempClient.on("error", err => {
         //Error: read ECONNRESET
-        logger.error(`${serverName} connect error ${err}`)
+        logger.error(`${serverName} connect error`, err)
         
         delete connectingServers[serverName]
     })

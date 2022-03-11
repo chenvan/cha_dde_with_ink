@@ -8,6 +8,8 @@ const path = require('path')
     prod: 生产
 */
 
+let root = path.dirname(__dirname)
+
 let infix = process.env.NODE_ENV === "dev" ? ".dev." : process.env.NODE_ENV === "test" ? ".test." : ".prod."
 
 let errFileName = ''.concat('error', infix, 'log')
@@ -25,8 +27,8 @@ const logger = createLogger({
         format.simple()
     ),
     transports: [
-        new transports.File({filename: path.join(__dirname, "logs", errFileName), level: 'error', maxsize: 10000000}),
-        new transports.File({filename: path.join(__dirname, "logs", infoFileName), level: 'info', maxsize: 10000000}),
+        new transports.File({filename: path.join(root, "logs", errFileName), level: 'error', maxsize: 10000000}),
+        new transports.File({filename: path.join(root, "logs", infoFileName), level: 'info', maxsize: 10000000}),
     ],
 })
 

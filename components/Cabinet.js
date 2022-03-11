@@ -7,7 +7,6 @@ const { setAdvise, fetchDDE } = require("../util/fetchDDE")
 const { speakErr } = require("../util/speak")
 const Context = require('./Context')
 const { logger } = require("../util/loggerHelper")
-const { checkPara } = require("../util/checkParaUtil")
 const { useInterval } = require("../util/customHook")
 
 const Cabinet = ({config, wbAccu}) => {
@@ -29,7 +28,7 @@ const Cabinet = ({config, wbAccu}) => {
       } catch (err) {
         setIsErr(true)
         speakErr(`${line} 建立出柜号监听的时候出现错误`, write)
-        logger.error(`${line} ${err}`)
+        logger.error(`${line}`, err)
       }
     }
 
@@ -69,10 +68,10 @@ const Cabinet = ({config, wbAccu}) => {
       if(warningCount.current++ > 3) {
         setIsErr(true)
         speakErr(`${line} 出柜尝试3次获取总量出错`, write)
-        logger.error(`${line} ${err}`)
+        logger.error(`${line}`, err)
         warningCount.current = 0
       } else {
-        logger.info(`${line} 出柜获取总量出错: ${err}`)
+        logger.info(`${line} 出柜获取总量出错`, err)
       }
     }
   }, state === "待机" ? 10 * 1000 : null)
@@ -99,7 +98,7 @@ const Cabinet = ({config, wbAccu}) => {
         } catch(err) {
           setIsErr(true)
           speakErr(`${line} 检查半柜电眼状态是出错`, write)
-          logger.error(`${line} ${err}`)
+          logger.error(`${line}`, err)
         }
       }
     }
