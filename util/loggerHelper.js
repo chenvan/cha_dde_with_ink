@@ -8,9 +8,9 @@ const path = require('path')
     prod: 生产
 */
 
-let rootPath = path.join("D:","cha_dde_with_ink","logs")
+let root = path.dirname(__dirname)
 
-let infix = process.env.NODE_ENV === "dev" ? ".dev." : "test" ? ".test." : ".prod."
+let infix = process.env.NODE_ENV === "dev" ? ".dev." : process.env.NODE_ENV === "test" ? ".test." : ".prod."
 
 let errFileName = ''.concat('error', infix, 'log')
 let infoFileName = ''.concat('combined', infix, 'log')
@@ -27,8 +27,8 @@ const logger = createLogger({
         format.simple()
     ),
     transports: [
-        new transports.File({filename: path.join(rootPath, errFileName), level: 'error', maxsize: 10000000}),
-        new transports.File({filename: path.join(rootPath, infoFileName), level: 'info', maxsize: 10000000}),
+        new transports.File({filename: path.join(root, "logs", errFileName), level: 'error', maxsize: 10000000}),
+        new transports.File({filename: path.join(root, "logs", infoFileName), level: 'info', maxsize: 10000000}),
     ],
 })
 

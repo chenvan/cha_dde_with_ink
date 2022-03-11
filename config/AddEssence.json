@@ -1,0 +1,85 @@
+{
+  "六四加香": {
+    "brandName": {
+      "itemName": "Galaxy:ZY2_YPCylinder_JK.ProductUnit.BrandName_Now",
+      "valueType": "string"
+    },
+    "id": {
+      "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_CurrBatchNo"
+    },
+    "margin": {
+      "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP1_M1_STATE",
+      "valueType": "int"
+    },
+    "weightBell": {
+      "主秤": {
+        "setting": {
+          "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_1",
+          "valueType": "int"
+        },
+        "accu": {
+          "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_3",
+          "valueType": "int"
+        },
+        "real": {
+          "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_2",
+          "valueType": "int"
+        },
+        "device": {
+          "提升带电眼": {
+            "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_2",
+            "maxDuration": 20
+          }
+        }
+      },
+      "梗丝秤": {
+        "setting": {
+          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.FluxSP",
+          "valueType": "int"
+        },
+        "accu": {
+          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.Total",
+          "valueType": "int"
+        },
+        "real": {
+          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.Flux",
+          "valueType": "int"
+        },
+        "device": {
+          "提升带电眼": {
+            "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.Feed205.Switch.High",
+            "maxDuration": 40
+          },
+          "暂存柜进柜电眼": {
+            "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Full",
+            "maxDuration": 40
+          }
+        }
+      },
+      "膨丝秤": {
+        "setting": {
+          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.FluxSP",
+          "valueType": "int"
+        },
+        "accu": {
+          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.Total",
+          "valueType": "int"
+        },
+        "real": {
+          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.Flux",
+          "valueType": "int"
+        },
+        "device": {
+          "提升带电眼": {
+            "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.Feed205.Switch.High",
+            "maxDuration": 40
+          },
+          "暂存柜进柜电眼": {
+            "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Full",
+            "maxDuration": 40
+          }
+        }
+      }
+    }
+  }
+}

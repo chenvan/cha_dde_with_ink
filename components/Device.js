@@ -37,32 +37,6 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
     init()
   }, [])
 
-  // // 对于没有特定监控状态的设备
-  // useEffect(() => {
-  //   if(detectState === undefined) {
-  //     if(parentState === "监控") {
-  //       setState("监控")
-  //       // 需要重设 lastUpdateMoment, 因为预填完成后, 设备已经处于超时状态, 当进入监控状态, 会立刻报警
-  //       setLastUpdateMoment(Date.now())
-  //     } else {
-  //       setState("停止")
-  //     }
-  //   }
-  // }, [parentState])
-  
-  // // 对于有特定监控状态的设备
-  // // 当 设备状态 已经处于 待监控 的状态, 而父状态没有在监控状态是, 当父状态进入了监控状态时, 需要重设 lastUpdateMoment 
-  // useEffect(() => {
-  //   if(detectState !== undefined) {
-  //     if(parentState === "监控") {
-  //       let temp = detectState === deviceState ? "监控" : "停止"
-  //       if(state !== temp) setState(temp)
-  //     } else {
-  //       if(state !== "停止") setState("停止")
-  //     }
-  //   }
-  // }, [parentState, deviceState])
-
   useEffect(() => {
     if(parentState === "监控") {
       if(detectState !== undefined) {

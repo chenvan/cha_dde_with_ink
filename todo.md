@@ -1,12 +1,20 @@
+# 2022/3/11
+
+- [x] 1. 解决启动程序时, NetDDE Server 没打开, 程序闪退的问题 
+
+- [] 2. 准备 AddEssence(加香) 的 采集点 和 运行数据
+
+- [] 3. 添加 console 程序的运行参数
+
+- [x] 4. 修改 logger 的错误
+
 # 2022/3/9
 
 - [] 1. 解决96回潮换批时,无法 fetch 秤 setting 和 accu 的问题
 
 # 2022/3/7
 
-- [] 1. 把需要 fetch 的都使用 useInterval 包装 
-
-- [] 2. 建一个统一的对于 catch error 后的处理
+- [] 1. 建一个统一的对于 catch error 后的处理
 
 # 2022/3/5
 
