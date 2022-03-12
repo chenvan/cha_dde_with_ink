@@ -10,7 +10,7 @@ const path = require('path')
 
 let root = path.dirname(__dirname)
 
-let infix = process.env.NODE_ENV === "dev" ? ".dev." : process.env.NODE_ENV === "test" ? ".test." : ".prod."
+let infix = process.env.NODE_ENV === "test" ? ".test." : ".prod."
 
 let errFileName = ''.concat('error', infix, 'log')
 let infoFileName = ''.concat('combined', infix, 'log')

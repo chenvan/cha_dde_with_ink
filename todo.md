@@ -1,10 +1,14 @@
+# 2022/3/12
+
+- [] 1. 尝试新的 NetDDE
+
 # 2022/3/11
 
 - [x] 1. 解决启动程序时, NetDDE Server 没打开, 程序闪退的问题 
 
-- [] 2. 准备 AddEssence(加香) 的 采集点 和 运行数据
+- [x] 2. 添加 六四 AddEssence(加香) 的 采集点
 
-- [] 3. 添加 console 程序的运行参数
+- [x] 3. 添加 console 程序的运行参数
 
 - [x] 4. 修改 logger 的错误
 
@@ -36,7 +40,7 @@
 
 - [] 1. 完善 log 的信息
 
-- [] 2. 如何确认 ummount 的时候成功的 cancel advice (取消, 见3月3号的待办)
+- [] 2. ~~如何确认 ummount 的时候成功的 cancel advice~~ (取消, 见3月3号的待办)
 
 - [x] 3. Provider 应该提升到 AddXXX 组件上
 

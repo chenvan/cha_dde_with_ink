@@ -7,12 +7,10 @@
 		"node": ">=10"
 	},
 	"scripts": {
-		"test": "SET NODE_ENV=prod&&cha_dde_with_ink --unit test",
-		"dev": "SET NODE_ENV=prod&&cha_dde_with_ink --unit dev",
-		"prod": "SET NODE_ENV=prod&&cha_dde_with_ink --unit prod",
-		"test_test": "SET NODE_ENV=test&&cha_dde_with_ink --unit test",
-		"test_dev": "SET NODE_ENV=test&&cha_dde_with_ink --unit dev",
-		"test_prod": "SET NODE_ENV=test&&cha_dde_with_ink --unit prod"
+		"dev": "SET NODE_ENV=prod&&node cli.js --unit dev",
+		"prod": "SET NODE_ENV=prod&&node cli.js --unit prod",
+		"test_dev": "SET NODE_ENV=test&&node cli.js --unit dev",
+		"test_prod": "SET NODE_ENV=test&&node cli.js --unit prod"
 	},
 	"files": [
 		"cli.js",
