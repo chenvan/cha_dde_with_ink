@@ -5,7 +5,7 @@ const config = require("../config/AddEssence.json")
 const React= require("react")
 const importJsx = require('import-jsx')
 const { useState, useEffect, useContext } = require("react")
-const { setAdvise } = require("../util/fetchDDE")
+const { setAdvise, fetchDDE } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
@@ -20,6 +20,7 @@ const AddEssence = () => {
   const [id, setId] = useState("")
   const [brandName, setBrandName] = useState("")
   const [margin, setMargin] = useState(0)
+  const [isWarning, setIsWarning] = useState(false)
   const {setIsErr, serverName, line} = useContext(Context)
   const { write } = useStdout()
 
@@ -60,7 +61,35 @@ const AddEssence = () => {
 
   useInterval(async () => {
     // 暂存柜存量
-  }, state === "待机" ? 10 * 1000 : null)
+    let currentMargin = await fetchDDE(serverName, config[line].margin.itemName, config[line].margin.valueType)
+    
+    if(currentMargin > 500 && !isWarning) {
+      speakErr("叶丝暂存柜存料过多", write)
+      setIsWarning(true)
+    }else if(currentMargin < 450 && isWarning) {
+      setIsWarning(false)
+    }
+
+    setMargin(currentMargin)
+  }, state === "待机" || state === "停止监控" ? 10 * 1000 : null)
+
+  useInterval(async () => {
+    let currentMargin = await fetchDDE(serverName, config[line].margin.itemName, config[line].margin.valueType)
+    
+    if(currentMargin > 600 && !isWarning) {
+      speakErr("叶丝暂存柜存料过多", write)
+      setIsWarning(true)
+    }else if(currentMargin < 50 && !isWarning) {
+      speakErr("叶丝暂存柜存料过少", write)
+      setIsWarning(true)
+    }else if(currentMargin < 550 && isWarning) {
+      setIsWarning(false)
+    }else if(currentMargin > 100 && isWarning) {
+      setIsWarning(false)
+    } 
+
+    setMargin(currentMargin)
+  }, state === "监控" ? 10 * 1000 : null)
 
 
 
@@ -68,7 +97,24 @@ const AddEssence = () => {
     <>
       <Text>{`${line}(${state})`}</Text>
       <Text>{brandName}</Text>
-      <Text>{`暂存柜存量: ${margin}`}</Text>
+      <WeightBell 
+        name={"主秤"}
+        config={config[line].weightBell["主秤"]}
+        parentState={state}
+        brandName={brandName}
+        setParentState={setState}
+      />
+      <Text>{`暂存柜料量: ${margin} kg`}</Text>
+      <WeightBell 
+        name={"梗丝秤"}
+        config={config[line].weightBell["梗丝秤"]}
+        parentState={state}
+      />
+      <WeightBell 
+        name={"膨丝秤"}
+        config={config[line].weightBell["膨丝秤"]}
+        parentState={state}
+      />
     </>
   )
 }

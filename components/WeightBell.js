@@ -46,18 +46,18 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
       setAccu(accu)
       setState("待机")
 
-      if(warningCount.current !== 0) warningCount.current = 0
+      //if(warningCount.current !== 0) warningCount.current = 0
     } catch (err) {
-      if(!isWarning) setIsWarning(true) 
+      // if(!isWarning) setIsWarning(true) 
      
-      if(warningCount.current++ > 3) {
-        setIsErr(true)
-        speakErr(`${line} ${name} 尝试3次获取设定流量与累积量均出错`, write)
-        logger.error(`${line} ${name}`, err)
-        warningCount.current = 0
-      } else {
-        logger.info(`${line} ${name} 获取设定流量与累积量时出错`, err)
-      }
+      // if(warningCount.current++ > 3) {
+      //   setIsErr(true)
+      //   speakErr(`${line} ${name} 尝试3次获取设定流量与累积量均出错`, write)
+      //   logger.error(`${line} ${name}`, err)
+      //   warningCount.current = 0
+      // } else {
+      //   logger.info(`${line} ${name} 获取设定流量与累积量时出错`, err)
+      // }
     }
   }, state === "获取参数" ? 10 * 1000 : null) 
 
@@ -132,13 +132,13 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         setSetting(0)
       }
     } catch (err) {
-      write(err)
+      logger.error(`${line} ${name}`, err)
     }
   }, [state])
 
   return (
     <>
-      <Text backgroundColor={isWarning ? "yellow" : "black"}>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
+      <Text backgroundColor={isWarning ? "red" : "black"}>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
       {
         config.hasOwnProperty("cabinet") && (
           <Cabinet 

@@ -26,9 +26,9 @@
           "valueType": "int"
         },
         "device": {
-          "提升带电眼": {
+          "叶丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP103_1.Feed.Switch.RaiseUp",
-            "maxDuration": 20
+            "maxDuration": 60
           }
         }
       },
@@ -46,13 +46,13 @@
           "valueType": "int"
         },
         "device": {
-          "提升带电眼": {
+          "梗丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.IOBox.CP203.Switch.RaiseUp",
-            "maxDuration": 40
+            "maxDuration": 60
           },
-          "暂存柜进柜电眼": {
+          "梗丝暂存柜进柜": {
             "itemName": "Galaxy:ZX4_Flavor_JK.IOBox.CP203.Switch.Full",
-            "maxDuration": 40
+            "maxDuration": 90
           }
         }
       },
@@ -70,13 +70,13 @@
           "valueType": "int"
         },
         "device": {
-          "提升带电眼": {
+          "膨丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.RaiseUp",
-            "maxDuration": 40
+            "maxDuration": 60
           },
-          "暂存柜进柜电眼": {
+          "膨丝暂存柜进柜": {
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.full",
-            "maxDuration": 40
+            "maxDuration": 90
           }
         }
       }
