@@ -18,7 +18,7 @@ DDE 获取数据的方式是 fetch 和 set advice, 为了方便开发需要在 t
 
 ### 重连逻辑
 
-
+先查出 NetDDEServer 没启动的报错, 以及 Intouch View 没启动的报错 
 
 # UI显示
 
