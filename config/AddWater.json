@@ -18,16 +18,13 @@
     "weightBell": {
       "主秤": {
         "setting": {
-          "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_1",
-          "valueType": "int"
+          "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_1"
         },
         "accu": {
-          "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_3",
-          "valueType": "int"
+          "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_3"
         },
         "real": {
-          "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_2",
-          "valueType": "int"
+          "itemName": "Galaxy:rHN_Z6.HN6.Z6_ZCBC_DB1Value_2"
         },
         "device": {
           "主秤入口电眼": {
@@ -44,16 +41,13 @@
       },
       "薄片秤": {
         "setting": {
-          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.FluxSP",
-          "valueType": "int"
+          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.FluxSP"
         },
         "accu": {
-          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.Total",
-          "valueType": "int"
+          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.Total"
         },
         "real": {
-          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.Flux",
-          "valueType": "int"
+          "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.BPBalance207.Flux"
         },
         "device": {
           "薄片秤定量管高电眼": {
@@ -83,16 +77,13 @@
     "weightBell": {
       "主秤": {
         "setting": {
-          "itemName": "Galaxy:rHN_Z3.HN3.Z3_ZCBC_DB1Value_1",
-          "valueType": "int"
+          "itemName": "Galaxy:rHN_Z3.HN3.Z3_ZCBC_DB1Value_1"
         },
         "accu": {
-          "itemName": "Galaxy:rHN_Z3.HN3.Z3_ZCBC_DB1Value_3",
-          "valueType": "int"
+          "itemName": "Galaxy:rHN_Z3.HN3.Z3_ZCBC_DB1Value_3"
         },
         "real": {
-          "itemName": "Galaxy:rHN_Z3.HN3.Z3_ZCBC_DB1Value_2",
-          "valueType": "int"
+          "itemName": "Galaxy:rHN_Z3.HN3.Z3_ZCBC_DB1Value_2"
         },
         "device": {
           "主秤入口电眼": {
@@ -109,16 +100,13 @@
       },
       "薄片秤": {
         "setting": {
-          "itemName": "Galaxy:ZY1_YPCylinder_JK.ZY1_NewPart.ZY1_BP.BPBalance107.FluxSP",
-          "valueType": "int"
+          "itemName": "Galaxy:ZY1_YPCylinder_JK.ZY1_NewPart.ZY1_BP.BPBalance107.FluxSP"
         },
         "accu": {
-          "itemName": "Galaxy:ZY1_YPCylinder_JK.ZY1_NewPart.ZY1_BP.BPBalance107.Total",
-          "valueType": "int"
+          "itemName": "Galaxy:ZY1_YPCylinder_JK.ZY1_NewPart.ZY1_BP.BPBalance107.Total"
         },
         "real": {
-          "itemName": "Galaxy:ZY1_YPCylinder_JK.ZY1_NewPart.ZY1_BP.BPBalance107.Flux",
-          "valueType": "int"
+          "itemName": "Galaxy:ZY1_YPCylinder_JK.ZY1_NewPart.ZY1_BP.BPBalance107.Flux"
         },
         "device": {
           "薄片秤定量管高电眼": {
