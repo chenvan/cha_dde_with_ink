@@ -27,7 +27,7 @@ const Cabinet = ({config, wbAccu}) => {
         })
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立出柜号监听的时候出现错误`, write)
+        speakErr(`${line}出柜 建立监听出错`, write)
         logger.error(`${line}`, err)
       }
     }

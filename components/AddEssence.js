@@ -27,12 +27,17 @@ const AddEssence = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        await setAdvise(serverName, config[line].id.itemName, result => {
-          setId(result.data.slice(0, -3))
-        })
+        await Promise.all([
+          setAdvise(serverName, config[line].id.itemName, result => {
+            setId(result.data.slice(0, -3))
+          }),
+          setAdvise(serverName, config[line].margin.itemName, result => {
+            setMargin(parseInt(result.data, 10))
+          })
+        ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立批号监听的时候出现错误`, write)
+        speakErr(`${line} 建立监听出错`, write)
         logger.error(`${line}`, err)
       }
     }
@@ -55,40 +60,48 @@ const AddEssence = () => {
       setBrandName(brandName)
       setState("待机")
     } catch (err) {
-      
+      setState("待机")
+      logger.error(`${line} ${state}`, err)
     }
   }, state === "获取参数" ? 10 * 1000 : null)
 
   useInterval(async () => {
     // 暂存柜存量
-    let currentMargin = await fetchDDE(serverName, config[line].margin.itemName, config[line].margin.valueType)
+    try {
+      // let currentMargin = await fetchDDE(serverName, config[line].margin.itemName, config[line].margin.valueType)
     
-    if(currentMargin > 500 && !isWarning) {
-      speakErr("叶丝暂存柜存料过多", write)
-      setIsWarning(true)
-    }else if(currentMargin < 450 && isWarning) {
-      setIsWarning(false)
-    }
+      if(currentMargin > 500 && !isWarning) {
+        speakErr("叶丝暂存柜存料过多", write)
+        setIsWarning(true)
+      }else if(currentMargin < 450 && isWarning) {
+        setIsWarning(false)
+      }
 
-    setMargin(currentMargin)
+      // setMargin(currentMargin)
+    } catch (err) {
+      logger.error(`${line} ${state}`, err)
+    }
   }, state === "待机" || state === "停止监控" ? 10 * 1000 : null)
 
   useInterval(async () => {
-    let currentMargin = await fetchDDE(serverName, config[line].margin.itemName, config[line].margin.valueType)
+    try {
+      // let currentMargin = await fetchDDE(serverName, config[line].margin.itemName, config[line].margin.valueType)
     
-    if(currentMargin > 600 && !isWarning) {
-      speakErr("叶丝暂存柜存料过多", write)
-      setIsWarning(true)
-    }else if(currentMargin < 50 && !isWarning) {
-      speakErr("叶丝暂存柜存料过少", write)
-      setIsWarning(true)
-    }else if(currentMargin < 550 && isWarning) {
-      setIsWarning(false)
-    }else if(currentMargin > 100 && isWarning) {
-      setIsWarning(false)
-    } 
+      if(currentMargin > 600 && !isWarning) {
+        speakErr("叶丝暂存柜存料过多", write)
+        setIsWarning(true)
+      }else if(currentMargin < 50 && !isWarning) {
+        speakErr("叶丝暂存柜存料过少", write)
+        setIsWarning(true)
+      }else if(currentMargin < 550 && currentMargin > 100 && isWarning) {
+        setIsWarning(false)
+      }
 
-    setMargin(currentMargin)
+      // setMargin(currentMargin)
+    } catch (err) {
+      logger.error(`${line} ${state}`, err)
+    }
+    
   }, state === "监控" ? 10 * 1000 : null)
 
 

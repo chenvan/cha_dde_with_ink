@@ -36,7 +36,7 @@ const AddWater = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立批号监听的时候出现错误`, write)
+        speakErr(`${line} 建立监听出错`, write)
         logger.error(`${line}`, err)
       }
     }
