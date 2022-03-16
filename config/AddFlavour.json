@@ -21,11 +21,17 @@
       "device": {        
         "提升带电眼": {
           "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Bottom",
-          "maxDuration": 20
+          "maxDurationConfig": {
+            "0": 20,
+            "1": 60 
+          }
         },
         "暂存柜进柜电眼": {
           "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Full",
-          "maxDuration": 40
+          "maxDurationConfig": {
+            "1": 40,
+            "0": 20
+          }
         }
       },
       "cabinet": {
@@ -177,11 +183,17 @@
       "device": {        
         "提升带电眼": {
           "itemName": "Galaxy:ZY1_YPOutSilo_JK.Feed_YX125.Switch.Bottom",
-          "maxDuration": 20
+          "maxDurationConfig": {
+            "0": 20,
+            "1": 60
+          }
         },
         "暂存柜进柜电眼": {
           "itemName": "Galaxy:ZY1_YPOutSilo_JK.Feed_YX125.Switch.Full",
-          "maxDuration": 40
+          "maxDurationConfig": {
+            "0": 40,
+            "1": 60
+          }
         }
       },
       "cabinet": {

@@ -68,8 +68,7 @@ const AddEssence = () => {
   useInterval(async () => {
     // 暂存柜存量
     try {
-      // let currentMargin = await fetchDDE(serverName, config[line].margin.itemName, config[line].margin.valueType)
-    
+
       if(currentMargin > 500 && !isWarning) {
         speakErr("叶丝暂存柜存料过多", write)
         setIsWarning(true)
@@ -77,7 +76,6 @@ const AddEssence = () => {
         setIsWarning(false)
       }
 
-      // setMargin(currentMargin)
     } catch (err) {
       logger.error(`${line} ${state}`, err)
     }
@@ -85,8 +83,7 @@ const AddEssence = () => {
 
   useInterval(async () => {
     try {
-      // let currentMargin = await fetchDDE(serverName, config[line].margin.itemName, config[line].margin.valueType)
-    
+     
       if(currentMargin > 600 && !isWarning) {
         speakErr("叶丝暂存柜存料过多", write)
         setIsWarning(true)
@@ -96,8 +93,7 @@ const AddEssence = () => {
       }else if(currentMargin < 550 && currentMargin > 100 && isWarning) {
         setIsWarning(false)
       }
-
-      // setMargin(currentMargin)
+      
     } catch (err) {
       logger.error(`${line} ${state}`, err)
     }

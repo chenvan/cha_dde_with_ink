@@ -56,19 +56,6 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
     init()
   }, [])
 
-  // useInterval(async () => {
-  //   try {
-
-  //     setState("待机")
-
-  //   } catch (err) {
-
-  //     // setState("待机")
-  //     // if(!isWarning) setIsWarning(true)
-  //     // logger.error(`${line} ${name} ${state} 实际流量，累计量获取失败`, err) 
-  //   }
-  // }, state === "获取参数" ? 10 * 1000 : null) 
-
   useInterval(async () => {
     try {
 

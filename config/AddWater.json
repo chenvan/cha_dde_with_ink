@@ -11,7 +11,9 @@
     "device": {
       "切片前输送带": {
         "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP1_M1_STATE",
-        "maxDuration": 90,
+        "maxDurationConfig": {
+          "33": 90
+        },
         "detectState": 33
       }
     },
@@ -29,12 +31,16 @@
         "device": {
           "主秤入口电眼": {
             "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_2",
-            "maxDuration": 20,
+            "maxDurationConfig": {
+              "0": 20
+            },
             "detectState": 0
           },
           "切片出口电眼": {
             "itemName": "Galaxy:ZY2KT.Topic_ZS6.FT_DP5_B1_1",
-            "maxDuration": 20,
+            "maxDurationConfig": {
+              "0": 20
+            },
             "detectState": 0
           }
         }
@@ -52,7 +58,10 @@
         "device": {
           "薄片秤定量管高电眼": {
             "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.Feed205.Switch.High",
-            "maxDuration": 40
+            "maxDurationConfig": {
+              "0": 30,
+              "1": 60
+            }
           }
         }
       }
@@ -70,7 +79,9 @@
     "device": {
       "切片前输送带": {
         "itemName": "Galaxy:ZY1KT.Topic_ZS3.FT_DP1_M1_STATE",
-        "maxDuration": 90,
+        "maxDurationConfig": {
+          "33": 90
+        },
         "detectState": 33
       }
     },
@@ -88,12 +99,16 @@
         "device": {
           "主秤入口电眼": {
             "itemName": "Galaxy:ZY1KT.Topic_ZS3.FT_DP5_B1_2",
-            "maxDuration": 20,
+            "maxDurationConfig": {
+              "0": 20
+            },
             "detectState": 0
           },
           "切片出口电眼": {
             "itemName": "Galaxy:ZY1KT.Topic_ZS3.FT_DP4_B1_2",
-            "maxDuration": 20,
+            "maxDurationConfig": {
+              "0": 20
+            },
             "detectState": 0
           }
         }
@@ -111,7 +126,10 @@
         "device": {
           "薄片秤定量管高电眼": {
             "itemName": "Galaxy:ZY1_YPCylinder_JK.ZY1_NewPart.ZY1_BP.Feed105.Switch.High",
-            "maxDuration": 40
+            "maxDurationConfig": {
+              "0": 30,
+              "1": 60
+            }
           }
         }
       }

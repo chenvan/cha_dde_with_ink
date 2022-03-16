@@ -9,12 +9,13 @@ const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
 const { logger } = require("../util/loggerHelper.js")
 
-const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) => {
+const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectState}) => {
 
   const [state, setState] = useState("停止")
   const [deviceState, setDeviceState] = useState(null)
   const [lastUpdateMoment, setLastUpdateMoment] = useState(Date.now())
   const [duration, setDuration] = useState(0)
+  const [maxDuration, setMaxDuration] = useState(60)
   const [isWarning, setIsWarning] = useState(false)
   const { serverName, line, setIsErr } = useContext(Context)
   const { write } = useStdout()
@@ -24,8 +25,14 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
     const init = async () => {
       try {
         await setAdvise(serverName, itemName, result => {
-          setDeviceState(parseInt(result.data, 10))
+          let deviceState =  parseInt(result.data, 10)
+          
+          setDeviceState(deviceState)
           setLastUpdateMoment(Date.now())
+
+          if(maxDurationConfig.hasOwnProperty(detectState)) {
+            setMaxDuration(maxDurationConfig[deviceState])
+          }
         })
       } catch (err) {
         setIsErr(true)
