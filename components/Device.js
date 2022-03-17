@@ -30,7 +30,7 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
           setDeviceState(deviceState)
           setLastUpdateMoment(Date.now())
 
-          if(maxDurationConfig.hasOwnProperty(detectState)) {
+          if(maxDurationConfig.hasOwnProperty(deviceState)) {
             setMaxDuration(maxDurationConfig[deviceState])
           }
         })
@@ -85,7 +85,7 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
     } else if(tempDuration <= maxDuration || state === "停止") {
       if(isWarning) setIsWarning(false)
     }
-  }, state === "监控" ? 5 * 1000 : null, true)
+  }, state === "监控" ? 1000 : null)
 
   return (
     <Text>

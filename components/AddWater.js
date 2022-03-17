@@ -73,7 +73,7 @@ const AddWater = () => {
   return (
     <>
       <Text>{`${line}(${state})`}</Text>
-      <Text>{brandName}</Text>
+      <Text>{`${brandName}.`}</Text>
       <WeightBell 
         name={"主秤"}
         config={config[line].weightBell["主秤"]}

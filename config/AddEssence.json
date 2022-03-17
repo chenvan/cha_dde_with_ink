@@ -73,7 +73,7 @@
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.Bottom",
             "maxDurationConfig": {
               "1": 60,
-              "0": 20
+              "0": 40
             }
           },
           "膨丝暂存柜进柜": {
@@ -161,7 +161,7 @@
             "itemName": "Galaxy:ZX5_Flavor_JK.Feed_CP419.Switch.Bottom",
             "maxDurationConfig": {
               "1": 60,
-              "0": 20
+              "0": 40
             }
           },
           "膨丝暂存柜进柜": {

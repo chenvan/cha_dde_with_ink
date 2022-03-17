@@ -68,7 +68,7 @@ const AddFlavour = () => {
   return (
     <>
       <Text>{`${line}(${state})`}</Text>
-      <Text>{brandName}</Text>
+      <Text>{`${brandName}.`}</Text>
         <WeightBell 
           name={"主秤"}
           config={config[line].mainWeightBell}

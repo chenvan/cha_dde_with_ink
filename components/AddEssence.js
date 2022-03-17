@@ -69,10 +69,10 @@ const AddEssence = () => {
     // 暂存柜存量
     try {
 
-      if(currentMargin > 500 && !isWarning) {
+      if(margin > 500 && !isWarning) {
         speakErr("叶丝暂存柜存料过多", write)
         setIsWarning(true)
-      }else if(currentMargin < 450 && isWarning) {
+      }else if(margin < 450 && isWarning) {
         setIsWarning(false)
       }
 
@@ -84,16 +84,16 @@ const AddEssence = () => {
   useInterval(async () => {
     try {
      
-      if(currentMargin > 600 && !isWarning) {
+      if(margin > 600 && !isWarning) {
         speakErr("叶丝暂存柜存料过多", write)
         setIsWarning(true)
-      }else if(currentMargin < 50 && !isWarning) {
+      }else if(margin < 50 && !isWarning) {
         speakErr("叶丝暂存柜存料过少", write)
         setIsWarning(true)
-      }else if(currentMargin < 550 && currentMargin > 100 && isWarning) {
+      }else if(margin < 550 && margin > 100 && isWarning) {
         setIsWarning(false)
       }
-      
+
     } catch (err) {
       logger.error(`${line} ${state}`, err)
     }
@@ -105,7 +105,7 @@ const AddEssence = () => {
   return (
     <>
       <Text>{`${line}(${state})`}</Text>
-      <Text>{brandName}</Text>
+      <Text>{`${brandName}.`}</Text>
       <WeightBell 
         name={"主秤"}
         config={config[line].weightBell["主秤"]}
