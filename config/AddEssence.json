@@ -25,9 +25,9 @@
           "叶丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP103_1.Feed.Switch.Tran",
             "maxDurationConfig": {
-              "1": 60,
-              "0": 20
-            }
+              "1": 60
+            },
+            "detectState": 1
           }
         }
       },
@@ -45,14 +45,14 @@
           "梗丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.IOBox.CP203.Switch.RaiseUp",
             "maxDurationConfig": {
-              "1": 60,
-              "0": 20
-            }
+              "1": 60
+            },
+            "detectState": 1
           },
           "梗丝暂存柜进柜": {
             "itemName": "Galaxy:ZX4_Flavor_JK.IOBox.CP203.Switch.Full",
             "maxDurationConfig": {
-              "0": 20
+              "0": 30
             },
             "detectState": 0
           }
@@ -72,14 +72,14 @@
           "膨丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.Bottom",
             "maxDurationConfig": {
-              "1": 60,
-              "0": 40
-            }
+              "1": 65
+            },
+            "detectState": 1
           },
           "膨丝暂存柜进柜": {
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.full",
             "maxDurationConfig": {
-              "0": 20
+              "0": 30
             },
             "detectState": 0
           }
@@ -113,9 +113,9 @@
           "叶丝提升带": {
             "itemName": "Galaxy:ZX5_Flavor_JK.Feed_CP108_1.Feed.Switch.Tran",
             "maxDurationConfig": {
-              "1": 60,
-              "0": 20
-            }
+              "1": 60
+            },
+            "detectState": 1
           }
         }
       },
@@ -133,14 +133,14 @@
           "梗丝提升带": {
             "itemName": "Galaxy:ZX5_Flavor_JK.IOBox.CP209.Switch.RaiseUp",
             "maxDurationConfig": {
-              "1": 60,
-              "0": 20
-            }
+              "1": 60
+            },
+            "detectState": 1
           },
           "梗丝暂存柜进柜": {
             "itemName": "Galaxy:ZX5_Flavor_JK.IOBox.CP209.Switch.Full",
             "maxDurationConfig": {
-              "0": 20
+              "0": 30
             },
             "detectState": 0
           }
@@ -160,14 +160,14 @@
           "膨丝提升带": {
             "itemName": "Galaxy:ZX5_Flavor_JK.Feed_CP419.Switch.Bottom",
             "maxDurationConfig": {
-              "1": 60,
-              "0": 40
-            }
+              "1": 60
+            },
+            "detectState": 1
           },
           "膨丝暂存柜进柜": {
             "itemName": "Galaxy:ZX5_Flavor_JK.Feed_CP419.Switch.full",
             "maxDurationConfig": {
-              "0": 20
+              "0": 30
             },
             "detectState": 0
           }

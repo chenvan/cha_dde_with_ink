@@ -22,7 +22,7 @@ const AddEssence = () => {
   const [margin, setMargin] = useState(0)
   const [isWarning, setIsWarning] = useState(false)
   const {setIsErr, serverName, line} = useContext(Context)
-  const { write } = useStdout()
+  // const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
@@ -37,7 +37,7 @@ const AddEssence = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立监听出错`, write)
+        speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
       }
     }
@@ -68,9 +68,9 @@ const AddEssence = () => {
   useInterval(async () => {
     // 暂存柜存量
     try {
-
-      if(margin > 500 && !isWarning) {
-        speakErr("叶丝暂存柜存料过多", write)
+      // 转批，在待机阶段暂存柜存量会有一个假数, 应该是上一批的累积量
+      if(margin > 500 && margin < 2500 && !isWarning) {
+        speakErr(`${line} 叶丝暂存柜存料过多`)
         setIsWarning(true)
       }else if(margin < 450 && isWarning) {
         setIsWarning(false)
@@ -85,10 +85,10 @@ const AddEssence = () => {
     try {
      
       if(margin > 600 && !isWarning) {
-        speakErr("叶丝暂存柜存料过多", write)
+        speakErr(`${line} 叶丝暂存柜存料过多`)
         setIsWarning(true)
       }else if(margin < 50 && !isWarning) {
-        speakErr("叶丝暂存柜存料过少", write)
+        speakErr(`${line} 叶丝暂存柜存料过少`)
         setIsWarning(true)
       }else if(margin < 550 && margin > 100 && isWarning) {
         setIsWarning(false)

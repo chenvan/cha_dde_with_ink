@@ -23,7 +23,7 @@ const AddFlavour = () => {
   const [id, setId] = useState("")
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
-  const { write } = useStdout()
+  // const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
@@ -33,7 +33,7 @@ const AddFlavour = () => {
         })
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立监听出错`, write)
+        speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
       }
     }
@@ -61,7 +61,7 @@ const AddFlavour = () => {
 
   useEffect(() => {
     if(state === "待机") { 
-      setTimeout(() => checkPara(line, serverName, config[line].para, write), 10 * 1000)
+      setTimeout(() => checkPara(line, serverName, config[line].para), 10 * 1000)
     }
   }, [state])
 

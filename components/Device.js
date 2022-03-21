@@ -18,7 +18,7 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
   const [maxDuration, setMaxDuration] = useState(60)
   const [isWarning, setIsWarning] = useState(false)
   const { serverName, line, setIsErr } = useContext(Context)
-  const { write } = useStdout()
+  // const { write } = useStdout()
 
   // init state listen
   useEffect(() => {
@@ -36,7 +36,7 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
         })
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line}${deviceName} 建立监听出错`, write)
+        speakErr(`${line}${deviceName} 建立监听出错`)
         logger.error(`${line}`, err)
       }
     }
@@ -80,7 +80,7 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
     setDuration(tempDuration)
 
     if(tempDuration > maxDuration && !isWarning && state === "监控") {
-      speakWarning(`${line} ${deviceName} 异常.`, write)
+      speakWarning(`${line} ${deviceName} 异常.`)
       setIsWarning(true)
     } else if(tempDuration <= maxDuration || state === "停止") {
       if(isWarning) setIsWarning(false)

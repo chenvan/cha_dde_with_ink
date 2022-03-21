@@ -22,16 +22,16 @@
         "提升带电眼": {
           "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Bottom",
           "maxDurationConfig": {
-            "0": 20,
             "1": 60 
-          }
+          },
+          "detectState": 1
         },
         "暂存柜进柜电眼": {
           "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Full",
           "maxDurationConfig": {
-            "1": 40,
-            "0": 35
-          }
+            "0": 40
+          },
+          "detectState": 0
         }
       },
       "cabinet": {
@@ -184,16 +184,16 @@
         "提升带电眼": {
           "itemName": "Galaxy:ZY1_YPOutSilo_JK.Feed_YX125.Switch.Bottom",
           "maxDurationConfig": {
-            "0": 20,
             "1": 60
-          }
+          },
+          "detectState": 1
         },
         "暂存柜进柜电眼": {
           "itemName": "Galaxy:ZY1_YPOutSilo_JK.Feed_YX125.Switch.Full",
           "maxDurationConfig": {
-            "0": 40,
-            "1": 60
-          }
+            "0": 40
+          },
+          "detectState": 0
         }
       },
       "cabinet": {
@@ -222,7 +222,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }
@@ -249,7 +249,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }
@@ -276,7 +276,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }
@@ -303,7 +303,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }
@@ -330,7 +330,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }
@@ -357,7 +357,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }

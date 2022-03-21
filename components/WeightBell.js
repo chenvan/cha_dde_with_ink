@@ -24,7 +24,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   const [real, setReal] = useState(0)
   const [accu, setAccu] = useState(0)
   const {setIsErr, serverName, line} = useContext(Context)
-  const { write } = useStdout()
+  // const { write } = useStdout()
 
   const [isWarning, setIsWarning] = useState(false)
   
@@ -48,7 +48,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} ${name} 建立监听出错`, write)
+        speakErr(`${line} ${name} 建立监听出错`)
         logger.error(`${line} ${name}`, err)
       }
     }
@@ -69,7 +69,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
       // if(!isWarning) setIsWarning(true) 
       // logger.error(`${line} ${name} ${state} 实际流量，累计量获取失败`, err)  
     }
-  }, setting > 0 && ["待机", "监控", "停止监控"].includes(state) ? 10 * 1000 : null)
+  }, ["待机", "监控", "停止监控"].includes(state) ? 5 * 1000 : null)
   // 加香段做完时，膨丝秤，梗丝秤的设定流量会变成0，导致无法从监控变成停止监控状态
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
       if (state === "待机") {  
         if (setting !==0 && accu === 0 && setParentState !== undefined) {
           // 是主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
-          if(VoiceTips.hasOwnProperty(line)) readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
+          if(VoiceTips.hasOwnProperty(line)) readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName)
         } else if(setting === 0 || (setting !== 0 && real === 0 && accu > 0)) {
           // 秤的设定量为0时, 表示秤不需要监控
           // 秤有累积量, 设定量不为0, 但实际流量为0时, 表示断流
@@ -103,7 +103,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         }
       } else if(state === "监控") {
         if(setParentState !== undefined) {
-          if(VoiceTips.hasOwnProperty(line)) runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu, write)
+          if(VoiceTips.hasOwnProperty(line)) runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu)
           setParentState(state)
         }
       } else if(state === "停止") {

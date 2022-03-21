@@ -21,7 +21,7 @@ const AddWater = () => {
   const [idList, setIdList] = useState(["", ""])
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
-  const { write } = useStdout()
+  // const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
@@ -36,7 +36,7 @@ const AddWater = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立监听出错`, write)
+        speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
       }
     }

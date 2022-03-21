@@ -1,5 +1,6 @@
 const { fetchDDE } = require('./fetchDDE')
 const { speakErr } = require('./speak')
+const { logger } = require('./loggerHelper')
 
 async function checkMoistureMeter(line, serverName, config) {
   for (const [name, itemNameList] of Object.entries(config)) {
@@ -12,13 +13,14 @@ async function checkMoistureMeter(line, serverName, config) {
   }
 }
 
-async function checkPara(line, serverName, paraConfig, writeToStdout) {
+async function checkPara(line, serverName, paraConfig) {
     try {
       if(paraConfig.hasOwnProperty("MoistureMeter")) {
         await checkMoistureMeter(line, serverName, paraConfig['MoistureMeter'])
       }
     } catch (err) {
-      writeToStdout(`${line} 检查水分仪零点出错. Error: ${err}\n`)
+      speakErr(`${line} 获取水分仪零点失败`)
+      logger.error(`${line} 检查水分仪零点出错`, err)
     }
     
 }
