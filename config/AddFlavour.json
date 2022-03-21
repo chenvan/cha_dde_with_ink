@@ -330,7 +330,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 400,
+            "diff": 100,
             "lowFreq": 21,
             "total": 6800
           }
@@ -357,7 +357,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 400,
+            "diff": 100,
             "lowFreq": 21,
             "total": 6800
           }
