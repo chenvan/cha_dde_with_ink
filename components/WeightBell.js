@@ -88,13 +88,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
       if (state === "待机") {  
         if (setting !==0 && accu === 0 && setParentState !== undefined) {
           // 是主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
-<<<<<<< HEAD
-          if(VoiceTips.hasOwnProperty(line)) {
-            readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName, write)
-          }
-=======
           if(VoiceTips.hasOwnProperty(line)) readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName)
->>>>>>> 46fdf9c8f1477484db40dbbc1e26f09aa1f1ec84
         } else if(setting === 0 || (setting !== 0 && real === 0 && accu > 0)) {
           // 秤的设定量为0时, 表示秤不需要监控
           // 秤有累积量, 设定量不为0, 但实际流量为0时, 表示断流
@@ -108,13 +102,8 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
           setParentState(state)
         }
       } else if(state === "监控") {
-<<<<<<< HEAD
-        if(setParentState !== undefined && VoiceTips.hasOwnProperty(line)) {
-          runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu, write)
-=======
         if(setParentState !== undefined) {
           if(VoiceTips.hasOwnProperty(line)) runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu)
->>>>>>> 46fdf9c8f1477484db40dbbc1e26f09aa1f1ec84
           setParentState(state)
         }
       } else if(state === "停止") {
