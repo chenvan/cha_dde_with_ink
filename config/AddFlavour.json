@@ -10,31 +10,33 @@
     "device": {},
     "mainWeightBell": {
       "setting": {
-        "itemName": "Galaxy:ZY2_YPSpice_JK.Balance_YX227.FluxSP",
-        "valueType": "int"
+        "itemName": "Galaxy:ZY2_YPSpice_JK.Balance_YX227.FluxSP"
       },
       "accu": {
-        "itemName": "Galaxy:ZY2_YPSpice_JK.Balance_YX227.Total",
-        "valueType": "int"
+        "itemName": "Galaxy:ZY2_YPSpice_JK.Balance_YX227.Total"
       },
       "real": {
-        "itemName": "Galaxy:ZY2_YPSpice_JK.Balance_YX227.Flux",
-        "valueType": "int"
+        "itemName": "Galaxy:ZY2_YPSpice_JK.Balance_YX227.Flux"
       },
       "device": {        
         "提升带电眼": {
           "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Bottom",
-          "maxDuration": 20
+          "maxDurationConfig": {
+            "1": 60 
+          },
+          "detectState": 1
         },
         "暂存柜进柜电眼": {
           "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Full",
-          "maxDuration": 40
+          "maxDurationConfig": {
+            "0": 40
+          },
+          "detectState": 0
         }
       },
       "cabinet": {
         "outputNr": {
-          "itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.SLOut1_Now",
-          "valueType": "int"
+          "itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.SLOut1_Now"
         },
         "2101": {
           "halfEye":{
@@ -170,31 +172,33 @@
     "device": {},
     "mainWeightBell": {
       "setting": {
-        "itemName": "Galaxy:ZY1_YPSpice_JK.Balance_YX127.FluxSP",
-        "valueType": "int"
+        "itemName": "Galaxy:ZY1_YPSpice_JK.Balance_YX127.FluxSP"
       },
       "accu": {
-        "itemName": "Galaxy:ZY1_YPSpice_JK.Balance_YX127.Total",
-        "valueType": "int"
+        "itemName": "Galaxy:ZY1_YPSpice_JK.Balance_YX127.Total"
       },
       "real": {
-        "itemName": "Galaxy:ZY1_YPSpice_JK.Balance_YX127.Flux",
-        "valueType": "int"
+        "itemName": "Galaxy:ZY1_YPSpice_JK.Balance_YX127.Flux"
       },
       "device": {        
         "提升带电眼": {
           "itemName": "Galaxy:ZY1_YPOutSilo_JK.Feed_YX125.Switch.Bottom",
-          "maxDuration": 20
+          "maxDurationConfig": {
+            "1": 60
+          },
+          "detectState": 1
         },
         "暂存柜进柜电眼": {
           "itemName": "Galaxy:ZY1_YPOutSilo_JK.Feed_YX125.Switch.Full",
-          "maxDuration": 40
+          "maxDurationConfig": {
+            "0": 40
+          },
+          "detectState": 0
         }
       },
       "cabinet": {
         "outputNr": {
-          "itemName": "Galaxy:ZY1_YPSpice_JK.ProductUnit.SLOut1_Now",
-          "valueType": "int"
+          "itemName": "Galaxy:ZY1_YPSpice_JK.ProductUnit.SLOut1_Now"
         },
         "1101": {
           "halfEye":{
@@ -218,7 +222,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }
@@ -245,7 +249,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }
@@ -272,7 +276,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }
@@ -299,7 +303,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 400,
             "lowFreq": 21,
             "total": 6800
           }
@@ -326,7 +330,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 100,
             "lowFreq": 21,
             "total": 6800
           }
@@ -353,7 +357,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 450,
+            "diff": 100,
             "lowFreq": 21,
             "total": 6800
           }

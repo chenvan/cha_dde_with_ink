@@ -22,7 +22,7 @@ VoiceTips的结构
 }
 */
 
-function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu, writeToStdout) {
+function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu) {
     let passSeconds = accu / setting * 3600
     
     return runningVoiceTips.filter(voiceTip => {
@@ -33,19 +33,19 @@ function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu, writeTo
         return false
     }).map(voiceTip => {
         return setTimeout(() => {
-            speakVoiceTip(voiceTip.content, writeToStdout)
+            speakVoiceTip(voiceTip.content)
         }, (voiceTip.offset - passSeconds) * 1000)
     })
 }
 
-function setReadyVoiceTips(readyVoiceTips, brandName, writeToStdout) {
+function setReadyVoiceTips(readyVoiceTips, brandName) {
     return readyVoiceTips.filter(voiceTip => {
         if(!voiceTip.hasOwnProperty("filter")) return true
         if(voiceTip.filter.includes(brandName)) return true
         return false
     }).map(voiceTip => {
         return setTimeout(() => {
-            speakVoiceTip(voiceTip.content, writeToStdout)
+            speakVoiceTip(voiceTip.content)
         }, voiceTip.offset * 1000)
     })
 }

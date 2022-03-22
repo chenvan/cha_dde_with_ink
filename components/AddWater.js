@@ -21,7 +21,7 @@ const AddWater = () => {
   const [idList, setIdList] = useState(["", ""])
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
-  const { write } = useStdout()
+  // const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
@@ -36,7 +36,7 @@ const AddWater = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立批号监听的时候出现错误`, write)
+        speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
       }
     }
@@ -73,7 +73,7 @@ const AddWater = () => {
   return (
     <>
       <Text>{`${line}(${state})`}</Text>
-      <Text>{brandName}</Text>
+      <Text>{`${brandName}.`}</Text>
       <WeightBell 
         name={"主秤"}
         config={config[line].weightBell["主秤"]}

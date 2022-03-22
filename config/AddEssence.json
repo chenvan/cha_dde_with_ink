@@ -8,75 +8,168 @@
       "itemName": "Galaxy:ZX4_Flavor_JK.ProductUnit.Batch_Now"
     },
     "margin": {
-      "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.ZX4_Box_Tobacco_Weight",
-      "valueType": "int"
+      "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.ZX4_Box_Tobacco_Weight"
     },
     "weightBell": {
       "主秤": {
         "setting": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.ProductUnit.Flux_ZYS_Now",
-          "valueType": "int"
+          "itemName": "Galaxy:ZX4_Flavor_JK.ProductUnit.Flux_ZYS_Now"
         },
         "accu": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Total",
-          "valueType": "int"
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Total"
         },
         "real": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Flux",
-          "valueType": "int"
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP105.Flux"
         },
         "device": {
           "叶丝提升带": {
-            "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP103_1.Feed.Switch.RaiseUp",
-            "maxDuration": 60
+            "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP103_1.Feed.Switch.Tran",
+            "maxDurationConfig": {
+              "1": 60
+            },
+            "detectState": 1
           }
         }
       },
       "梗丝秤": {
         "setting": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.FluxSP",
-          "valueType": "int"
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.FluxSP"
         },
         "accu": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Total",
-          "valueType": "int"
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Total"
         },
         "real": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Flux",
-          "valueType": "int"
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP205.Flux"
         },
         "device": {
           "梗丝提升带": {
             "itemName": "Galaxy:ZX4_Flavor_JK.IOBox.CP203.Switch.RaiseUp",
-            "maxDuration": 60
+            "maxDurationConfig": {
+              "1": 60
+            },
+            "detectState": 1
           },
           "梗丝暂存柜进柜": {
             "itemName": "Galaxy:ZX4_Flavor_JK.IOBox.CP203.Switch.Full",
-            "maxDuration": 90
+            "maxDurationConfig": {
+              "0": 30
+            },
+            "detectState": 0
           }
         }
       },
       "膨丝秤": {
         "setting": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.FluxSP",
-          "valueType": "int"
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.FluxSP"
         },
         "accu": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Total",
-          "valueType": "int"
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Total"
         },
         "real": {
-          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Flux",
-          "valueType": "int"
+          "itemName": "Galaxy:ZX4_Flavor_JK.Balance_CP415.Flux"
         },
         "device": {
           "膨丝提升带": {
-            "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.RaiseUp",
-            "maxDuration": 60
+            "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.Bottom",
+            "maxDurationConfig": {
+              "1": 65
+            },
+            "detectState": 1
           },
           "膨丝暂存柜进柜": {
             "itemName": "Galaxy:ZX4_Flavor_JK.Feed_CP413.Switch.full",
-            "maxDuration": 90
+            "maxDurationConfig": {
+              "0": 30
+            },
+            "detectState": 0
+          }
+        }
+      }
+    }
+  },
+  "九六加香": {
+    "brandName": {
+      "itemName": "Galaxy:ZX5_Flavor_JK.ProductUnit.BrandName_Now",
+      "valueType": "string"
+    },
+    "id": {
+      "itemName": "Galaxy:ZX5_Flavor_JK.ProductUnit.Batch_Now"
+    },
+    "margin": {
+      "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP110.ZX5_Box_Tobacco_Weight"
+    },
+    "weightBell": {
+      "主秤": {
+        "setting": {
+          "itemName": "Galaxy:ZX5_Flavor_JK.ProductUnit.Flux_ZYS_Now"
+        },
+        "accu": {
+          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP110.Total"
+        },
+        "real": {
+          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP110.Flux"
+        },
+        "device": {
+          "叶丝提升带": {
+            "itemName": "Galaxy:ZX5_Flavor_JK.Feed_CP108_1.Feed.Switch.Tran",
+            "maxDurationConfig": {
+              "1": 60
+            },
+            "detectState": 1
+          }
+        }
+      },
+      "梗丝秤": {
+        "setting": {
+          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP211.FluxSP"
+        },
+        "accu": {
+          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP211.Total"
+        },
+        "real": {
+          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP211.Flux"
+        },
+        "device": {
+          "梗丝提升带": {
+            "itemName": "Galaxy:ZX5_Flavor_JK.IOBox.CP209.Switch.RaiseUp",
+            "maxDurationConfig": {
+              "1": 60
+            },
+            "detectState": 1
+          },
+          "梗丝暂存柜进柜": {
+            "itemName": "Galaxy:ZX5_Flavor_JK.IOBox.CP209.Switch.Full",
+            "maxDurationConfig": {
+              "0": 30
+            },
+            "detectState": 0
+          }
+        }
+      },
+      "膨丝秤": {
+        "setting": {
+          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP421.FluxSP"
+        },
+        "accu": {
+          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP421.Total"
+        },
+        "real": {
+          "itemName": "Galaxy:ZX5_Flavor_JK.Balance_CP421.Flux"
+        },
+        "device": {
+          "膨丝提升带": {
+            "itemName": "Galaxy:ZX5_Flavor_JK.Feed_CP419.Switch.Bottom",
+            "maxDurationConfig": {
+              "1": 60
+            },
+            "detectState": 1
+          },
+          "膨丝暂存柜进柜": {
+            "itemName": "Galaxy:ZX5_Flavor_JK.Feed_CP419.Switch.full",
+            "maxDurationConfig": {
+              "0": 30
+            },
+            "detectState": 0
           }
         }
       }

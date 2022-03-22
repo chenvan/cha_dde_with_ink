@@ -9,27 +9,34 @@ const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
 const { logger } = require("../util/loggerHelper.js")
 
-const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) => {
+const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectState}) => {
 
   const [state, setState] = useState("停止")
   const [deviceState, setDeviceState] = useState(null)
   const [lastUpdateMoment, setLastUpdateMoment] = useState(Date.now())
   const [duration, setDuration] = useState(0)
+  const [maxDuration, setMaxDuration] = useState(60)
   const [isWarning, setIsWarning] = useState(false)
   const { serverName, line, setIsErr } = useContext(Context)
-  const { write } = useStdout()
+  // const { write } = useStdout()
 
   // init state listen
   useEffect(() => {
     const init = async () => {
       try {
         await setAdvise(serverName, itemName, result => {
-          setDeviceState(parseInt(result.data, 10))
+          let deviceState =  parseInt(result.data, 10)
+          
+          setDeviceState(deviceState)
           setLastUpdateMoment(Date.now())
+
+          if(maxDurationConfig.hasOwnProperty(deviceState)) {
+            setMaxDuration(maxDurationConfig[deviceState])
+          }
         })
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立 ${deviceName} 监听的时候出现错误`, write)
+        speakErr(`${line}${deviceName} 建立监听出错`)
         logger.error(`${line}`, err)
       }
     }
@@ -73,12 +80,12 @@ const Device = ({deviceName, maxDuration, itemName, parentState, detectState}) =
     setDuration(tempDuration)
 
     if(tempDuration > maxDuration && !isWarning && state === "监控") {
-      speakWarning(`${line} ${deviceName} 异常.`, write)
+      speakWarning(`${line} ${deviceName} 异常.`)
       setIsWarning(true)
     } else if(tempDuration <= maxDuration || state === "停止") {
       if(isWarning) setIsWarning(false)
     }
-  }, state === "监控" ? 5 * 1000 : null, true)
+  }, state === "监控" ? 1000 : null)
 
   return (
     <Text>

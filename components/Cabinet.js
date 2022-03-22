@@ -15,7 +15,7 @@ const Cabinet = ({config, wbAccu}) => {
   const [cabinetNr, setCabinetNr] = useState("")
   const [state, setState] = useState("停止")
   const {setIsErr, serverName, line} = useContext(Context)
-  const { write } = useStdout()
+  // const { write } = useStdout()
   const [isWarning, setIsWarning] = useState(false)
   const warningCount = useRef(0)
 
@@ -27,7 +27,7 @@ const Cabinet = ({config, wbAccu}) => {
         })
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立出柜号监听的时候出现错误`, write)
+        speakErr(`${line}出柜 建立监听出错`)
         logger.error(`${line}`, err)
       }
     }
@@ -38,7 +38,7 @@ const Cabinet = ({config, wbAccu}) => {
   useEffect(() => {
     if(cabinetNr === "") {
       if (state === "监控") {
-        speakErr(`${line} 监控状态下, 出柜号发生更换`, write)
+        speakErr(`${line} 监控状态下, 出柜号发生更换`)
       }
       setState("停止")
     } else {
@@ -67,7 +67,7 @@ const Cabinet = ({config, wbAccu}) => {
 
       if(warningCount.current++ > 3) {
         setIsErr(true)
-        speakErr(`${line} 出柜尝试3次获取总量出错`, write)
+        speakErr(`${line} 出柜尝试3次获取总量出错`)
         logger.error(`${line}`, err)
         warningCount.current = 0
       } else {
@@ -90,14 +90,14 @@ const Cabinet = ({config, wbAccu}) => {
           logger.info(`${line} 半柜电眼状态: ${halfEyeState}`)
     
           if(halfEyeState === 1) {
-            speakErr(`${line} 加料出柜未转高速`, write)
+            speakErr(`${line} 出柜未转高速`)
             setState("未转高速")
           } else {
             setState("完成")
           }
         } catch(err) {
-          setIsErr(true)
-          speakErr(`${line} 检查半柜电眼状态是出错`, write)
+          // setIsErr(true)
+          speakErr(`${line} 检查半柜电眼状态是出错`)
           logger.error(`${line}`, err)
         }
       }
