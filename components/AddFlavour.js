@@ -23,7 +23,6 @@ const AddFlavour = () => {
   const [id, setId] = useState("")
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
-  // const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {

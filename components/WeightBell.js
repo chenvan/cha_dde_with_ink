@@ -1,11 +1,12 @@
 'use strict'
 
 const VoiceTips = require("../config/VoiceTips.json")
+const Tail = require("../config/WeightBellTail.json")
 
 const React = require("react")
 const { useState, useEffect, useContext, useRef } = require("react")
 const importJsx = require('import-jsx')
-const { Text, useStdout } = require("ink")
+const { Text } = require("ink")
 
 const { fetchDDE, setAdvise } = require("../util/fetchDDE")
 const { logger } = require("../util/loggerHelper")
@@ -24,13 +25,11 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   const [real, setReal] = useState(0)
   const [accu, setAccu] = useState(0)
   const {setIsErr, serverName, line} = useContext(Context)
-  // const { write } = useStdout()
 
   const [isWarning, setIsWarning] = useState(false)
   
   const readyTimeIdList = useRef([])
   const runningTimeIdList = useRef([])
-  const warningCount = useRef(0)
 
   useEffect(() => {
     const init = async () => {
@@ -83,8 +82,6 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
 
   useEffect(() => {
     try {
-      // write(`${line}, ${name}, ${state}, ${setting}, ${real}, ${accu}\n`)
-
       if (state === "待机") {  
         if (setting !==0 && accu === 0 && setParentState !== undefined) {
           // 是主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
@@ -141,5 +138,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
     </>
   )
 }
+
+
 
 module.exports = WeightBell
