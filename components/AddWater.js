@@ -7,13 +7,13 @@ const { useState, useEffect, useRef, useContext } = require("react")
 const importJsx = require('import-jsx')
 const { setAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
-const { Box, Text, useStdout } = require('ink')
+const { Box, Text } = require('ink')
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
 const { useInterval } = require("../util/customHook")
 
-const Device = importJsx('./Device.js')
+const { Device } = importJsx('./Device.js')
 const WeightBell = importJsx('./WeightBell.js')
 
 const AddWater = () => {
@@ -21,7 +21,6 @@ const AddWater = () => {
   const [idList, setIdList] = useState(["", ""])
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
-  // const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
@@ -60,7 +59,7 @@ const AddWater = () => {
       // 延迟进入 待机 状态
       setState("待机") 
     } catch (err) {
-      
+      logger.error(`${line}`, err)
     }
   }, state === "获取参数" ? 1000 * 10 : null)
 
@@ -85,6 +84,7 @@ const AddWater = () => {
         name={"薄片秤"}
         config={config[line].weightBell["薄片秤"]}
         parentState={state}
+        brandName={brandName}
       />
       {
         Object.entries(config[line].device).map(

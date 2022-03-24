@@ -15,7 +15,7 @@ const { speakErr } = require("../util/speak")
 const Context = require('./Context')
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
 
-const Device = importJsx('./Device.js')
+const { DeviceCtrlByWBAccu } = importJsx('./Device.js')
 const Cabinet = importJsx('./Cabinet.js')
 
 const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
@@ -24,6 +24,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   const [setting, setSetting] = useState(0)
   const [real, setReal] = useState(0)
   const [accu, setAccu] = useState(0)
+  const [cutoff, setCutoff] = useState(undefined)
   const {setIsErr, serverName, line} = useContext(Context)
 
   const [isWarning, setIsWarning] = useState(false)
@@ -56,20 +57,26 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   }, [])
 
   useInterval(async () => {
-    try {
-
-      if(real > 100) {
-        if(state === "待机" || state === "停止监控") setState("监控")
-      } else if(real === 0 ) {
-        if(state === "监控") setState("停止监控")
-      } 
-
-    } catch(err) {
-      // if(!isWarning) setIsWarning(true) 
-      // logger.error(`${line} ${name} ${state} 实际流量，累计量获取失败`, err)  
-    }
-  }, ["待机", "监控", "停止监控"].includes(state) ? 5 * 1000 : null)
+    if(cutoff !== undefined && accu >= cutoff) setState("停止监控")
+    if(real === 0 ) setState("停止监控")
+  }, state === "监控" ? 5 * 1000 : null)
   // 加香段做完时，膨丝秤，梗丝秤的设定流量会变成0，导致无法从监控变成停止监控状态
+
+
+  useInterval(async () => {
+    if(cutoff !== undefined) {
+      if(accu < cutoff && real > 100) setState("监控")
+    } else {
+      if(real > 100) setState("监控")
+    }
+  }, state === "停止监控" ? 5 * 1000 : null)
+  // 加香段做完时，膨丝秤，梗丝秤的设定流量会变成0，导致无法从监控
+
+  useInterval(async () => {
+
+    if(real > 100) setState("监控")
+  
+  }, state === "待机" ? 5 * 1000 : null)
 
   useEffect(() => {
     if(parentState === "待机" ) {
@@ -82,7 +89,15 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
 
   useEffect(() => {
     try {
-      if (state === "待机") {  
+      if (state === "待机") {
+        
+        // 秤的截止点  
+        if(Tail[line][name]["cutoff"].hasOwnProperty(brandName)) {
+          setCutoff(Tail[line][name]["cutoff"][brandName] * 0.98)
+        } else {
+          setCutoff(undefined)
+        }
+        
         if (setting !==0 && accu === 0 && setParentState !== undefined) {
           // 是主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
           if(VoiceTips.hasOwnProperty(line)) readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName)
@@ -93,6 +108,8 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         } else if(setting !== 0 && real !== 0) {
           setState("监控")
         }
+
+
       } else if(state === "停止监控") {
         if(setParentState !== undefined) {
           runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
@@ -103,6 +120,13 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
           if(VoiceTips.hasOwnProperty(line)) runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu)
           setParentState(state)
         }
+
+        if(name.includes("薄片")) {
+          setTimeout(() => {
+            if(setting > 0 && real === 0) speakErr(`${line} ${name} 没有启动`) 
+          }, 1000 * 90);
+        }
+
       } else if(state === "停止") {
         
       }
@@ -114,6 +138,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   return (
     <>
       <Text backgroundColor={isWarning ? "#ff4500" : "black"}>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
+      <Text color="blue">{`秤截止数: ${cutoff}`}</Text>
       {
         config.hasOwnProperty("cabinet") && (
           <Cabinet 
@@ -128,10 +153,14 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
             let data = {
               ...deviceConfig,
               "deviceName": deviceName,
-              "parentState": state
+              "parentState": state,
+              "cutoff": cutoff,
+              "brandName": brandName,
+              "currentAccu": accu,
+              "offsetConfig": Tail[line][name]["offset"][deviceName]
             }
 
-            return <Device key={deviceName} {...data} />
+            return <DeviceCtrlByWBAccu key={deviceName} {...data} />
           }
         )
       }

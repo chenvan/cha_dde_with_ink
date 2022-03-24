@@ -10,7 +10,7 @@ const { fetchBrandName } = require("../util/fetchUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
-const { Box, Text, useStdout } = require('ink')
+const { Box, Text } = require('ink')
 const { useInterval } = require("../util/customHook")
 
 const WeightBell = importJsx('./WeightBell.js')
@@ -22,7 +22,6 @@ const AddEssence = () => {
   const [margin, setMargin] = useState(0)
   const [isWarning, setIsWarning] = useState(false)
   const {setIsErr, serverName, line} = useContext(Context)
-  // const { write } = useStdout()
 
   useEffect(() => {
     const init = async () => {
@@ -75,7 +74,6 @@ const AddEssence = () => {
       }else if(margin < 450 && isWarning) {
         setIsWarning(false)
       }
-
     } catch (err) {
       logger.error(`${line} ${state}`, err)
     }
@@ -100,8 +98,6 @@ const AddEssence = () => {
     
   }, state === "监控" ? 10 * 1000 : null)
 
-
-
   return (
     <>
       <Text>{`${line}(${state})`}</Text>
@@ -118,11 +114,13 @@ const AddEssence = () => {
         name={"梗丝秤"}
         config={config[line].weightBell["梗丝秤"]}
         parentState={state}
+        brandName={brandName}
       />
       <WeightBell 
         name={"膨丝秤"}
         config={config[line].weightBell["膨丝秤"]}
         parentState={state}
+        brandName={brandName}
       />
     </>
   )

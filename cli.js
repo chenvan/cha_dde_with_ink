@@ -12,7 +12,7 @@ const cli = meow({
 	flags: {
 		unit: {
 			type: "string",
-			default: "all"
+			default: "prod"
 		}
 	}
 })

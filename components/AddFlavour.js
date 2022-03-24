@@ -11,10 +11,10 @@ const { checkPara } = require("../util/checkParaUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
-const { Box, Text, useStdout } = require('ink')
+const { Box, Text } = require('ink')
 const { useInterval } = require("../util/customHook")
 
-const Device = importJsx('./Device.js')
+const { Device } = importJsx('./Device.js')
 const WeightBell = importJsx('./WeightBell.js')
 
 const AddFlavour = () => {

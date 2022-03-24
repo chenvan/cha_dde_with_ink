@@ -1,10 +1,11 @@
 'use strict'
+const Tail = require("../config/WeightBellTail.json")
 
 const { setAdvise } = require("../util/fetchDDE")
 const { speakWarning, speakErr } = require("../util/speak")
 const React = require("react")
 const { useState, useEffect, useContext } = require("react")
-const { Text, useStdout } = require("ink")
+const { Text } = require("ink")
 const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
 const { logger } = require("../util/loggerHelper.js")
@@ -18,7 +19,6 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
   const [maxDuration, setMaxDuration] = useState(60)
   const [isWarning, setIsWarning] = useState(false)
   const { serverName, line, setIsErr } = useContext(Context)
-  // const { write } = useStdout()
 
   // init state listen
   useEffect(() => {
@@ -106,5 +106,49 @@ const TimeComparator = ({maxDuration, duration, isWarning, backgroundColor}) => 
   )
 }
 
+const DeviceCtrlByWBAccu = ({deviceName, maxDurationConfig, itemName, parentState, detectState, cutoff, brandName, offsetConfig, currentAccu}) => {
+  
+  const [offset, setOffset] = useState(0)
+  const [state, setState] = useState("停止")
 
-module.exports = Device
+  useEffect(() => {
+    if(parentState === "待机" ) {
+      if(offsetConfig !== undefined) {
+        if(offsetConfig.hasOwnProperty(brandName)) {
+          setOffset(offsetConfig[brandName])
+        } else {
+          setOffset(offsetConfig["default"])
+        }
+      }
+    }
+    
+    setState(parentState) // state 与 parent state 的值应该是一样的
+
+  }, [parentState])
+
+  useEffect(() => {
+    if(state !== "监控" || cutoff === undefined) return
+
+    if(cutoff - offset < currentAccu && state === "监控") setState("停止监控")
+
+  }, [currentAccu, state])
+
+  return (
+    <>
+      <Device 
+        deviceName={deviceName}
+        maxDurationConfig={maxDurationConfig}
+        parentState={state}
+        itemName={itemName}
+        detectState={detectState}
+      />
+      <Text color="blue">{`截止数: ${cutoff !== undefined ? cutoff - offset : undefined}`}</Text>
+    </>
+  )
+
+}
+
+module.exports = {
+  Device,
+  DeviceCtrlByWBAccu
+}

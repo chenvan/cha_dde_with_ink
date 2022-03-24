@@ -15,9 +15,7 @@ const Cabinet = ({config, wbAccu}) => {
   const [cabinetNr, setCabinetNr] = useState("")
   const [state, setState] = useState("停止")
   const {setIsErr, serverName, line} = useContext(Context)
-  // const { write } = useStdout()
   const [isWarning, setIsWarning] = useState(false)
-  const warningCount = useRef(0)
 
   useEffect(() => {
     const init = async () => {
@@ -59,20 +57,9 @@ const Cabinet = ({config, wbAccu}) => {
       setState("监控")
       
       // 检查出柜频率
-      
-      if(warningCount.current !== 0) warningCount.current = 0
 
     } catch (err) {
-      if(!isWarning) setIsWarning(true) 
-
-      if(warningCount.current++ > 3) {
-        setIsErr(true)
-        speakErr(`${line} 出柜尝试3次获取总量出错`)
-        logger.error(`${line}`, err)
-        warningCount.current = 0
-      } else {
-        logger.info(`${line} 出柜获取总量出错`, err)
-      }
+      logger.error(`${line} 出柜获取总量出错`, err)
     }
   }, state === "待机" ? 10 * 1000 : null)
 
@@ -96,8 +83,8 @@ const Cabinet = ({config, wbAccu}) => {
             setState("完成")
           }
         } catch(err) {
-          // setIsErr(true)
-          speakErr(`${line} 检查半柜电眼状态是出错`)
+          setState("检查失败")
+          speakErr(`${line} 检查半柜电眼状态时出错, 请人工检查`)
           logger.error(`${line}`, err)
         }
       }
