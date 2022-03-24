@@ -25,7 +25,7 @@ const AddEssence = () => {
 
   const minute = useRef({
     now: 0,
-    last: 66
+    last: undefined
   })
 
   useEffect(() => {

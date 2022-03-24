@@ -38,6 +38,9 @@ async function request(serverName, itemName) {
     } catch(err) {
 
         if (err.message === "Not connected") {
+            // 运行时, 出现以下两种情况需要重新连接
+            // 1. NetDDEServer没打开 
+            // 2. Intouch View 没打开
             delete connectingServers[serverName]
         }
 
