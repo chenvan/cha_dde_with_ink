@@ -4,8 +4,8 @@ const config = require("../config/AddEssence.json")
 
 const React= require("react")
 const importJsx = require('import-jsx')
-const { useState, useEffect, useContext } = require("react")
-const { setAdvise, fetchDDE } = require("../util/fetchDDE")
+const { useState, useEffect, useContext, useRef } = require("react")
+const { setAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
@@ -23,6 +23,11 @@ const AddEssence = () => {
   const [isWarning, setIsWarning] = useState(false)
   const {setIsErr, serverName, line} = useContext(Context)
 
+  const minute = useRef({
+    now: 0,
+    last: 66
+  })
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -32,6 +37,9 @@ const AddEssence = () => {
           }),
           setAdvise(serverName, config[line].margin.itemName, result => {
             setMargin(parseInt(result.data, 10))
+          }),
+          setAdvise(serverName, "$Minute", result => {
+            minute.current.now = parseInt(result.data, 10)
           })
         ])
       } catch (err) {
@@ -63,6 +71,11 @@ const AddEssence = () => {
       logger.error(`${line} ${state}`, err)
     }
   }, state === "获取参数" ? 10 * 1000 : null)
+
+  useInterval(() => {
+    if(minute.current.now === minute.current.last) setIsErr(true)
+    minute.current.last = minute.current.now
+  }, 1000 * 60 * 2)
 
   useInterval(async () => {
     // 暂存柜存量

@@ -21,6 +21,11 @@ const AddWater = () => {
   const [idList, setIdList] = useState(["", ""])
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
+  
+  const minute = useRef({
+    now: 0,
+    last: undefined
+  })
 
   useEffect(() => {
     const init = async () => {
@@ -31,6 +36,9 @@ const AddWater = () => {
           }),
           setAdvise(serverName, config[line].id["除杂"].itemName, result => {
             setIdList(prevIdList => [prevIdList[0], result.data.slice(0, -3)])
+          }),
+          setAdvise(serverName, "$Minute", result => {
+            minute.current.now = parseInt(result.data, 10)
           })
         ])
       } catch (err) {
@@ -62,6 +70,11 @@ const AddWater = () => {
       logger.error(`${line}`, err)
     }
   }, state === "获取参数" ? 1000 * 10 : null)
+
+  useInterval(() => {
+    if(minute.current.now === minute.current.last) setIsErr(true)
+    minute.current.last = minute.current.now
+  }, 1000 * 60 * 2)
 
   useEffect(() => {
     if(state === "待机") {

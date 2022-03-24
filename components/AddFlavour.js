@@ -4,7 +4,7 @@ const config = require("../config/AddFlavour.json")
 
 const React= require("react")
 const importJsx = require('import-jsx')
-const { useState, useEffect, useContext } = require("react")
+const { useState, useEffect, useContext, useRef } = require("react")
 const { setAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { checkPara } = require("../util/checkParaUtil")
@@ -24,12 +24,22 @@ const AddFlavour = () => {
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
 
+  const minute = useRef({
+    now: 0,
+    last: 66
+  })
+
   useEffect(() => {
     const init = async () => {
       try {
-        await setAdvise(serverName, config[line].id.itemName, result => {
-          setId(result.data.slice(0, -3))
-        })
+        await Promise.all([
+          setAdvise(serverName, config[line].id.itemName, result => {
+            setId(result.data.slice(0, -3))
+          }),
+          setAdvise(serverName, "$Minute", result => {
+            minute.current.now = parseInt(result.data, 10)
+          })
+        ])
       } catch (err) {
         setIsErr(true)
         speakErr(`${line} 建立监听出错`)
@@ -57,6 +67,11 @@ const AddFlavour = () => {
       
     }
   }, state === "获取参数" ? 10 * 1000 : null)
+
+  useInterval(() => {
+    if(minute.current.now === minute.current.last) setIsErr(true)
+    minute.current.last = minute.current.now
+  }, 1000 * 60 * 2)
 
   useEffect(() => {
     if(state === "待机") { 
