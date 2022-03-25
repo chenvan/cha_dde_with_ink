@@ -59,8 +59,8 @@
           "薄片秤定量管高电眼": {
             "itemName": "Galaxy:ZY2_YPCylinder_JK.ZY2_NewPart.ZY2_BP.Feed205.Switch.High",
             "maxDurationConfig": {
-              "0": 40,
-              "1": 60
+              "0": 60,
+              "1": 90
             }
           }
         }
@@ -120,8 +120,8 @@
           "薄片秤定量管高电眼": {
             "itemName": "Galaxy:ZY1_YPCylinder_JK.ZY1_NewPart.ZY1_BP.Feed105.Switch.High",
             "maxDurationConfig": {
-              "0": 40,
-              "1": 60
+              "0": 60,
+              "1": 90
             }
           }
         }

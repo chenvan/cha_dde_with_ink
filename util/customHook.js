@@ -23,6 +23,34 @@ function useInterval(callback, delay, isRunRightNow = false) {
   }, [delay]);
 }
 
+// 先要检查一下是否可行
+function useTestServerConnect(serverName, setIsErr) {
+
+  const minute = useRef({
+    now: 0,
+    last: undefined
+  })
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await setAdvise(serverName, "$Minute", result => {
+          minute.current.now = parseInt(result.data, 10)
+        })
+      } catch (err) {
+        setIsErr(true)
+      }
+    }
+  
+    init()
+  }, [])
+
+  useInterval(() => {
+    if(minute.current.now === minute.current.last) setIsErr(true)
+    minute.current.last = minute.current.now
+  }, 1000 * 60 * 2)
+}
+
 module.exports = {
   useInterval
 }

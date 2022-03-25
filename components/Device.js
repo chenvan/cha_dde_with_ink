@@ -134,7 +134,8 @@ const DeviceCtrlByWBAccu = ({deviceName, maxDurationConfig, itemName, parentStat
   }, [currentAccu, state])
 
   return (
-    <>
+    <Text>
+      <Text color="blue">{`<${cutoff !== undefined ? cutoff - offset : ""}> `}</Text>
       <Device 
         deviceName={deviceName}
         maxDurationConfig={maxDurationConfig}
@@ -142,8 +143,7 @@ const DeviceCtrlByWBAccu = ({deviceName, maxDurationConfig, itemName, parentStat
         itemName={itemName}
         detectState={detectState}
       />
-      <Text color="blue">{`截止数: ${cutoff !== undefined ? cutoff - offset : undefined}`}</Text>
-    </>
+    </Text>
   )
 
 }

@@ -1,6 +1,6 @@
 'use strict'
 
-const config = require("../config/AddFlavour.json")
+const config = require("../config/Dryer.json")
 
 const React= require("react")
 const importJsx = require('import-jsx')
@@ -17,7 +17,7 @@ const { useInterval } = require("../util/customHook")
 const { Device } = importJsx('./Device.js')
 const WeightBell = importJsx('./WeightBell.js')
 
-const AddFlavour = () => {
+const Dryer = () => {
 
   const [state, setState] = useState("停止")
   const [id, setId] = useState("")
@@ -107,4 +107,4 @@ const AddFlavour = () => {
   )
 }
 
-module.exports = AddFlavour
+module.exports = Dryer

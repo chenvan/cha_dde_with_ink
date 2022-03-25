@@ -59,9 +59,19 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   useInterval(async () => {
     if(cutoff !== undefined && accu >= cutoff) setState("停止监控")
     if(real === 0 ) setState("停止监控")
-  }, state === "监控" ? 5 * 1000 : null)
-  // 加香段做完时，膨丝秤，梗丝秤的设定流量会变成0，导致无法从监控变成停止监控状态
 
+    // 检查流量波动
+    if(cutoff) {
+      if(Math.abs(setting - real) < 0.1 * setting && isWarning ) {
+        setIsWarning(false)
+      } else if (Math.abs(setting - real) >= 0.1 * setting && !isWarning ) {
+        setIsWarning(true)
+        speakErr(`${line} ${name} 流量波动`)
+        logger.error(`${line} ${name} 流量波动`)
+      }
+    }
+
+  }, state === "监控" ? 5 * 1000 : null)
 
   useInterval(async () => {
     if(cutoff !== undefined) {
@@ -70,7 +80,6 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
       if(real > 100) setState("监控")
     }
   }, state === "停止监控" ? 5 * 1000 : null)
-  // 加香段做完时，膨丝秤，梗丝秤的设定流量会变成0，导致无法从监控
 
   useInterval(async () => {
 
@@ -99,7 +108,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         }
         
         if (setting !==0 && accu === 0 && setParentState !== undefined) {
-          // 是主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
+          // 主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
           if(VoiceTips.hasOwnProperty(line)) readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName)
         } else if(setting === 0 || (setting !== 0 && real === 0 && accu > 0)) {
           // 秤的设定量为0时, 表示秤不需要监控
@@ -110,21 +119,27 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
         }
 
 
+
       } else if(state === "停止监控") {
         if(setParentState !== undefined) {
           runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
           setParentState(state)
         }
       } else if(state === "监控") {
+        // 进入监控先把 warning 设为 true 先
+        setIsWarning(true)
+
+        // 主秤
         if(setParentState !== undefined) {
           if(VoiceTips.hasOwnProperty(line)) runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu)
           setParentState(state)
         }
 
+        // 薄片秤不会检测是否投入生产
         if(name.includes("薄片")) {
           setTimeout(() => {
             if(setting > 0 && real === 0) speakErr(`${line} ${name} 没有启动`) 
-          }, 1000 * 90);
+          }, 1000 * 90)
         }
 
       } else if(state === "停止") {
@@ -137,8 +152,10 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
 
   return (
     <>
-      <Text backgroundColor={isWarning ? "#ff4500" : "black"}>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
-      <Text color="blue">{`秤截止数: ${cutoff}`}</Text>
+      <Text>
+        <Text color="blue">{`<${cutoff !== undefined ? cutoff : ""}> `}</Text>
+        <Text>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
+      </Text>
       {
         config.hasOwnProperty("cabinet") && (
           <Cabinet 
