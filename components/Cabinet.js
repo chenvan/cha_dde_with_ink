@@ -2,12 +2,15 @@
 
 const React = require("react")
 const { useState, useEffect, useContext, useRef } = require("react")
-const { Text, useStdout } = require("ink")
+const { Text } = require("ink")
 const { setAdvise, fetchDDE } = require("../util/fetchDDE")
 const { speakErr } = require("../util/speak")
 const Context = require('./Context')
 const { logger } = require("../util/loggerHelper")
 const { useInterval } = require("../util/customHook")
+const importJsx = require("import-jsx")
+
+const State = importJsx('./State.js')
 
 const Cabinet = ({config, wbAccu}) => {
   const cabinetTotal = useRef(0)
@@ -97,7 +100,11 @@ const Cabinet = ({config, wbAccu}) => {
 
   return (
     <>
-      <Text>{`出柜(${state}): ${cabinetNr % 10}`}</Text>
+      <Text>
+        <Text>{`出柜`}</Text>
+        <State state={state} />
+        <Text>{`: ${cabinetNr % 10}`}</Text>
+      </Text>
       <Text>{`${cabinetTotal.current} - ${wbAccu} = ${cabinetTotal.current - wbAccu}`}</Text>
     </>
   )

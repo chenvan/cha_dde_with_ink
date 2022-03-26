@@ -10,10 +10,11 @@ const { fetchBrandName } = require("../util/fetchUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
-const { Box, Text } = require('ink')
+const { Text } = require('ink')
 const { useInterval } = require("../util/customHook")
 
 const WeightBell = importJsx('./WeightBell.js')
+const State = importJsx('./State.js')
 
 const AddEssence = () => {
   const [state, setState] = useState("停止")
@@ -113,7 +114,10 @@ const AddEssence = () => {
 
   return (
     <>
-      <Text>{`${line}(${state})`}</Text>
+      <Text>
+        <Text>{`${line}`}</Text>
+        <State state={state} />
+      </Text>
       <Text>{`${brandName}.`}</Text>
       <WeightBell 
         name={"主秤"}

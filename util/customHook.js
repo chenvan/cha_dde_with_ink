@@ -1,5 +1,6 @@
 const React = require("react")
 const { useEffect, useRef } = require("react")
+const { logger } = require("./loggerHelper")
 
 function useInterval(callback, delay, isRunRightNow = false) {
   const savedCallback = useRef();
@@ -39,6 +40,7 @@ function useTestServerConnect(serverName, setIsErr) {
         })
       } catch (err) {
         setIsErr(true)
+        logger.error(`${serverName} 建立测试服务连接出错`, err)
       }
     }
   
@@ -52,5 +54,6 @@ function useTestServerConnect(serverName, setIsErr) {
 }
 
 module.exports = {
-  useInterval
+  useInterval,
+  useTestServerConnect
 }

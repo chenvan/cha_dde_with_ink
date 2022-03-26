@@ -15,6 +15,7 @@ const { useInterval } = require("../util/customHook")
 
 const { Device } = importJsx('./Device.js')
 const WeightBell = importJsx('./WeightBell.js')
+const State = importJsx('./State.js')
 
 const AddWater = () => {
   const [state, setState] = useState("停止")
@@ -84,7 +85,10 @@ const AddWater = () => {
 
   return (
     <>
-      <Text>{`${line}(${state})`}</Text>
+      <Text>
+        <Text>{`${line}`}</Text>
+        <State state={state} />
+      </Text>
       <Text>{`${brandName}.`}</Text>
       <WeightBell 
         name={"主秤"}

@@ -17,6 +17,7 @@ const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../ut
 
 const { DeviceCtrlByWBAccu } = importJsx('./Device.js')
 const Cabinet = importJsx('./Cabinet.js')
+const State = importJsx('./State.js')
 
 const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   
@@ -118,8 +119,6 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
           setState("监控")
         }
 
-
-
       } else if(state === "停止监控") {
         if(setParentState !== undefined) {
           runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
@@ -153,8 +152,10 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
   return (
     <>
       <Text>
-        <Text color="blue">{`<${cutoff !== undefined ? cutoff : ""}> `}</Text>
-        <Text>{`${name}(${state}): 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
+        <Text>{`${name}`}</Text>
+        <State state={state} />
+        <Text color="blue">{` <${cutoff !== undefined ? cutoff : ""}>`}</Text>
+        <Text>{`: 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
       </Text>
       {
         config.hasOwnProperty("cabinet") && (

@@ -9,8 +9,11 @@ const { Text } = require("ink")
 const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
 const { logger } = require("../util/loggerHelper.js")
+const importJsx = require("import-jsx")
 
-const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectState}) => {
+const State = importJsx('./State.js')
+
+const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectState, CutoffComp}) => {
 
   const [state, setState] = useState("停止")
   const [deviceState, setDeviceState] = useState(null)
@@ -89,7 +92,11 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
 
   return (
     <Text>
-      <Text>{`${deviceName}(${state}) [${detectState !== undefined ?  detectState + " " : ""}${deviceState}]: `}</Text>
+      <Text>{`${deviceName}`}</Text>
+      <State state={state} />
+      <Text>{` [${detectState !== undefined ?  detectState + " " : ""}${deviceState}] `}</Text>
+      {CutoffComp}
+      <Text>{": "}</Text>
       {
         state === "监控" && 
             <TimeComparator backgroundColor={isWarning? "red" : "black"} maxDuration={maxDuration} duration={duration} isWarning={isWarning} />
@@ -134,16 +141,14 @@ const DeviceCtrlByWBAccu = ({deviceName, maxDurationConfig, itemName, parentStat
   }, [currentAccu, state])
 
   return (
-    <Text>
-      <Text color="blue">{`<${cutoff !== undefined ? cutoff - offset : ""}> `}</Text>
-      <Device 
-        deviceName={deviceName}
-        maxDurationConfig={maxDurationConfig}
-        parentState={state}
-        itemName={itemName}
-        detectState={detectState}
-      />
-    </Text>
+    <Device 
+      deviceName={deviceName}
+      maxDurationConfig={maxDurationConfig}
+      parentState={state}
+      itemName={itemName}
+      detectState={detectState}
+      CutoffComp={<Text color="blue">{`<${cutoff !== undefined ? cutoff - offset : ""}>`}</Text>}
+    />
   )
 
 }
