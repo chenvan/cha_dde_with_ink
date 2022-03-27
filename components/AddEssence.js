@@ -20,8 +20,8 @@ const AddEssence = () => {
   const [state, setState] = useState("停止")
   const [id, setId] = useState("")
   const [brandName, setBrandName] = useState("")
-  const [margin, setMargin] = useState(0)
-  const [isWarning, setIsWarning] = useState(false)
+  // const [margin, setMargin] = useState(0)
+  // const [isWarning, setIsWarning] = useState(false)
   const {setIsErr, serverName, line} = useContext(Context)
 
   const minute = useRef({
@@ -36,9 +36,9 @@ const AddEssence = () => {
           setAdvise(serverName, config[line].id.itemName, result => {
             setId(result.data.slice(0, -3))
           }),
-          setAdvise(serverName, config[line].margin.itemName, result => {
-            setMargin(parseInt(result.data, 10))
-          }),
+          // setAdvise(serverName, config[line].margin.itemName, result => {
+          //   setMargin(parseInt(result.data, 10))
+          // }),
           setAdvise(serverName, "$Minute", result => {
             minute.current.now = parseInt(result.data, 10)
           })
@@ -78,39 +78,39 @@ const AddEssence = () => {
     minute.current.last = minute.current.now
   }, 1000 * 60 * 2)
 
-  useInterval(async () => {
-    // 暂存柜存量
-    try {
-      // 转批，在待机阶段暂存柜存量会有一个假数, 应该是上一批的累积量
-      if(margin > 500 && margin < 2500 && !isWarning) {
-        speakErr(`${line} 叶丝暂存柜存料过多`)
-        setIsWarning(true)
-      }else if(margin < 450 && isWarning) {
-        setIsWarning(false)
-      }
-    } catch (err) {
-      logger.error(`${line} ${state}`, err)
-    }
-  }, state === "待机" || state === "停止监控" ? 10 * 1000 : null)
+  // useInterval(async () => {
+  //   // 暂存柜存量
+  //   try {
+  //     // 转批，在待机阶段暂存柜存量会有一个假数, 应该是上一批的累积量
+  //     if(margin > 500 && margin < 2500 && !isWarning) {
+  //       speakErr(`${line} 叶丝暂存柜存料过多`)
+  //       setIsWarning(true)
+  //     }else if(margin < 450 && isWarning) {
+  //       setIsWarning(false)
+  //     }
+  //   } catch (err) {
+  //     logger.error(`${line} ${state}`, err)
+  //   }
+  // }, state === "待机" || state === "停止监控" ? 10 * 1000 : null)
 
-  useInterval(async () => {
-    try {
+  // useInterval(async () => {
+  //   try {
      
-      if(margin > 600 && !isWarning) {
-        speakErr(`${line} 叶丝暂存柜存料过多`)
-        setIsWarning(true)
-      }else if(margin < 50 && !isWarning) {
-        speakErr(`${line} 叶丝暂存柜存料过少`)
-        setIsWarning(true)
-      }else if(margin < 550 && margin > 100 && isWarning) {
-        setIsWarning(false)
-      }
+  //     if(margin > 600 && !isWarning) {
+  //       speakErr(`${line} 叶丝暂存柜存料过多`)
+  //       setIsWarning(true)
+  //     }else if(margin < 50 && !isWarning) {
+  //       speakErr(`${line} 叶丝暂存柜存料过少`)
+  //       setIsWarning(true)
+  //     }else if(margin < 550 && margin > 100 && isWarning) {
+  //       setIsWarning(false)
+  //     }
 
-    } catch (err) {
-      logger.error(`${line} ${state}`, err)
-    }
+  //   } catch (err) {
+  //     logger.error(`${line} ${state}`, err)
+  //   }
     
-  }, state === "监控" ? 10 * 1000 : null)
+  // }, state === "监控" ? 10 * 1000 : null)
 
   return (
     <>
@@ -126,7 +126,7 @@ const AddEssence = () => {
         brandName={brandName}
         setParentState={setState}
       />
-      <Text>{`暂存柜料量: ${margin} kg`}</Text>
+      {/* <Text>{`暂存柜料量: ${margin} kg`}</Text> */}
       <WeightBell 
         name={"梗丝秤"}
         config={config[line].weightBell["梗丝秤"]}

@@ -14,8 +14,9 @@ const { useInterval } = require("../util/customHook.js")
 const { speakErr } = require("../util/speak")
 const Context = require('./Context')
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
+const { Device, StateCtrlByWbAccuSkin, Margin } = require("./Device")
 
-const { DeviceCtrlByWBAccu } = importJsx('./Device.js')
+// const { DeviceCtrlByWBAccu, Margin } = importJsx('./Device.js')
 const Cabinet = importJsx('./Cabinet.js')
 const State = importJsx('./State.js')
 
@@ -164,6 +165,22 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
             wbAccu={accu}
           /> 
         )
+      }
+      {
+        config.hasOwnProperty("margin") && (
+          <StateCtrlByWbAccuSkin
+            brandName={brandName}
+            parentState={state}
+            wbAccu={accu}
+            offsetConfig={Tail[line][name]["offset"]["margin"]}
+            cutoff={cutoff}
+            key={"margin"}
+          >
+            <Margin 
+              config={config.margin}
+            />
+          </StateCtrlByWbAccuSkin>
+        )
       }      
       {
         Object.entries(config.device).map(
@@ -171,14 +188,22 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
             let data = {
               ...deviceConfig,
               "deviceName": deviceName,
-              "parentState": state,
-              "cutoff": cutoff,
-              "brandName": brandName,
-              "currentAccu": accu,
-              "offsetConfig": Tail[line][name]["offset"][deviceName]
             }
 
-            return <DeviceCtrlByWBAccu key={deviceName} {...data} />
+            return (
+              <StateCtrlByWbAccuSkin
+                brandName={brandName}
+                parentState={state}
+                wbAccu={accu}
+                offsetConfig={Tail[line][name]["offset"][deviceName]}
+                cutoff={cutoff}
+                key={deviceName}
+              >
+                <Device 
+                  {...data}
+                />
+              </StateCtrlByWbAccuSkin>
+            )
           }
         )
       }

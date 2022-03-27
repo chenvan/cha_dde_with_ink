@@ -107,7 +107,10 @@ async function fetchDDETest(serverName, itemName, returnType) {
 async function setAdviseTest(serverName, itemName, callback) {
     if(fakeDataConfig.hasOwnProperty(itemName)) {
         callback({data: fakeDataConfig[itemName]})
-    } else {
+    }else if(itemName === "$Minute") {
+        let today = new Date()
+        callback({data: today.getMinutes()})
+    }else {
         callback({data: "0"})
     }
 }

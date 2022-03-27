@@ -54,6 +54,9 @@
             "offset": {
                 "叶丝提升带": {
                     "default": 50
+                },
+                "margin": {
+                    "default": 100
                 }
             }
         },

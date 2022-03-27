@@ -32,4 +32,6 @@ const Provider = ({line, children}) => {
   )
 }
 
-module.exports = Provider
+module.exports = {
+  Provider
+}

@@ -1,6 +1,4 @@
 'use strict'
-const Tail = require("../config/WeightBellTail.json")
-
 const { setAdvise } = require("../util/fetchDDE")
 const { speakWarning, speakErr } = require("../util/speak")
 const React = require("react")
@@ -112,8 +110,7 @@ const TimeComparator = ({maxDuration, duration, isWarning, backgroundColor}) => 
     </Text>
   )
 }
-
-const DeviceCtrlByWBAccu = ({deviceName, maxDurationConfig, itemName, parentState, detectState, cutoff, brandName, offsetConfig, currentAccu}) => {
+const StateCtrlByWbAccuSkin = ({brandName, wbAccu, parentState, cutoff, offsetConfig, children}) => {
   
   const [offset, setOffset] = useState(0)
   const [state, setState] = useState("停止")
@@ -136,24 +133,88 @@ const DeviceCtrlByWBAccu = ({deviceName, maxDurationConfig, itemName, parentStat
   useEffect(() => {
     if(state !== "监控" || cutoff === undefined) return
 
-    if(cutoff - offset < currentAccu && state === "监控") setState("停止监控")
+    if(cutoff - offset < wbAccu && state === "监控") setState("停止监控")
 
-  }, [currentAccu, state])
+  }, [wbAccu, state])
 
   return (
-    <Device 
-      deviceName={deviceName}
-      maxDurationConfig={maxDurationConfig}
-      parentState={state}
-      itemName={itemName}
-      detectState={detectState}
-      CutoffComp={<Text color="blue">{`<${cutoff !== undefined ? cutoff - offset : ""}>`}</Text>}
-    />
+    <>
+      {
+        React.cloneElement(
+          children, 
+          {
+            parentState: state, 
+            CutoffComp: <Text color="blue">{`<${cutoff !== undefined ? cutoff - offset : ""}>`}</Text>
+          }
+        )
+      }
+    </>
   )
+}
 
+const Margin = ({config, parentState, CutoffComp}) => {
+  const [margin, setMargin] = useState(0)
+  const [isWarning, setIsWarning] = useState(false)
+  const {setIsErr, serverName, line} = useContext(Context)
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await setAdvise(serverName, config.itemName, result => {
+          setMargin(parseInt(result.data, 10))
+        })
+      } catch (err) {
+        setIsErr(true)
+        speakErr(`${line} margin 建立监听出错`)
+        logger.error(`${line}`, err)
+      }
+    }
+    init()
+  }, [])
+
+  useInterval(async () => {
+    // 暂存柜存量
+    try {
+      // 转批，在待机阶段暂存柜存量会有一个假数, 应该是上一批的累积量
+      if(margin > 500 && margin < 2500 && !isWarning) {
+        speakErr(`${line} 叶丝暂存柜存料过多`)
+        setIsWarning(true)
+      }else if(margin < 450 && isWarning) {
+        setIsWarning(false)
+      }
+    } catch (err) {
+      logger.error(`${line} margin`, err)
+    }
+  }, parentState === "待机" || parentState === "停止监控" ? 10 * 1000 : null)
+
+  useInterval(async () => {
+    try {
+     
+      if(margin > 600 && !isWarning) {
+        speakErr(`${line} 叶丝暂存柜存料过多`)
+        setIsWarning(true)
+      }else if(margin < 50 && !isWarning) {
+        speakErr(`${line} 叶丝暂存柜存料过少`)
+        setIsWarning(true)
+      }else if(margin < 550 && margin > 100 && isWarning) {
+        setIsWarning(false)
+      }
+    } catch (err) {
+      logger.error(`${line} margin`, err)
+    }
+  }, parentState === "监控" ? 10 * 1000 : null)
+
+  return (
+    <Text>
+      <Text>{`暂存柜料量`}</Text>
+      {CutoffComp}
+      <Text>{`: ${margin} kg`}</Text>
+    </Text>
+  )
 }
 
 module.exports = {
   Device,
-  DeviceCtrlByWBAccu
+  Margin,
+  StateCtrlByWbAccuSkin
 }

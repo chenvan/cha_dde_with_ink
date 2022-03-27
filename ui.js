@@ -7,7 +7,7 @@ const { Box } = require('ink');
 const AddFlavour = importJsx('./components/AddFlavour.js')
 const AddWater = importJsx('./components/AddWater.js')
 const AddEssence = importJsx('./components/AddEssence.js')
-const Provider = importJsx('./components/Provider.js')
+const { Provider } = importJsx('./components/Provider.js')
 
 let setting = {
 	"prod": {
