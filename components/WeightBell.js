@@ -14,9 +14,8 @@ const { useInterval } = require("../util/customHook.js")
 const { speakErr } = require("../util/speak")
 const Context = require('./Context')
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
-const { Device, StateCtrlByWbAccuSkin, Margin } = require("./Device")
 
-// const { DeviceCtrlByWBAccu, Margin } = importJsx('./Device.js')
+const { Device, StateCtrlByWbAccuSkin, Margin } = require("./Device")
 const Cabinet = importJsx('./Cabinet.js')
 const State = importJsx('./State.js')
 
@@ -210,7 +209,5 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
     </>
   )
 }
-
-
 
 module.exports = WeightBell

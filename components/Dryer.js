@@ -7,7 +7,6 @@ const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
 const { setAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
-const { checkPara } = require("../util/checkParaUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
@@ -20,7 +19,7 @@ const WeightBell = importJsx('./WeightBell.js')
 const Dryer = () => {
 
   const [state, setState] = useState("停止")
-  const [id, setId] = useState("")
+  const [idList, setIdList] = useState(["", ""])
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
 
@@ -32,9 +31,13 @@ const Dryer = () => {
   useEffect(() => {
     const init = async () => {
       try {
+        // 可能一个 id 就可以了
         await Promise.all([
-          setAdvise(serverName, config[line].id.itemName, result => {
-            setId(result.data.slice(0, -3))
+          setAdvise(serverName, config[line].id["出柜"].itemName, result => {
+            setIdList(prevIdList => [result.data.slice(0, -3), prevIdList[1]])
+          }),
+          setAdvise(serverName, config[line].id["切丝"].itemName, result => {
+            setIdList(prevIdList => [prevIdList[0], result.data.slice(0, -3)])
           }),
           setAdvise(serverName, "$Minute", result => {
             minute.current.now = parseInt(result.data, 10)
@@ -51,12 +54,12 @@ const Dryer = () => {
   }, [])
 
   useEffect(() => {
-    if(id !== "") {
+    if(idList[0] === idList[1] && idList[1] !== "") {
       setState("获取参数")
-    } else {
+    } else if(idList[1] === "") {
       setState("停止")
     }
-  }, [id])
+  }, [idList])
 
   useInterval(async () => {
     try {
@@ -64,7 +67,7 @@ const Dryer = () => {
       setBrandName(brandName)
       setState("待机")
     } catch (err) {
-      
+      logger.error(`${line}`, err)
     }
   }, state === "获取参数" ? 10 * 1000 : null)
 
@@ -72,12 +75,6 @@ const Dryer = () => {
     if(minute.current.now === minute.current.last) setIsErr(true)
     minute.current.last = minute.current.now
   }, 1000 * 60 * 2)
-
-  useEffect(() => {
-    if(state === "待机") { 
-      setTimeout(() => checkPara(line, serverName, config[line].para), 20 * 1000)
-    }
-  }, [state])
 
   return (
     <>

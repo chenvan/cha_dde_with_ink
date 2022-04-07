@@ -65,7 +65,7 @@ const AddFlavour = () => {
       setBrandName(brandName)
       setState("待机")
     } catch (err) {
-      
+      logger.error(`${line}`, err)
     }
   }, state === "获取参数" ? 10 * 1000 : null)
 
