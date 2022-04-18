@@ -7,7 +7,7 @@ const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
 const { setAdvise } = require("../util/fetchDDE")
 const { fetchBrandName } = require("../util/fetchUtil")
-const { checkPara } = require("../util/checkParaUtil")
+const { checkPara, MoistureMeter } = require("../util/checkParaUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
@@ -25,13 +25,18 @@ const AddFlavour = () => {
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
 
+  const moistureMeter = useRef([])
   const minute = useRef({
     now: 0,
     last: undefined
   })
 
   useEffect(() => {
+
     const init = async () => {
+
+      moistureMeter.current = [new MoistureMeter(line, "入口水分仪"), new MoistureMeter(line, "出口水分仪")]
+
       try {
         await Promise.all([
           setAdvise(serverName, config[line].id.itemName, result => {
@@ -39,7 +44,9 @@ const AddFlavour = () => {
           }),
           setAdvise(serverName, "$Minute", result => {
             minute.current.now = parseInt(result.data, 10)
-          })
+          }),
+          moistureMeter.current[0].initM(serverName, config[line]["moistureMeter"]["入口水分仪"]),
+          moistureMeter.current[1].initM(serverName, config[line]["moistureMeter"]["出口水分仪"])
         ])
       } catch (err) {
         setIsErr(true)
@@ -76,9 +83,15 @@ const AddFlavour = () => {
 
   useEffect(() => {
     if(state === "待机") { 
-      setTimeout(() => checkPara(line, serverName, config[line].para), 20 * 1000)
+      // setTimeout(() => checkPara(line, serverName, config[line].para, brandName), 20 * 1000)
+      console.log(moistureMeter.current[0])
+      console.log(moistureMeter.current[1])
+      setTimeout(() => {
+        moistureMeter.current[0].check(brandName),
+        moistureMeter.current[1].check(brandName)
+      }, 10 * 1000)
     }
-  }, [state])
+  }, [state, brandName])
 
   return (
     <>

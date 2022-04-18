@@ -19,7 +19,7 @@ const { Device, StateCtrlByWbAccuSkin, Margin } = require("./Device")
 const Cabinet = importJsx('./Cabinet.js')
 const State = importJsx('./State.js')
 
-const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
+const WeightBell = ({name, config, parentState, brandName, setParentState, isCabMon}) => {
   
   const [state, setState] = useState("停止")
   const [setting, setSetting] = useState(0)
@@ -162,6 +162,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState}) => {
           <Cabinet 
             config={config.cabinet}
             wbAccu={accu}
+            isCabMon={isCabMon}
           /> 
         )
       }

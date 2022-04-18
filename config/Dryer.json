@@ -1,27 +1,39 @@
 {
   "六四烘丝": {
     "brandName": {
-      "itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.BrandName_Now",
+      "itemName": "Galaxy:rHN_Z7.HN.ZX_CurrBrandName",
       "valueType": "string"
     },
     "id": {
-      "出柜": {"itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.Batch_Now"},
-      "切丝": {"itemName": "Galaxy:rHN_Z7.HN.ZX_CurrBatch"}
+      "出柜": {"itemName": "Galaxy:ZY3_OutSilo1_JK.ProductUnit.Batch_Now"},
+      "烘丝": {"itemName": "Galaxy:rHN_Z7.HN.ZX_CurrBatch"}
+    },
+    "moistureMeter": {
+      "入口水分仪":  [
+        "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSQ.Read_BrandName",
+        "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSQ.Read_Trim", 
+        "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSQ.Write_Trim"
+      ],
+      "出口水分仪": [
+        "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSH.Read_BrandName",
+        "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSH.Read_Trim",
+        "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSH.Write_Trim"
+      ]
     },
     "device": {},
     "mainWeightBell": {
       "setting": {
-        "itemName": "Galaxy:ZY2_YPSpice_JK.Balance_YX227.FluxSP"
+        "itemName": "Galaxy:rHN_Z7.HN.ZX_DB1Value_1"
       },
       "accu": {
         "itemName": "Galaxy:rHN_Z7.HN.ZX_DB1Value_4"
       },
       "real": {
-        "itemName": "Galaxy:ZY2_YPSpice_JK.Balance_YX227.Flux"
+        "itemName": "Galaxy:rHN_Z7.HN.ZX_TT1Value_18"
       },
       "device": {        
         "提升带电眼": {
-          "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Bottom",
+          "itemName": "Galaxy:ZX2_YSCut2_JK.FeedCabinet_YS216.Feed.Switch.Bottom",
           "maxDurationConfig": {
             "1": 60 
           },
@@ -197,6 +209,18 @@
       }
     },
     "para": {
+      "MoistureMeter": {
+        "入口水分仪":  [
+          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSQ.Read_BrandName",
+          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSQ.Read_Trim", 
+          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSQ.Write_Trim"
+        ],
+        "出口水分仪": [
+          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSH.Read_BrandName",
+          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSH.Read_Trim",
+          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSH.Write_Trim"
+        ]
+      }
     }
   },
   "九六烘丝": {
