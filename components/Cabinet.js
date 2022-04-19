@@ -12,13 +12,15 @@ const importJsx = require("import-jsx")
 
 const State = importJsx('./State.js')
 
-const Cabinet = ({config, wbAccu}) => {
+const Cabinet = ({config, wbAccu, isCabMon}) => {
   const cabinetTotal = useRef(0)
 
   const [cabinetNr, setCabinetNr] = useState("")
   const [state, setState] = useState("停止")
   const {setIsErr, serverName, line} = useContext(Context)
-  const [isWarning, setIsWarning] = useState(false)
+  const [isMon, setIsMon] = useState(false)
+
+  // const [isWarning, setIsWarning] = useState(false)
 
   useEffect(() => {
     const init = async () => {
@@ -35,6 +37,11 @@ const Cabinet = ({config, wbAccu}) => {
 
     init()
   }, [])
+
+  useEffect(() => {
+    // 需要延时，否则烘丝转批是会报出柜没转高速
+    setTimeout(() => setIsMon(isCabMon), 1000 * 5)
+  }, [isCabMon])
 
   useEffect(() => {
     if(cabinetNr === "") {
@@ -69,7 +76,8 @@ const Cabinet = ({config, wbAccu}) => {
 
   useEffect(() => {
     const checkHalfEye = async () => {
-      if(state === "监控" && config.hasOwnProperty(cabinetNr) && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
+      if(state === "监控" && isMon !== false && config.hasOwnProperty(cabinetNr) && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
+        console.log(`${wbAccu}, 出柜号: ${cabinetNr}, 状态: ${state}, 监控: ${isMon}`)
         try{
           let halfEyeState = await fetchDDE(
             serverName, 
@@ -95,7 +103,7 @@ const Cabinet = ({config, wbAccu}) => {
 
     checkHalfEye()
 
-  }, [wbAccu, state, cabinetNr])
+  }, [wbAccu, state, cabinetNr, isMon])
 
 
   return (
