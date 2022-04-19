@@ -57,15 +57,16 @@ function splitToChunks(array, rows) {
 
 const App = ({unit}) => {
 
-	const [displayComp, setDisplayComp] = useState([])
+	const [displayComps, setDisplayComps] = useState([])
 
 	useEffect(() => {
-    	let temp = Object.keys(setting[unit]).reduce((displayComp, type) => {
-        	return displayComp.concat(setting[unit][type].map(line => returnComponent(type, line)))
-    	}, [])
+		let temp = Object.keys(setting[unit]).reduce((compList, type) => {
+				return compList.concat(setting[unit][type].map(line => returnComponent(type, line)))
+		}, [])
 	
-    	setDisplayComp(splitToChunks(temp, 3))
-
+		temp = splitToChunks(temp, 3)
+    
+		setDisplayComps(temp)
 	}, [])
 
 	return (
@@ -80,7 +81,7 @@ const App = ({unit}) => {
 		// </Box>
 		<Box key="root" flexDirection='column' width="100%">
 			{
-				displayComp.map((comps, index) => {
+				displayComps.map((comps, index) => {
 					return (
 						<Box key={'row'+index} flexDirection='row' width="100%">
 							{

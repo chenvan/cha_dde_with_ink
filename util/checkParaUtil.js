@@ -34,13 +34,15 @@ async function checkPara(line, serverName, paraConfig, brandName) {
 }
 
 // 全角符号转半角符号
-function toCDB(str) {
+function toHalfwidth(str) {
   let temp = ""
 
   for(let i = 0; i < str.length; i++) {
     if(str.charCodeAt(i) > 65280 && str.charCodeAt(i) < 65375) {
       temp += String.fromCharCode(str.charCodeAt(i) - 65248)
-    } else {
+    }else if(str.charCodeAt(i) === 12288) {
+      temp += String.fromCharCode(str.charCodeAt(i) - 12256)
+    }else {
       temp += String.fromCharCode(str.charCodeAt(i))
     }
   }
@@ -58,7 +60,7 @@ class MoistureMeter {
     return Promise.all([
       setAdvise(serverName, itemNameList[0], result => {
         let temp = result.data.slice(0, -3)
-        console.log(`${temp}. ${toCDB(temp)}.`)
+        console.log(`${temp}. ${toHalfwidth(temp)}.`)
 
         this.brandName = result.data.slice(0, -3).replace("（", "(").replace("）", ")")
       }),
