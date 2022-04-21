@@ -6,7 +6,7 @@ const React= require("react")
 const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
 const { setAdvise } = require("../util/fetchDDE")
-const { checkPara, MoistureMeter } = require("../util/checkParaUtil")
+const { MoistureMeter } = require("../util/checkParaUtil")
 const { fetchBrandName } = require("../util/fetchUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
@@ -85,9 +85,6 @@ const Dryer = () => {
 
   useEffect(() => {
     if(state === "待机") { 
-      // setTimeout(() => checkPara(line, serverName, config[line].para, brandName), 20 * 1000)
-      console.log(moistureMeter.current[0])
-      console.log(moistureMeter.current[1])
       setTimeout(() => {
         moistureMeter.current[0].check(brandName),
         moistureMeter.current[1].check(brandName)

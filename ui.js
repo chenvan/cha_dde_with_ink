@@ -26,7 +26,7 @@ let setting = {
 	"64": {
 		"回潮": ["六四回潮"],
 		"加料": ["六四加料"],
-		// "烘丝": ["六四烘丝"],
+		"烘丝": ["六四烘丝"],
 		"加香": ["六四加香"]
 	}
 }
@@ -69,15 +69,6 @@ const App = ({unit}) => {
 	}, [])
 
 	return (
-		// <Box key="root" flexDirection='column' width="100%">
-		// 	{
-		// 		Object.keys(setting[unit]).map(type => {
-		// 			return <Box key={type} flexDirection='row' width="100%">{
-		// 				setting[unit][type].map(line => returnComponent(type, line))
-		// 			}</Box>
-		// 		})
-		// 	}
-		// </Box>
 		<Box key="root" flexDirection='column' width="100%">
 			{
 				displayComp.map((comps, index) => {

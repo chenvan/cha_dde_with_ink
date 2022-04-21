@@ -66,7 +66,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 1900,
+            "diff": 1700,
             "lowFreq": 21,
             "total": 6800
           }
@@ -93,7 +93,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 1900,
+            "diff": 1700,
             "lowFreq": 21,
             "total": 6800
           }
@@ -120,7 +120,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 1900,
+            "diff": 1700,
             "lowFreq": 21,
             "total": 6800
           }
@@ -147,7 +147,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 1900,
+            "diff": 1700,
             "lowFreq": 21,
             "total": 6800
           }
@@ -174,7 +174,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 1900,
+            "diff": 1700,
             "lowFreq": 21,
             "total": 6800
           }
@@ -201,27 +201,14 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 1900,
+            "diff": 1700,
             "lowFreq": 21,
             "total": 6800
           }
         }
       }
     },
-    "para": {
-      "MoistureMeter": {
-        "入口水分仪":  [
-          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSQ.Read_BrandName",
-          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSQ.Read_Trim", 
-          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSQ.Write_Trim"
-        ],
-        "出口水分仪": [
-          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSH.Read_BrandName",
-          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSH.Read_Trim",
-          "Galaxy:ZX2_YSKiln_JK.ProductUnit.MoistureMeter_HSH.Write_Trim"
-        ]
-      }
-    }
+    "para": {}
   },
   "九六烘丝": {
 

@@ -77,7 +77,7 @@ const Cabinet = ({config, wbAccu, isCabMon}) => {
   useEffect(() => {
     const checkHalfEye = async () => {
       if(state === "监控" && isMon !== false && config.hasOwnProperty(cabinetNr) && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
-        console.log(`${wbAccu}, 出柜号: ${cabinetNr}, 状态: ${state}, 监控: ${isMon}`)
+        // console.log(`${wbAccu}, 出柜号: ${cabinetNr}, 状态: ${state}, 监控: ${isMon}`)
         try{
           let halfEyeState = await fetchDDE(
             serverName, 
