@@ -5,6 +5,9 @@ DDE 获取数据的方式是 fetch 和 advice, 为了方便开发需要在 test 
 
 用 DDE 获取数据并不稳定(特别是对96线使用fetch), 经常无法找到 item 
 
+client与fetch的关系
+
+
 ## 升级
 
 待中控升级后, 看是否能够改用支持UA架构的Lib, 更改获取数据的方法
