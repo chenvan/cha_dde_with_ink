@@ -1,5 +1,5 @@
 const { NetDDEClient, Constants } = require('netdde')
-const fakeDataConfig = require("../config/test.json")
+const  itemNameMapForTest = require("../test/itemNameMap.json")
 const { logger } = require("../util/loggerHelper")
 
 const serverNameList = [
@@ -11,13 +11,11 @@ let connectedGroup = new Map()
 let isTest = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === "dev"
 let topicName = isTest ? "[test.xlsm]Sheet1" : "tagname"
 let transformItemName = isTest ? transformForTest : itemName => itemName
-
+let transformMap = new Map(Object.entries(itemNameMapForTest))
 
 function transformForTest(itemName) {
     // 具体的
-    if(itemName === "Galaxy:rHN_Z7.HN.ZX_DB1Value_1") return "R2C2"
-    if(itemName === "Galaxy:rHN_Z7.HN.ZX_DB1Value_4") return "R4C2"
-    if(itemName === "Galaxy:rHN_Z7.HN.ZX_TT1Value_18") return "R3C2"
+    if(transformMap.has(itemName)) return transformMap.get(itemName)
     // 不具体的
     if(itemName.includes("Batch")) return "R6C2"
     if(itemName.includes("BrandName")) return "R5C2"
@@ -29,7 +27,7 @@ function transformForTest(itemName) {
     if(itemName.includes("Second")) return "R9C2"
     if(itemName.includes("Read_Trim")) return "R10C2"
     if(itemName.includes("Write_Trim")) return "R11C2"
-    if(itemName.includes("SLOut")) return "R12C2"
+    if(itemName.includes("FT_DP5_B1")) return "R17C2"
     if(itemName.includes("InWeight")) return "R13C2"
     // default
     return "R1C2"
@@ -37,6 +35,7 @@ function transformForTest(itemName) {
 
 async function fetchDDE (serverName, itemName, valueType) {
     let value = await request(serverName, itemName)
+    
     if(valueType === 'int') {
         value = parseInt(value, 10)
         if (Number.isNaN(value)) throw Error(`${serverName}:${itemName} -> get ${value} is not a number`)
@@ -95,6 +94,7 @@ async function cancelAdvise(serverName, itemName) {
         if(connectedGroup.has(serverName)) {
             let client = connectedGroup.get(serverName)
             await client.stopAdvise(topicName, transformItemName(itemName), Constants.dataType.CF_TEXT)
+            
             logger.info(`${serverName} ${itemName} cancel advise success`)
         }
     } catch (err) {
