@@ -5,7 +5,7 @@ const config = require("../config/AddWater.json")
 const React= require("react")
 const { useState, useEffect, useRef, useContext } = require("react")
 const importJsx = require('import-jsx')
-const { setAdvise, fetchBrandName } = require("../util/fetchDDE")
+const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { Box, Text } = require('ink')
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
@@ -19,6 +19,7 @@ const State = importJsx('./State.js')
 const AddWater = () => {
   const [state, setState] = useState("停止")
   const [idList, setIdList] = useState(["", ""])
+  const [isLoading, setIsLoading] = useState(true)
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
   
@@ -30,6 +31,8 @@ const AddWater = () => {
   useEffect(() => {
     const init = async () => {
       try {
+        await connectServer(serverName)
+        setIsLoading(false)
         await Promise.all([
           setAdvise(serverName, config[line].id["回潮"].itemName, result => {
             setIdList(prevIdList => [result.data.slice(0, -3), prevIdList[1]])
@@ -45,6 +48,7 @@ const AddWater = () => {
         setIsErr(true)
         speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
+        setIsLoading(true)
       }
     }
 
@@ -88,33 +92,40 @@ const AddWater = () => {
         <Text>{`${line}`}</Text>
         <State state={state} />
       </Text>
-      <Text>{`${brandName}.`}</Text>
-      <WeightBell 
-        name={"主秤"}
-        config={config[line].weightBell["主秤"]}
-        parentState={state}
-        brandName={brandName}
-        setParentState={setState}
-      />
-      <WeightBell 
-        name={"薄片秤"}
-        config={config[line].weightBell["薄片秤"]}
-        parentState={state}
-        brandName={brandName}
-      />
       {
-        Object.entries(config[line].device).map(
-          ([deviceName, deviceConfig]) => {
-            let data = {
-              ...deviceConfig,
-              "deviceName": deviceName,
-              "parentState": state
-            }
+        isLoading ? <Text>Loading...</Text> : (
+          <>
+            <Text>{`${brandName}.`}</Text>
+            <WeightBell 
+              name={"主秤"}
+              config={config[line].weightBell["主秤"]}
+              parentState={state}
+              brandName={brandName}
+              setParentState={setState}
+            />
+            <WeightBell 
+              name={"薄片秤"}
+              config={config[line].weightBell["薄片秤"]}
+              parentState={state}
+              brandName={brandName}
+            />
+            {
+              Object.entries(config[line].device).map(
+                ([deviceName, deviceConfig]) => {
+                  let data = {
+                    ...deviceConfig,
+                    "deviceName": deviceName,
+                    "parentState": state
+                  }
 
-            return <Device key={deviceName} {...data} />
-          }
+                  return <Device key={deviceName} {...data} />
+                }
+              )
+            }
+          </>
         )
       }
+      
     </>
   )
 }

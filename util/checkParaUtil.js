@@ -26,6 +26,7 @@ class MoistureMeter {
   }
 
   async initM(serverName, itemNameList) {
+
     return Promise.all([
       setAdvise(serverName, itemNameList[0], result => {
         let temp = result.data.slice(0, -3)

@@ -9,13 +9,15 @@ const serverNameList = [
 
 let connectedGroup = new Map()
 let isTest = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === "dev"
-let topicName = isTest ? "[test.xlsx]Sheet1" : "tagname"
+let topicName = isTest ? "[test.xlsm]Sheet1" : "tagname"
 let transformItemName = isTest ? transformForTest : itemName => itemName
 
 
 function transformForTest(itemName) {
     // 具体的
-
+    if(itemName === "Galaxy:rHN_Z7.HN.ZX_DB1Value_1") return "R2C2"
+    if(itemName === "Galaxy:rHN_Z7.HN.ZX_DB1Value_4") return "R4C2"
+    if(itemName === "Galaxy:rHN_Z7.HN.ZX_TT1Value_18") return "R3C2"
     // 不具体的
     if(itemName.includes("Batch")) return "R6C2"
     if(itemName.includes("BrandName")) return "R5C2"
@@ -25,7 +27,10 @@ function transformForTest(itemName) {
     if(itemName.includes("Switch")) return "R8C2"
     if(itemName.includes("Minute")) return "R7C2"
     if(itemName.includes("Second")) return "R9C2"
-
+    if(itemName.includes("Read_Trim")) return "R10C2"
+    if(itemName.includes("Write_Trim")) return "R11C2"
+    if(itemName.includes("SLOut")) return "R12C2"
+    if(itemName.includes("InWeight")) return "R13C2"
     // default
     return "R1C2"
 } 
@@ -69,7 +74,9 @@ async function request(serverName, itemName) {
 
 
 async function setAdvise(serverName, itemName, cb){
+    console.log(itemName)
     if(!connectedGroup.has(serverName)) {
+        console.log("connect in advice")
         await connectServer(serverName)
     }
 
@@ -112,6 +119,9 @@ async function connectServer(serverName) {
     }
 
     let [appName, hostName] = isTest ? ["Excel", "localhost"] : ["view", serverName]
+    
+    console.log(serverName, appName, hostName)
+    
     let client = new NetDDEClient(appName, {host: hostName, timeout: 60 * 1000})
             
     client.on("error", err => {
@@ -141,6 +151,7 @@ async function disconnectAllClients() {
 
 
 module.exports = {
+    connectServer,
     fetchDDE,
     setAdvise,
     disconnectAllClients,

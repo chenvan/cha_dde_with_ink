@@ -8,7 +8,7 @@ const { useState, useEffect, useContext, useRef } = require("react")
 const importJsx = require('import-jsx')
 const { Text } = require("ink")
 
-const { fetchDDE, setAdvise } = require("../util/fetchDDE")
+const { setAdvise } = require("../util/fetchDDE")
 const { logger } = require("../util/loggerHelper")
 const { useInterval } = require("../util/customHook.js")
 const { speakErr } = require("../util/speak")

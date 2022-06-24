@@ -5,7 +5,7 @@ const config = require("../config/Dryer.json")
 const React= require("react")
 const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
-const { setAdvise, fetchBrandName } = require("../util/fetchDDE")
+const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { MoistureMeter } = require("../util/checkParaUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
@@ -19,6 +19,7 @@ const WeightBell = importJsx('./WeightBell.js')
 const Dryer = () => {
 
   const [state, setState] = useState("停止")
+  const [isLoading, setIsLoading] = useState(true)
   const [idList, setIdList] = useState(["", ""])
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
@@ -35,6 +36,11 @@ const Dryer = () => {
       moistureMeter.current = [new MoistureMeter(line, "入口水分仪"), new MoistureMeter(line, "出口水分仪")]
 
       try {
+        
+        await connectServer(serverName)
+        
+        setIsLoading(false)
+
         // 可能一个 id 就可以了
         await Promise.all([
           setAdvise(serverName, config[line].id["出柜"].itemName, result => {
@@ -49,10 +55,13 @@ const Dryer = () => {
           moistureMeter.current[0].initM(serverName, config[line]["moistureMeter"]["入口水分仪"]),
           moistureMeter.current[1].initM(serverName, config[line]["moistureMeter"]["出口水分仪"])
         ])
+        
       } catch (err) {
         setIsErr(true)
+        console.log(err)
         speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
+        setIsLoading(true)
       }
     }
 
@@ -94,28 +103,34 @@ const Dryer = () => {
   return (
     <>
       <Text>{`${line}(${state})`}</Text>
-      <Text>{`${brandName}.`}</Text>
-        <WeightBell 
-          name={"主秤"}
-          config={config[line].mainWeightBell}
-          parentState={state}
-          brandName={brandName}
-          setParentState={setState}
-          isCabMon={idList[1] !== "" && idList[0] === idList[1]}
-        />
-        {
-          Object.entries(config[line].device).map(
-            ([deviceName, deviceConfig]) => {
-              let data = {
-                ...deviceConfig,
-                "deviceName": deviceName,
-                "parentState": state
-              }
+      {
+        isLoading ? <Text>Loading...</Text> : (
+          <>
+            <Text>{`${brandName}.`}</Text>
+            <WeightBell 
+              name={"主秤"}
+              config={config[line].mainWeightBell}
+              parentState={state}
+              brandName={brandName}
+              setParentState={setState}
+              isCabMon={idList[1] !== "" && idList[0] === idList[1]}
+            />
+            {
+              Object.entries(config[line].device).map(
+                ([deviceName, deviceConfig]) => {
+                  let data = {
+                    ...deviceConfig,
+                    "deviceName": deviceName,
+                    "parentState": state
+                  }
 
-              return <Device key={deviceName} {...data} />
+                  return <Device key={deviceName} {...data} />
+                }
+              )
             }
-          )
-        }
+          </>
+        )
+      }
     </>
   )
 }

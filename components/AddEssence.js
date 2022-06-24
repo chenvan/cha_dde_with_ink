@@ -5,7 +5,7 @@ const config = require("../config/AddEssence.json")
 const React= require("react")
 const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
-const { setAdvise, fetchBrandName } = require("../util/fetchDDE")
+const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
@@ -18,6 +18,7 @@ const State = importJsx('./State.js')
 const AddEssence = () => {
   const [state, setState] = useState("停止")
   const [id, setId] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
 
@@ -29,6 +30,8 @@ const AddEssence = () => {
   useEffect(() => {
     const init = async () => {
       try {
+        await connectServer(serverName)
+        setIsLoading(false)
         await Promise.all([
           setAdvise(serverName, config[line].id.itemName, result => {
             setId(result.data.slice(0, -3))
@@ -44,6 +47,7 @@ const AddEssence = () => {
         setIsErr(true)
         speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
+        setIsLoading(true)
       }
     }
 
@@ -81,26 +85,33 @@ const AddEssence = () => {
         <Text>{`${line}`}</Text>
         <State state={state} />
       </Text>
-      <Text>{`${brandName}.`}</Text>
-      <WeightBell 
-        name={"主秤"}
-        config={config[line].weightBell["主秤"]}
-        parentState={state}
-        brandName={brandName}
-        setParentState={setState}
-      />
-      <WeightBell 
-        name={"梗丝秤"}
-        config={config[line].weightBell["梗丝秤"]}
-        parentState={state}
-        brandName={brandName}
-      />
-      <WeightBell 
-        name={"膨丝秤"}
-        config={config[line].weightBell["膨丝秤"]}
-        parentState={state}
-        brandName={brandName}
-      />
+      {
+        isLoading ? <Text>isLoading</Text> : (
+          <>
+            <Text>{`${brandName}.`}</Text>
+            <WeightBell 
+              name={"主秤"}
+              config={config[line].weightBell["主秤"]}
+              parentState={state}
+              brandName={brandName}
+              setParentState={setState}
+            />
+            <WeightBell 
+              name={"梗丝秤"}
+              config={config[line].weightBell["梗丝秤"]}
+              parentState={state}
+              brandName={brandName}
+            />
+            <WeightBell 
+              name={"膨丝秤"}
+              config={config[line].weightBell["膨丝秤"]}
+              parentState={state}
+              brandName={brandName}
+            />
+          </>
+        )
+      }
+      
     </>
   )
 }

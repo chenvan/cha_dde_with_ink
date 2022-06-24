@@ -5,7 +5,7 @@ const config = require("../config/AddFlavour.json")
 const React= require("react")
 const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
-const { setAdvise, fetchBrandName } = require("../util/fetchDDE")
+const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { MoistureMeter } = require("../util/checkParaUtil")
 const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
@@ -21,6 +21,7 @@ const AddFlavour = () => {
 
   const [state, setState] = useState("停止")
   const [id, setId] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
 
@@ -37,6 +38,10 @@ const AddFlavour = () => {
       moistureMeter.current = [new MoistureMeter(line, "入口水分仪"), new MoistureMeter(line, "出口水分仪")]
 
       try {
+        await connectServer(serverName)
+
+        setIsLoading(false)
+
         await Promise.all([
           setAdvise(serverName, config[line].id.itemName, result => {
             setId(result.data.slice(0, -3))
@@ -51,6 +56,7 @@ const AddFlavour = () => {
         setIsErr(true)
         speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
+        setIsLoading(true)
       }
     }
 
@@ -95,27 +101,34 @@ const AddFlavour = () => {
         <Text>{`${line}`}</Text>
         <State state={state} />
       </Text>
-      <Text>{`${brandName}.`}</Text>
-        <WeightBell 
-          name={"主秤"}
-          config={config[line].mainWeightBell}
-          parentState={state}
-          brandName={brandName}
-          setParentState={setState}
-        />
-        {
-          Object.entries(config[line].device).map(
-            ([deviceName, deviceConfig]) => {
-              let data = {
-                ...deviceConfig,
-                "deviceName": deviceName,
-                "parentState": state
-              }
+      {
+        isLoading ? <Text>Loading</Text> : (
+          <>
+            <Text>{`${brandName}.`}</Text>
+            <WeightBell 
+              name={"主秤"}
+              config={config[line].mainWeightBell}
+              parentState={state}
+              brandName={brandName}
+              setParentState={setState}
+            />
+            {
+              Object.entries(config[line].device).map(
+                ([deviceName, deviceConfig]) => {
+                  let data = {
+                    ...deviceConfig,
+                    "deviceName": deviceName,
+                    "parentState": state
+                  }
 
-              return <Device key={deviceName} {...data} />
+                  return <Device key={deviceName} {...data} />
+                }
+              )
             }
-          )
-        }
+          </>
+        )
+      }
+      
     </>
   )
 }
