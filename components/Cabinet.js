@@ -30,7 +30,6 @@ const Cabinet = ({config, wbAccu, isCabMon}) => {
         })
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line}出柜 建立监听出错`)
         logger.error(`${line}`, err)
       }
     }

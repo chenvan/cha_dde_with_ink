@@ -37,7 +37,6 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
         })
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line}${deviceName} 建立监听出错`)
         logger.error(`${line}`, err)
       }
     }

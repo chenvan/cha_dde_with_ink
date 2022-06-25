@@ -49,7 +49,6 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} ${name} 建立监听出错`)
         logger.error(`${line} ${name}`, err)
       }
     }
@@ -68,7 +67,6 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
       } else if (Math.abs(setting - real) >= 0.1 * setting && !isWarning ) {
         setIsWarning(true)
         speakErr(`${line} ${name} 流量波动`)
-        logger.error(`${line} ${name} 流量波动`)
       }
     }
 

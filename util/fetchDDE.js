@@ -73,9 +73,8 @@ async function request(serverName, itemName) {
 
 
 async function setAdvise(serverName, itemName, cb){
-    console.log(itemName)
+
     if(!connectedGroup.has(serverName)) {
-        console.log("connect in advice")
         await connectServer(serverName)
     }
 
@@ -89,12 +88,10 @@ async function setAdvise(serverName, itemName, cb){
 }
 
 async function cancelAdvise(serverName, itemName) {
-    // cancel 有问题
     try{
         if(connectedGroup.has(serverName)) {
             let client = connectedGroup.get(serverName)
             await client.stopAdvise(topicName, transformItemName(itemName), Constants.dataType.CF_TEXT)
-            
             logger.info(`${serverName} ${itemName} cancel advise success`)
         }
     } catch (err) {
@@ -109,52 +106,71 @@ async function fetchBrandName(serverName, itemName, valueType) {
 }
 
 async function testServerConnect(serverName) {
-    // 通过获取秒数来测试 Server 是否通
-    let seconds = await fetchDDE(serverName, "$Second", "int")
+    // 通过获取分钟来测试 Server 是否通
+    await fetchDDE(serverName, "$Minute", "int")
 }
 
 async function connectServer(serverName) {
     if (!serverNameList.includes(serverName)) {
         throw new Error(`server ${serverName} does not exist`)
     }
+    
+    if (connectedGroup.has(serverName)) return
 
     let [appName, hostName] = isTest ? ["Excel", "localhost"] : ["view", serverName]
     
-    console.log(serverName, appName, hostName)
-    
     let client = new NetDDEClient(appName, {host: hostName, timeout: 60 * 1000})
+
+    /*
+        connectServer 出现 Error 的几种情况
+
+        没有找到 host, 故障不会在下面的listener中出现
+
+        找到host, 初始连接
+        DDE Server 没有启动时, 故障不会在下面的listener中出现
+        *** Intouch(Excel) 没有启动时, 故障在下面的listener中出现***
+
+        已经在运行中的时候
+        Intouch(Excel) 关闭, 故障不会在下面的listener中出现
+        *** DDE Server 关闭, 故障在下面的listener中出现 ***
+
+    */
             
     client.on("error", err => {
-        //Error: read ECONNRESET
-        logger.error(`${serverName} connect error`, err)
-        connectedGroup.delete(serverName)
-    })
-
-    client.on("close", () => {
-        logger.info(`${serverName} close`)
-        connectedGroup.delete(serverName)
+        // 现在不会播报 error
+        // 如何播报 Error, 并且拒绝重复播报
+        logger.error(`${serverName} err listener catch connect error`, err)
+        if (connectedGroup.has(serverName)) connectedGroup.delete(serverName)
     })
     
     await client.connect()
     connectedGroup.set(serverName, client)
 }
 
-async function disconnectAllClients() {
-
-    for (let client of connectedGroup.values()) {
+async function disconnectServer(serverName) {
+    if (connectedGroup.has(serverName)) {
+        let client = connectedGroup.get(serverName)
         await client.disconnect()
+        connectedGroup.delete(serverName)
     }
-
-    // ?
-    connectedGroup = new Map()
 }
+
+// async function disconnectAllClients() {
+
+//     for (let client of connectedGroup.values()) {
+//         await client.disconnect()
+//     }
+
+//     // ?
+//     connectedGroup = new Map()
+// }
 
 
 module.exports = {
     connectServer,
     fetchDDE,
     setAdvise,
-    disconnectAllClients,
+    disconnectServer,
     cancelAdvise,
     fetchBrandName,
     testServerConnect

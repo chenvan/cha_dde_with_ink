@@ -32,16 +32,34 @@ const logger = createLogger({
     ],
 })
 
-if(process.env.NODE_ENV === "dev") {
-    logger.add(
-        new transports.Console({
-            format: format.combine(
-                format.colorize(),
-            )
-        })
-    )
+function leadingZero (num) {
+    return String(num).padStart(2, "0")
+}
+  
+function now() {
+    let today = new Date()
+    return [today.getHours(), today.getMinutes()].map(leadingZero).join(":")
 }
 
+function showMsg(msg) {
+    console.log(`${now()} ${msg}`)
+}
+  
+
 module.exports = {
-    logger
+    logger : {
+        error: (msg, err) => {
+            logger.error(msg, err)
+            if (err && err.message) {
+                console.log(`${now()} ${msg} ${err.message}`)
+            } else {
+                console.log(`${now()} ${msg}`)
+            }
+        },
+        info: msg => {
+            logger.info(msg)
+            console.log(`${now()} ${msg}`)
+        }
+    },
+    showMsg
 }

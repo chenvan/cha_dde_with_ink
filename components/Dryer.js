@@ -7,10 +7,9 @@ const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
 const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { MoistureMeter } = require("../util/checkParaUtil")
-const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
-const { Box, Text } = require('ink')
+const { Text } = require('ink')
 const { useInterval } = require("../util/customHook")
 
 const { Device } = importJsx('./Device.js')
@@ -58,10 +57,8 @@ const Dryer = () => {
         
       } catch (err) {
         setIsErr(true)
-        console.log(err)
-        speakErr(`${line} 建立监听出错`)
-        logger.error(`${line}`, err)
         setIsLoading(true)
+        logger.error(`${line}`, err)
       }
     }
 
@@ -87,7 +84,10 @@ const Dryer = () => {
   }, state === "获取参数" ? 10 * 1000 : null)
 
   useInterval(() => {
-    if(minute.current.now === minute.current.last) setIsErr(true)
+    if(minute.current.now === minute.current.last) {
+      setIsErr(true)
+      logger.error(`${line} 连接中断`)
+    }
     minute.current.last = minute.current.now
   }, 1000 * 60 * 2)
 

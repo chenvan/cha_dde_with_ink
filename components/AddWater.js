@@ -6,8 +6,7 @@ const React= require("react")
 const { useState, useEffect, useRef, useContext } = require("react")
 const importJsx = require('import-jsx')
 const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
-const { Box, Text } = require('ink')
-const { speakErr } = require("../util/speak")
+const { Text } = require('ink')
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
 const { useInterval } = require("../util/customHook")
@@ -46,7 +45,6 @@ const AddWater = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
         setIsLoading(true)
       }
@@ -76,7 +74,10 @@ const AddWater = () => {
   }, state === "获取参数" ? 1000 * 10 : null)
 
   useInterval(() => {
-    if(minute.current.now === minute.current.last) setIsErr(true)
+    if(minute.current.now === minute.current.last) {
+      setIsErr(true)
+      logger.error(`${line} 连接中断`)
+    }
     minute.current.last = minute.current.now
   }, 1000 * 60 * 2)
 

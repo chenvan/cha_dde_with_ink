@@ -7,7 +7,6 @@ const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
 const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { MoistureMeter } = require("../util/checkParaUtil")
-const { speakErr } = require("../util/speak")
 const { logger } = require("../util/loggerHelper")
 const Context = require('./Context')
 const { Box, Text } = require('ink')
@@ -54,7 +53,6 @@ const AddFlavour = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立监听出错`)
         logger.error(`${line}`, err)
         setIsLoading(true)
       }
@@ -82,7 +80,10 @@ const AddFlavour = () => {
   }, state === "获取参数" ? 10 * 1000 : null)
 
   useInterval(() => {
-    if(minute.current.now === minute.current.last) setIsErr(true)
+    if(minute.current.now === minute.current.last) {
+      setIsErr(true)
+      logger.error(`${line} 连接中断`)
+    }
     minute.current.last = minute.current.now
   }, 1000 * 60 * 2)
 
