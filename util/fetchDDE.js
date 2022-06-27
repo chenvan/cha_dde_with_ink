@@ -1,6 +1,6 @@
 const { NetDDEClient, Constants } = require('netdde')
 const  itemNameMapForTest = require("../test/itemNameMap.json")
-const { logger } = require("../util/loggerHelper")
+const { logger } = require("./logger")
 
 const serverNameList = [
     "VMGZZSHMI1", "VMGZZSHMI2","VMGZZSHMI3", "VMGZZSHMI4", "VMGZZSHMI5",
@@ -51,7 +51,7 @@ async function request(serverName, itemName) {
         }
 
         let value
-        let client = connectedGroup.get(serverName)
+        let client = await connectedGroup.get(serverName)
 
         for (let i = 0; i < 3; i++) {
             value = await client.request(topicName, transformItemName(itemName))
@@ -78,7 +78,7 @@ async function setAdvise(serverName, itemName, cb){
         await connectServer(serverName)
     }
 
-    let client = connectedGroup.get(serverName)
+    let client = await connectedGroup.get(serverName)
     itemName = transformItemName(itemName)
 
     // 程序本来只使用 "advise" 这个事件名去触发数据, 我们需要改成用 itemName 作为事件名去触发数据  
@@ -90,12 +90,12 @@ async function setAdvise(serverName, itemName, cb){
 async function cancelAdvise(serverName, itemName) {
     try{
         if(connectedGroup.has(serverName)) {
-            let client = connectedGroup.get(serverName)
+            let client = await connectedGroup.get(serverName)
             await client.stopAdvise(topicName, transformItemName(itemName), Constants.dataType.CF_TEXT)
             logger.info(`${serverName} ${itemName} cancel advise success`)
         }
     } catch (err) {
-        logger.error(err)
+        logger.error(`${serverName} ${itemName} cancel advise fail`, err)
         throw err
     }
 }
@@ -143,16 +143,25 @@ async function connectServer(serverName) {
         if (connectedGroup.has(serverName)) connectedGroup.delete(serverName)
     })
     
-    await client.connect()
-    connectedGroup.set(serverName, client)
+    connectedGroup.set(serverName, client.connect().then(() => client))
+    // await client.connect()
+    // connectedGroup.set(serverName, client)
 }
 
 async function disconnectServer(serverName) {
-    if (connectedGroup.has(serverName)) {
-        let client = connectedGroup.get(serverName)
-        await client.disconnect()
+    try {
+        if (connectedGroup.has(serverName)) {
+            // 初始化时, client 连接失败, 需要 disconnectServer 时
+            // 下面的 await connectedGroup.get(serverName) 会报错
+            let client = await connectedGroup.get(serverName) 
+            await client.disconnect()
+            connectedGroup.delete(serverName)
+        }
+    } catch (err) {
         connectedGroup.delete(serverName)
+        logger.error(`${serverName} disconnect 出错`, err)
     }
+    
 }
 
 // async function disconnectAllClients() {

@@ -1,5 +1,5 @@
 require('winax')
-const { logger, showMsg } = require('./loggerHelper')
+const { logger } = require('./logger')
 
 let Hongyu = new ActiveXObject("Sapi.SpVoice")
 let Kangkang = new ActiveXObject("Sapi.SpVoice")
@@ -7,16 +7,16 @@ let Kangkang = new ActiveXObject("Sapi.SpVoice")
 if (Hongyu.getVoices("name=Microsoft Hongyu Mobile").Count == 1) {
   Hongyu.Voice = Hongyu.getVoices("name=Microsoft Hongyu Mobile").Item(0)
 } else {
-  logger.info("can not find Hongyu voice")
+  logger.warn("Cannot find Hongyu voice")
 }
 
 if(Kangkang.getVoices("name=Microsoft Kangkang Mobile").Count == 1) {
   Kangkang.Voice = Kangkang.getVoices("name=Microsoft Kangkang Mobile").Item(0)
 } else {
-  logger.info("can not find kangkang voice")
+  logger.warn("Cannot find kangkang voice")
 }
 
-function test () {
+function speakTest () {
   let voiceObj = new ActiveXObject("Sapi.SpVoice")
 
   for (let i = 0 ; i < voiceObj.getVoices().Count; i++) {
@@ -36,25 +36,7 @@ function speakTwice(msg) {
   voiceObj.speak(msg, 1)
 }
 
-function speakErr(msg) {
-  speakTwice(msg)
-  logger.error(msg)
-}
-
-function speakWarning(msg) {
-  speakTwice(msg)
-  logger.info(msg)
-}
-
-function speakVoiceTip(tip) {
-  speakTwice(tip)
-  showMsg(tip)
-}
-
-
 module.exports = {
-  speakWarning,
-  speakErr,
-  speakVoiceTip,
-  test
+  speakTwice,
+  speakTest
 }

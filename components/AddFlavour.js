@@ -7,9 +7,9 @@ const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
 const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { MoistureMeter } = require("../util/checkParaUtil")
-const { logger } = require("../util/loggerHelper")
+const { logger } = require("../util/logger")
 const Context = require('./Context')
-const { Box, Text } = require('ink')
+const { Text } = require('ink')
 const { useInterval } = require("../util/customHook")
 
 const { Device } = importJsx('./Device.js')
@@ -53,7 +53,7 @@ const AddFlavour = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        logger.error(`${line}`, err)
+        logger.error(`${line} 建立监听出错`, err)
         setIsLoading(true)
       }
     }
@@ -75,7 +75,7 @@ const AddFlavour = () => {
       setBrandName(brandName)
       setState("待机")
     } catch (err) {
-      logger.error(`${line}`, err)
+      logger.error(`${line} 获取参数出错`, err)
     }
   }, state === "获取参数" ? 10 * 1000 : null)
 

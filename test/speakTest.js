@@ -1,3 +1,3 @@
-const { test } = require("../util/speak.js")
+const { speakTest } = require("../util/speak.js")
 
-test()
+speakTest()

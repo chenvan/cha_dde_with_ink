@@ -1,23 +1,26 @@
-# 2022/6/25
-- [] 1. 运行连接中断, 重新连接后, 原来的 client 没有 disconnect
+# 2022/6/27
+- [x] 1. 重新设置 logger
 
-- [] 2. 如何让 connectServer 变成一个串行运行的函数, 这样才能使得回潮与加料能使用同一个client
+- [x] 2. 初始化错误狗, cabinet 由于 setTimeout 几秒后要修改 isMon 的状态, 造成组件 warning
+
+# 2022/6/25
+- [x] 1. 运行连接中断, 重新连接后, 原来的 client 没有 disconnect
+
+- [x] 2. 组件初始化(advise)时, server cache 没有起作用, 每一个 advice 都建立自己的 client, 因此只有最后的 client 会存到 cache 中, 这也是 cancelAdvise 出错的原因. 因此应该组件初始化时, 应该先进行 connectServer 后才 advise
+
+- [x] 3. 回潮与加料用相同的serverName, 但是由于是不同的组件, 因此会是两个不同的 client. server cache 时只存最后的 client.  修正的方法是 cache 不存 client, 而是存 promise. 这样避免了 conectServer 内异步执行的语句, 使得回潮与加料是同一个 client 
 
 # 2022/6/24
 - [] 1. 96回潮切片的电眼是否抄错了
 
 # 2022/6/22
-- [x] 1. 重新做测试方案
+- [x] 1. 使用Excel + netdde serve 做测试方案
 
 # 2022/6/16
-- [] 1.修正建立监听失败后一连串的报警
+- [x] 1.修正建立监听失败后一连串的报警
 
 # 2022/6/2
 - [] 1. 入柜跑车的限位监控
-
-- [] 2. 重新检查代码, 是否有更好的写法
-
-- [] 3. cancelAdvice 的用法
 
 # 2022/4/19
 
@@ -37,9 +40,7 @@
 
 - [x] 2. 监控画面的排列应该重写, 再加上烘丝段的监控就太长了
 
-- [] 3. 在 test.json 中增加 itemName 对应的数字
-
-- [] 4. 重新整理各组件的状态转换图
+- [] 3. 重新整理各组件的状态转换图
 
 # 2022/3/27
 

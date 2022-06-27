@@ -1,12 +1,12 @@
 'use strict'
 const { setAdvise } = require("../util/fetchDDE")
-const { speakWarning, speakErr } = require("../util/speak")
+const { speakTwice} = require("../util/speak")
 const React = require("react")
 const { useState, useEffect, useContext } = require("react")
 const { Text } = require("ink")
 const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
-const { logger } = require("../util/loggerHelper.js")
+const { logger } = require("../util/logger.js")
 const importJsx = require("import-jsx")
 
 const State = importJsx('./State.js')
@@ -37,7 +37,7 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
         })
       } catch (err) {
         setIsErr(true)
-        logger.error(`${line}`, err)
+        logger.error(`${line} ${deviceName} 建立监听出错`, err)
       }
     }
 
@@ -80,7 +80,8 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
     setDuration(tempDuration)
 
     if(tempDuration > maxDuration && !isWarning && state === "监控") {
-      speakWarning(`${line} ${deviceName} 异常.`)
+      speakTwice(`${line} ${deviceName} 异常.`)
+      logger.warn(`${line} ${deviceName} 异常.`)
       setIsWarning(true)
     } else if(tempDuration <= maxDuration || state === "停止") {
       if(isWarning) setIsWarning(false)
@@ -165,8 +166,7 @@ const Margin = ({config, parentState, CutoffComp}) => {
         })
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} margin 建立监听出错`)
-        logger.error(`${line}`, err)
+        logger.error(`${line} advice 出错`, err)
       }
     }
     init()
@@ -177,7 +177,8 @@ const Margin = ({config, parentState, CutoffComp}) => {
     try {
       // 转批，在待机阶段暂存柜存量会有一个假数, 应该是上一批的累积量
       if(margin > 500 && margin < 2500 && !isWarning) {
-        speakErr(`${line} 叶丝暂存柜存料过多`)
+        speakTwice(`${line} 叶丝暂存柜存料过多`)
+        logger.warn(`${line} 叶丝暂存柜存料过多`)
         setIsWarning(true)
       }else if(margin < 450 && isWarning) {
         setIsWarning(false)
@@ -191,10 +192,12 @@ const Margin = ({config, parentState, CutoffComp}) => {
     try {
      
       if(margin > 600 && !isWarning) {
-        speakErr(`${line} 叶丝暂存柜存料过多`)
+        speakTwice(`${line} 叶丝暂存柜存料过多`)
+        logger.warn(`${line} 叶丝暂存柜存料过多`)
         setIsWarning(true)
       }else if(margin < 50 && !isWarning) {
-        speakErr(`${line} 叶丝暂存柜存料过少`)
+        speakTwice(`${line} 叶丝暂存柜存料过少`)
+        logger.warn(`${line} 叶丝暂存柜存料过少`)
         setIsWarning(true)
       }else if(margin < 550 && margin > 100 && isWarning) {
         setIsWarning(false)

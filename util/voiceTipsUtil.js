@@ -1,4 +1,5 @@
-const { speakVoiceTip } = require('./speak.js')
+const { speakTwice } = require('./speak.js')
+const { logger } = require('./logger.js')
 
 /* 
 VoiceTips 包含 准备段 和 运行段
@@ -33,7 +34,8 @@ function setRunningVoiceTips(runningVoiceTips, brandName, setting, accu) {
         return false
     }).map(voiceTip => {
         return setTimeout(() => {
-            speakVoiceTip(voiceTip.content)
+            speakTwice(voiceTip.content)
+            logger.info(voiceTip.content)
         }, (voiceTip.offset - passSeconds) * 1000)
     })
 }
@@ -45,7 +47,8 @@ function setReadyVoiceTips(readyVoiceTips, brandName) {
         return false
     }).map(voiceTip => {
         return setTimeout(() => {
-            speakVoiceTip(voiceTip.content)
+            speakTwice(voiceTip.content)
+            logger.info(voiceTip.content)
         }, voiceTip.offset * 1000)
     })
 }

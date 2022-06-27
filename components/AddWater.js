@@ -7,7 +7,7 @@ const { useState, useEffect, useRef, useContext } = require("react")
 const importJsx = require('import-jsx')
 const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { Text } = require('ink')
-const { logger } = require("../util/loggerHelper")
+const { logger } = require("../util/logger")
 const Context = require('./Context')
 const { useInterval } = require("../util/customHook")
 
@@ -45,7 +45,7 @@ const AddWater = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        logger.error(`${line}`, err)
+        logger.error(`${line} 建立监听出错`, err)
         setIsLoading(true)
       }
     }
@@ -69,7 +69,7 @@ const AddWater = () => {
       // 延迟进入 待机 状态
       setState("待机") 
     } catch (err) {
-      logger.error(`${line}`, err)
+      logger.error(`${line} 获取参数出错`, err)
     }
   }, state === "获取参数" ? 1000 * 10 : null)
 

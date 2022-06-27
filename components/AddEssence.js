@@ -6,7 +6,7 @@ const React= require("react")
 const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
 const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
-const { logger } = require("../util/loggerHelper")
+const { logger } = require("../util/logger")
 const Context = require('./Context')
 const { Text } = require('ink')
 const { useInterval } = require("../util/customHook")
@@ -35,9 +35,6 @@ const AddEssence = () => {
           setAdvise(serverName, config[line].id.itemName, result => {
             setId(result.data.slice(0, -3))
           }),
-          // setAdvise(serverName, config[line].margin.itemName, result => {
-          //   setMargin(parseInt(result.data, 10))
-          // }),
           setAdvise(serverName, "$Minute", result => {
             minute.current.now = parseInt(result.data, 10)
           })
@@ -45,7 +42,7 @@ const AddEssence = () => {
       } catch (err) {
         setIsErr(true)
         setIsLoading(true)
-        logger.error(`${line}`, err)
+        logger.error(`${line} 建立监听出错`, err)
       }
     }
 
@@ -68,7 +65,7 @@ const AddEssence = () => {
       setState("待机")
     } catch (err) {
       setState("待机")
-      logger.error(`${line} ${state}`, err)
+      logger.error(`${line} 获取参数出错`, err)
     }
   }, state === "获取参数" ? 10 * 1000 : null)
 
