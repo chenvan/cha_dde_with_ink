@@ -8,10 +8,10 @@ const { useState, useEffect, useContext, useRef } = require("react")
 const importJsx = require('import-jsx')
 const { Text } = require("ink")
 
-const { fetchDDE, setAdvise } = require("../util/fetchDDE")
-const { logger } = require("../util/loggerHelper")
+const { setAdvise } = require("../util/fetchDDE")
+const { logger } = require("../util/logger")
 const { useInterval } = require("../util/customHook.js")
-const { speakErr } = require("../util/speak")
+const { speakTwice } = require("../util/speak")
 const Context = require('./Context')
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
 
@@ -49,8 +49,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} ${name} 建立监听出错`)
-        logger.error(`${line} ${name}`, err)
+        logger.error(`${line} ${name} 建立监听出错`, err)
       }
     }
 
@@ -67,8 +66,8 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
         setIsWarning(false)
       } else if (Math.abs(setting - real) >= 0.1 * setting && !isWarning ) {
         setIsWarning(true)
-        speakErr(`${line} ${name} 流量波动`)
-        logger.error(`${line} ${name} 流量波动`)
+        speakTwice(`${line} ${name} 流量波动`)
+        logger.warn(`${line} ${name} 流量波动`)
       }
     }
 
@@ -137,7 +136,10 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
         // 薄片秤不会检测是否投入生产
         if(name.includes("薄片")) {
           setTimeout(() => {
-            if(setting > 0 && real === 0) speakErr(`${line} ${name} 没有启动`) 
+            if(setting > 0 && real === 0) {
+              speakTwice(`${line} ${name} 没有启动`)
+              logger.warn(`${line} ${name} 没有启动`)
+            } 
           }, 1000 * 90)
         }
 
@@ -145,7 +147,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
         
       }
     } catch (err) {
-      logger.error(`${line} ${name}`, err)
+      logger.error(`${line} ${name} 状态转换出现错误`, err)
     }
   }, [state])
 

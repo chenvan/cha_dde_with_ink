@@ -5,11 +5,9 @@ const config = require("../config/AddWater.json")
 const React= require("react")
 const { useState, useEffect, useRef, useContext } = require("react")
 const importJsx = require('import-jsx')
-const { setAdvise } = require("../util/fetchDDE")
-const { fetchBrandName } = require("../util/fetchUtil")
-const { Box, Text } = require('ink')
-const { speakErr } = require("../util/speak")
-const { logger } = require("../util/loggerHelper")
+const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
+const { Text } = require('ink')
+const { logger } = require("../util/logger")
 const Context = require('./Context')
 const { useInterval } = require("../util/customHook")
 
@@ -20,6 +18,7 @@ const State = importJsx('./State.js')
 const AddWater = () => {
   const [state, setState] = useState("停止")
   const [idList, setIdList] = useState(["", ""])
+  const [isLoading, setIsLoading] = useState(true)
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
   
@@ -31,6 +30,8 @@ const AddWater = () => {
   useEffect(() => {
     const init = async () => {
       try {
+        await connectServer(serverName)
+        setIsLoading(false)
         await Promise.all([
           setAdvise(serverName, config[line].id["回潮"].itemName, result => {
             setIdList(prevIdList => [result.data.slice(0, -3), prevIdList[1]])
@@ -44,8 +45,8 @@ const AddWater = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立监听出错`)
-        logger.error(`${line}`, err)
+        logger.error(`${line} 建立监听出错`, err)
+        setIsLoading(true)
       }
     }
 
@@ -68,12 +69,15 @@ const AddWater = () => {
       // 延迟进入 待机 状态
       setState("待机") 
     } catch (err) {
-      logger.error(`${line}`, err)
+      logger.error(`${line} 获取参数出错`, err)
     }
   }, state === "获取参数" ? 1000 * 10 : null)
 
   useInterval(() => {
-    if(minute.current.now === minute.current.last) setIsErr(true)
+    if(minute.current.now === minute.current.last) {
+      setIsErr(true)
+      logger.error(`${line} 连接中断`)
+    }
     minute.current.last = minute.current.now
   }, 1000 * 60 * 2)
 
@@ -89,33 +93,40 @@ const AddWater = () => {
         <Text>{`${line}`}</Text>
         <State state={state} />
       </Text>
-      <Text>{`${brandName}.`}</Text>
-      <WeightBell 
-        name={"主秤"}
-        config={config[line].weightBell["主秤"]}
-        parentState={state}
-        brandName={brandName}
-        setParentState={setState}
-      />
-      <WeightBell 
-        name={"薄片秤"}
-        config={config[line].weightBell["薄片秤"]}
-        parentState={state}
-        brandName={brandName}
-      />
       {
-        Object.entries(config[line].device).map(
-          ([deviceName, deviceConfig]) => {
-            let data = {
-              ...deviceConfig,
-              "deviceName": deviceName,
-              "parentState": state
-            }
+        isLoading ? <Text>Loading...</Text> : (
+          <>
+            <Text>{`${brandName}.`}</Text>
+            <WeightBell 
+              name={"主秤"}
+              config={config[line].weightBell["主秤"]}
+              parentState={state}
+              brandName={brandName}
+              setParentState={setState}
+            />
+            <WeightBell 
+              name={"薄片秤"}
+              config={config[line].weightBell["薄片秤"]}
+              parentState={state}
+              brandName={brandName}
+            />
+            {
+              Object.entries(config[line].device).map(
+                ([deviceName, deviceConfig]) => {
+                  let data = {
+                    ...deviceConfig,
+                    "deviceName": deviceName,
+                    "parentState": state
+                  }
 
-            return <Device key={deviceName} {...data} />
-          }
+                  return <Device key={deviceName} {...data} />
+                }
+              )
+            }
+          </>
         )
       }
+      
     </>
   )
 }

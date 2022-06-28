@@ -1,6 +1,6 @@
 const { setAdvise } = require('./fetchDDE')
-const { speakErr } = require('./speak')
-const { logger } = require('./loggerHelper')
+const { speakTwice } = require('./speak')
+const { logger } = require('./logger')
 
 // 全角符号转半角符号
 function toHalfwidth(str) {
@@ -26,6 +26,7 @@ class MoistureMeter {
   }
 
   async initM(serverName, itemNameList) {
+
     return Promise.all([
       setAdvise(serverName, itemNameList[0], result => {
         let temp = result.data.slice(0, -3)
@@ -43,8 +44,14 @@ class MoistureMeter {
 
   check(brandName) {
     // console.log(this.brandName, brandName)
-    if(this.brandName !== brandName) speakErr(`${this.line}, ${this.name} 牌号不一致`)
-    if(this.setP !== this.realP) speakErr(`${this.line}, ${this.name} 零点不一致`)
+    if(this.brandName !== brandName) {
+      speakTwice(`${this.line}, ${this.name} 牌号不一致`)
+      logger.warn(`${this.line}, ${this.name} 牌号不一致`)
+    }
+    if(this.setP !== this.realP) {
+      speakTwice(`${this.line}, ${this.name} 零点不一致`)
+      logger.warn(`${this.line}, ${this.name} 零点不一致`)
+    } 
   }
 }
 

@@ -1,3 +1,32 @@
+# 2022/6/28
+- [x] 1.NetDDEServer 没打开, 监控软件报错, 监控软件重新连接失败后再打开NetDDEServer, 监控软件就无法进行重连, 如果在监控软件没进行重连尝试时就打开NetDDEServer, 监控软件是可以进行重连的. 出现这个问题的原因是监控软件重新连接失败后, 并没有将 cache client 删掉
+
+- [] 2. 梳理各组件连接 NetDDEServer 的具体过程
+
+# 2022/6/27
+- [x] 1. 重新设置 logger
+
+- [x] 2. 初始化错误后, cabinet 由于 setTimeout 几秒后要修改 isMon 的状态, 造成组件 warning
+
+# 2022/6/25
+- [x] 1. 运行连接中断, 重新连接后, 原来的 client 没有 disconnect
+
+- [x] 2. 组件初始化(advise)时, server cache 没有起作用, 每一个 advice 都建立自己的 client, 因此只有最后的 client 会存到 cache 中, 这也是 cancelAdvise 出错的原因. 因此应该组件初始化时, 应该先进行 connectServer 后才 advise
+
+- [x] 3. 回潮与加料用相同的serverName, 但是由于是不同的组件, 因此会是两个不同的 client. server cache 时只存最后的 client.  修正的方法是 cache 不存 client, 而是存 promise. 这样避免了 conectServer 内异步执行的语句, 使得回潮与加料是同一个 client 
+
+# 2022/6/24
+- [] 1. 96回潮切片的电眼是否抄错了
+
+# 2022/6/22
+- [x] 1. 使用Excel + netdde serve 做测试方案
+
+# 2022/6/16
+- [x] 1.修正建立监听失败后一连串的报警
+
+# 2022/6/2
+- [] 1. 入柜跑车的限位监控
+
 # 2022/4/19
 
 - [x] 1. 水分仪的牌号转换为半角字符
@@ -16,9 +45,7 @@
 
 - [x] 2. 监控画面的排列应该重写, 再加上烘丝段的监控就太长了
 
-- [] 3. 在 test.json 中增加 itemName 对应的数字
-
-- [] 4. 重新整理各组件的状态转换图
+- [] 3. 重新整理各组件的状态转换图
 
 # 2022/3/27
 

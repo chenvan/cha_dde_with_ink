@@ -1,7 +1,7 @@
 # 获取数据
 使用 [NetDDE Server](https://github.com/chrisoldwood/NetDDE) 与 [NetDDE Clinet JS Version](https://github.com/st-one-io/netdde) 从 Intouch View 中获取数据
 
-DDE 获取数据的方式是 fetch 和 advice, 为了方便开发需要在 test 环境下返回假数据
+DDE 获取数据的方式是 fetch 和 advice, 为了方便开发需使用 Excel + NetDDE Server 模拟生产环境下的 Intouch
 
 用 DDE 获取数据并不稳定(特别是对96线使用fetch), 经常无法找到 item 
 

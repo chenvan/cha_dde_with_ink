@@ -1,6 +1,6 @@
 const React = require("react")
 const { useEffect, useRef } = require("react")
-const { logger } = require("./loggerHelper")
+const { logger } = require("./logger")
 
 function useInterval(callback, delay, isRunRightNow = false) {
   const savedCallback = useRef();

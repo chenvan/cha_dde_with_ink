@@ -5,13 +5,11 @@ const config = require("../config/AddFlavour.json")
 const React= require("react")
 const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
-const { setAdvise } = require("../util/fetchDDE")
-const { fetchBrandName } = require("../util/fetchUtil")
+const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { MoistureMeter } = require("../util/checkParaUtil")
-const { speakErr } = require("../util/speak")
-const { logger } = require("../util/loggerHelper")
+const { logger } = require("../util/logger")
 const Context = require('./Context')
-const { Box, Text } = require('ink')
+const { Text } = require('ink')
 const { useInterval } = require("../util/customHook")
 
 const { Device } = importJsx('./Device.js')
@@ -22,6 +20,7 @@ const AddFlavour = () => {
 
   const [state, setState] = useState("停止")
   const [id, setId] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
   const [brandName, setBrandName] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
 
@@ -38,6 +37,10 @@ const AddFlavour = () => {
       moistureMeter.current = [new MoistureMeter(line, "入口水分仪"), new MoistureMeter(line, "出口水分仪")]
 
       try {
+        await connectServer(serverName)
+
+        setIsLoading(false)
+
         await Promise.all([
           setAdvise(serverName, config[line].id.itemName, result => {
             setId(result.data.slice(0, -3))
@@ -50,8 +53,8 @@ const AddFlavour = () => {
         ])
       } catch (err) {
         setIsErr(true)
-        speakErr(`${line} 建立监听出错`)
-        logger.error(`${line}`, err)
+        logger.error(`${line} 建立监听出错`, err)
+        setIsLoading(true)
       }
     }
 
@@ -72,12 +75,15 @@ const AddFlavour = () => {
       setBrandName(brandName)
       setState("待机")
     } catch (err) {
-      logger.error(`${line}`, err)
+      logger.error(`${line} 获取参数出错`, err)
     }
   }, state === "获取参数" ? 10 * 1000 : null)
 
   useInterval(() => {
-    if(minute.current.now === minute.current.last) setIsErr(true)
+    if(minute.current.now === minute.current.last) {
+      setIsErr(true)
+      logger.error(`${line} 连接中断`)
+    }
     minute.current.last = minute.current.now
   }, 1000 * 60 * 2)
 
@@ -96,27 +102,34 @@ const AddFlavour = () => {
         <Text>{`${line}`}</Text>
         <State state={state} />
       </Text>
-      <Text>{`${brandName}.`}</Text>
-        <WeightBell 
-          name={"主秤"}
-          config={config[line].mainWeightBell}
-          parentState={state}
-          brandName={brandName}
-          setParentState={setState}
-        />
-        {
-          Object.entries(config[line].device).map(
-            ([deviceName, deviceConfig]) => {
-              let data = {
-                ...deviceConfig,
-                "deviceName": deviceName,
-                "parentState": state
-              }
+      {
+        isLoading ? <Text>Loading</Text> : (
+          <>
+            <Text>{`${brandName}.`}</Text>
+            <WeightBell 
+              name={"主秤"}
+              config={config[line].mainWeightBell}
+              parentState={state}
+              brandName={brandName}
+              setParentState={setState}
+            />
+            {
+              Object.entries(config[line].device).map(
+                ([deviceName, deviceConfig]) => {
+                  let data = {
+                    ...deviceConfig,
+                    "deviceName": deviceName,
+                    "parentState": state
+                  }
 
-              return <Device key={deviceName} {...data} />
+                  return <Device key={deviceName} {...data} />
+                }
+              )
             }
-          )
-        }
+          </>
+        )
+      }
+      
     </>
   )
 }
