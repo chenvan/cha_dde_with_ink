@@ -20,6 +20,7 @@ const Provider = ({line, children}) => {
       } 
     } catch(err) { 
       logger.error(`${line} 尝试重连 ${serverNameConfig[line]} 失败`, err)
+      await disconnectServer(serverNameConfig[line])
     }
   }, isErr ? 1000 * 60 : null)
 

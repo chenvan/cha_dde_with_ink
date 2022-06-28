@@ -1,7 +1,12 @@
+# 2022/6/28
+- [x] 1.NetDDEServer 没打开, 监控软件报错, 监控软件重新连接失败后再打开NetDDEServer, 监控软件就无法进行重连, 如果在监控软件没进行重连尝试时就打开NetDDEServer, 监控软件是可以进行重连的. 出现这个问题的原因是监控软件重新连接失败后, 并没有将 cache client 删掉
+
+- [] 2. 梳理各组件连接 NetDDEServer 的具体过程
+
 # 2022/6/27
 - [x] 1. 重新设置 logger
 
-- [x] 2. 初始化错误狗, cabinet 由于 setTimeout 几秒后要修改 isMon 的状态, 造成组件 warning
+- [x] 2. 初始化错误后, cabinet 由于 setTimeout 几秒后要修改 isMon 的状态, 造成组件 warning
 
 # 2022/6/25
 - [x] 1. 运行连接中断, 重新连接后, 原来的 client 没有 disconnect

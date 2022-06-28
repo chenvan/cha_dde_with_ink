@@ -110,6 +110,19 @@ async function testServerConnect(serverName) {
     await fetchDDE(serverName, "$Minute", "int")
 }
 
+/*
+    client connect 分为两个阶段
+    第一阶段是 socket connect
+        connect 失败后, socket destroy, reject err, connectionState 转为 CONN_DISCONNECTED
+        这种情况包含 NetDDEServer 程序没打开
+    第二阶段是 endpoint connect
+        connect 失败后, throw error, connectionState 应该没有转, 还是 CONN_CONNECTING 
+        这种情况就是 NetDDEServer 对于 endpoint 发出 NETDDE_CLIENT_CONNECT 信号没有回复
+
+    当 client 的 connectionState 是 CONN_DISCONNECTED 时, 
+    执行 advice, request, stopAdvice 这些命令时都会 throw error 
+
+*/
 async function connectServer(serverName) {
     if (!serverNameList.includes(serverName)) {
         throw new Error(`server ${serverName} does not exist`)
@@ -143,9 +156,12 @@ async function connectServer(serverName) {
         if (connectedGroup.has(serverName)) connectedGroup.delete(serverName)
     })
     
+    // 如果下面的 promise 使用了 catch error, 那么无论如何情况, connectGroup 都会对这个 client 缓存
+    // 当进行fetch, setAdvice等命令时, 检测 connectGroup 肯定有缓存
+    // 而后进行request, advice等具体操作时, throw "not connect"
+    // 而缓存的 client 是 disconnect, 还是继续尝试 connect
+    // connectServer 函数也需要分清楚没有 cache 和 有 cache 的重新连接
     connectedGroup.set(serverName, client.connect().then(() => client))
-    // await client.connect()
-    // connectedGroup.set(serverName, client)
 }
 
 async function disconnectServer(serverName) {
@@ -163,16 +179,6 @@ async function disconnectServer(serverName) {
     }
     
 }
-
-// async function disconnectAllClients() {
-
-//     for (let client of connectedGroup.values()) {
-//         await client.disconnect()
-//     }
-
-//     // ?
-//     connectedGroup = new Map()
-// }
 
 
 module.exports = {
