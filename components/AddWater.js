@@ -5,7 +5,7 @@ const config = require("../config/AddWater.json")
 const React= require("react")
 const { useState, useEffect, useRef, useContext } = require("react")
 const importJsx = require('import-jsx')
-const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
+const { cacheServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { Text } = require('ink')
 const { logger } = require("../util/logger")
 const Context = require('./Context')
@@ -30,7 +30,7 @@ const AddWater = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        await connectServer(serverName)
+        cacheServer(serverName, setIsErr)
         setIsLoading(false)
         await Promise.all([
           setAdvise(serverName, config[line].id["回潮"].itemName, result => {

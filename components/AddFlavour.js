@@ -5,7 +5,7 @@ const config = require("../config/AddFlavour.json")
 const React= require("react")
 const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
-const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
+const { cacheServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { MoistureMeter } = require("../util/checkParaUtil")
 const { logger } = require("../util/logger")
 const Context = require('./Context')
@@ -37,8 +37,7 @@ const AddFlavour = () => {
       moistureMeter.current = [new MoistureMeter(line, "入口水分仪"), new MoistureMeter(line, "出口水分仪")]
 
       try {
-        await connectServer(serverName)
-
+        cacheServer(serverName, setIsErr)
         setIsLoading(false)
 
         await Promise.all([

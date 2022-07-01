@@ -1,5 +1,6 @@
 const React = require("react")
 const { useEffect, useRef } = require("react")
+const { setAdvise } = require("./fetchDDE")
 const { logger } = require("./logger")
 
 function useInterval(callback, delay, isRunRightNow = false) {
@@ -24,8 +25,7 @@ function useInterval(callback, delay, isRunRightNow = false) {
   }, [delay]);
 }
 
-// 先要检查一下是否可行
-function useTestServerConnect(serverName, setIsErr) {
+function useCheckServerConnect(line, serverName, setIsErr, delay) {
 
   const minute = useRef({
     now: 0,
@@ -40,7 +40,7 @@ function useTestServerConnect(serverName, setIsErr) {
         })
       } catch (err) {
         setIsErr(true)
-        logger.error(`${serverName} 建立测试服务连接出错`, err)
+        logger.error(`${serverName} 建立服务连接监控出错`, err)
       }
     }
   
@@ -48,12 +48,15 @@ function useTestServerConnect(serverName, setIsErr) {
   }, [])
 
   useInterval(() => {
-    if(minute.current.now === minute.current.last) setIsErr(true)
+    if(minute.current.now === minute.current.last) {
+      setIsErr(true)
+      logger.error(`${line} 连接中断`)
+    }
     minute.current.last = minute.current.now
-  }, 1000 * 60 * 2)
+  }, delay)
 }
 
 module.exports = {
   useInterval,
-  useTestServerConnect
+  useCheckServerConnect
 }

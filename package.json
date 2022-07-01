@@ -10,8 +10,8 @@
 		"dev": "SET NODE_ENV=prod&&node cli.js --unit dev",
 		"prod": "SET NODE_ENV=prod&&node cli.js --unit prod",
 		"64": "SET NODE_ENV=prod&&node cli.js --unit 64",
-		"test_dev": "SET NODE_ENV=test&&node cli.js --unit dev",
-		"test_prod": "SET NODE_ENV=test&&node cli.js --unit prod"
+		"test_dev": "SET NODE_ENV=test&&SET DEV=true&&node cli.js --unit dev",
+		"test_prod": "SET NODE_ENV=test&&SET DEV=true&&node cli.js --unit prod"
 	},
 	"files": [
 		"cli.js",

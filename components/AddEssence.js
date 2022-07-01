@@ -5,7 +5,7 @@ const config = require("../config/AddEssence.json")
 const React= require("react")
 const importJsx = require('import-jsx')
 const { useState, useEffect, useContext, useRef } = require("react")
-const { connectServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
+const { cacheServer, setAdvise, fetchBrandName } = require("../util/fetchDDE")
 const { logger } = require("../util/logger")
 const Context = require('./Context')
 const { Text } = require('ink')
@@ -29,7 +29,7 @@ const AddEssence = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        await connectServer(serverName)
+        cacheServer(serverName, setIsErr)
         setIsLoading(false)
         await Promise.all([
           setAdvise(serverName, config[line].id.itemName, result => {

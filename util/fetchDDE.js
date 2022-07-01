@@ -1,4 +1,5 @@
 const { NetDDEClient, Constants } = require('netdde')
+const { cli } = require('winston/lib/winston/config')
 const  itemNameMapForTest = require("../test/itemNameMap.json")
 const { logger } = require("./logger")
 
@@ -45,10 +46,7 @@ async function fetchDDE (serverName, itemName, valueType) {
 }
 
 async function request(serverName, itemName) {
-    try {
-        if (!connectedGroup.has(serverName)) {
-            await connectServer(serverName)
-        }
+    // try {
 
         let value
         let client = await connectedGroup.get(serverName)
@@ -59,24 +57,20 @@ async function request(serverName, itemName) {
         }
         
         return value
-    } catch(err) {
-        if (err.message === "Not connected") {
-            // 运行时, 出现以下两种情况需要重新连接
-            // 1. NetDDEServer没打开 
-            // 2. Intouch View 没打开
-            connectedGroup.delete(serverName)
-        }
+    // } catch(err) {
+    //     if (err.message === "Not connected") {
+    //         // 运行时, 出现以下两种情况需要重新连接
+    //         // 1. NetDDEServer没打开 
+    //         // 2. Intouch View 没打开
+    //         connectedGroup.delete(serverName)
+    //     }
 
-        throw err
-    }
+    //     throw err
+    // }
 }
 
 
 async function setAdvise(serverName, itemName, cb){
-
-    if(!connectedGroup.has(serverName)) {
-        await connectServer(serverName)
-    }
 
     let client = await connectedGroup.get(serverName)
     itemName = transformItemName(itemName)
@@ -105,8 +99,9 @@ async function fetchBrandName(serverName, itemName, valueType) {
     return data.slice(0, -3)
 }
 
-async function testServerConnect(serverName) {
+async function testServerConnect(serverName, setIsErr) {
     // 通过获取分钟来测试 Server 是否通
+    cacheServer(serverName, setIsErr)
     await fetchDDE(serverName, "$Minute", "int")
 }
 
@@ -123,9 +118,9 @@ async function testServerConnect(serverName) {
     执行 advice, request, stopAdvice 这些命令时都会 throw error 
 
 */
-async function connectServer(serverName) {
+function cacheServer(serverName, setIsErr) {
     if (!serverNameList.includes(serverName)) {
-        throw new Error(`server ${serverName} does not exist`)
+        throw new Error(`server ${serverName} is not exist`)
     }
     
     if (connectedGroup.has(serverName)) return
@@ -133,9 +128,16 @@ async function connectServer(serverName) {
     let [appName, hostName] = isTest ? ["Excel", "localhost"] : ["view", serverName]
     
     let client = new NetDDEClient(appName, {host: hostName, timeout: 60 * 1000})
+    
+    let errHandler = err => {
+        logger.error(`${serverName} catch connect error`, err)
+        if (connectedGroup.has(serverName)) connectedGroup.delete(serverName)
+        client.removeListener('error', errHandler)
+        setIsErr(true)
+    }
 
     /*
-        connectServer 出现 Error 的几种情况
+        cacheServer 出现 Error 的几种情况
 
         没有找到 host, 故障不会在下面的listener中出现
 
@@ -146,46 +148,36 @@ async function connectServer(serverName) {
         已经在运行中的时候
         Intouch(Excel) 关闭, 故障不会在下面的listener中出现
         *** DDE Server 关闭, 故障在下面的listener中出现 ***
-
     */
-            
-    client.on("error", err => {
-        // 现在不会播报 error
-        // 如何播报 Error, 并且拒绝重复播报
-        logger.error(`${serverName} err listener catch connect error`, err)
-        if (connectedGroup.has(serverName)) connectedGroup.delete(serverName)
-    })
-    
-    // 如果下面的 promise 使用了 catch error, 那么无论如何情况, connectGroup 都会对这个 client 缓存
-    // 当进行fetch, setAdvice等命令时, 检测 connectGroup 肯定有缓存
-    // 而后进行request, advice等具体操作时, throw "not connect"
-    // 而缓存的 client 是 disconnect, 还是继续尝试 connect
-    // connectServer 函数也需要分清楚没有 cache 和 有 cache 的重新连接
+          
+    // client 已经建立后, 这个 catch err 才会生效
+    client.on("error", errHandler)
+
     connectedGroup.set(serverName, client.connect().then(() => client))
 }
 
-async function disconnectServer(serverName) {
+
+async function clearCache(serverName) {
     try {
         if (connectedGroup.has(serverName)) {
             // 初始化时, client 连接失败, 需要 disconnectServer 时
             // 下面的 await connectedGroup.get(serverName) 会报错
             let client = await connectedGroup.get(serverName) 
             await client.disconnect()
-            connectedGroup.delete(serverName)
         }
     } catch (err) {
+        logger.error(`${serverName} clearCache 出错`, err)
+    } finally {
         connectedGroup.delete(serverName)
-        logger.error(`${serverName} disconnect 出错`, err)
     }
-    
 }
 
 
 module.exports = {
-    connectServer,
+    cacheServer,
     fetchDDE,
     setAdvise,
-    disconnectServer,
+    clearCache,
     cancelAdvise,
     fetchBrandName,
     testServerConnect

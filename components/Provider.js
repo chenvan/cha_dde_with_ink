@@ -3,7 +3,7 @@ const serverNameConfig = require("../config/ServerName.json")
 const React = require("react")
 const { useState, useEffect } = require("react")
 const { Box, Text } = require('ink')
-const { testServerConnect, disconnectServer } = require("../util/fetchDDE")
+const { testServerConnect, clearCache} = require("../util/fetchDDE")
 const { useInterval } = require("../util/customHook.js")
 const Context = require('./Context')
 const { logger } = require("../util/logger")
@@ -15,19 +15,22 @@ const Provider = ({line, children}) => {
   useInterval(async () => {
     try {
       if(isErr) {
-        await testServerConnect(serverNameConfig[line])
+        await testServerConnect(serverNameConfig[line], setIsErr)
         setIsErr(false)
       } 
     } catch(err) { 
       logger.error(`${line} 尝试重连 ${serverNameConfig[line]} 失败`, err)
-      await disconnectServer(serverNameConfig[line])
+      await clearCache(serverNameConfig[line])
     }
   }, isErr ? 1000 * 60 : null)
 
   useEffect(() => {
     (async () => {
       if(isErr) {
-        await disconnectServer(serverNameConfig[line])
+        // 两种错误
+        // 1. 初始化连接
+        // 2. 运行时的中断 
+        await clearCache(serverNameConfig[line])
         speakTwice(`${line} 监控 出现错误`)
         logger.warn(`${line} 监控 出现错误`)
       }

@@ -3,7 +3,7 @@
 const React = require("react")
 const { useState, useEffect, useContext, useRef } = require("react")
 const { Text } = require("ink")
-const { setAdvise, fetchDDE, cancelAdvise } = require("../util/fetchDDE")
+const { setAdvise, fetchDDE } = require("../util/fetchDDE")
 const { speakTwice } = require("../util/speak")
 const Context = require('./Context')
 const { logger } = require("../util/logger")
