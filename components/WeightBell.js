@@ -16,7 +16,7 @@ const Context = require('./Context')
 const { setReadyVoiceTips, setRunningVoiceTips, clearVoiceTips} = require("../util/voiceTipsUtil")
 
 const { Device, StateCtrlByWbAccuSkin, Margin } = require("./Device")
-const Cabinet = importJsx('./Cabinet.js')
+const { CabinetOut } = importJsx('./Cabinet.js')
 const State = importJsx('./State.js')
 
 const WeightBell = ({name, config, parentState, brandName, setParentState, isCabMon}) => {
@@ -160,9 +160,9 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
         <Text>{`: 设定流量 / 实际流量 / 累计量: ${setting} / ${real} / ${accu}`}</Text>
       </Text>
       {
-        config.hasOwnProperty("cabinet") && (
-          <Cabinet 
-            config={config.cabinet}
+        config.hasOwnProperty("cabinetOut") && (
+          <CabinetOut 
+            config={config.cabinetOut}
             wbAccu={accu}
             isCabMon={isCabMon}
           /> 

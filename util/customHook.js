@@ -4,25 +4,25 @@ const { setAdvise } = require("./fetchDDE")
 const { logger } = require("./logger")
 
 function useInterval(callback, delay, isRunRightNow = false) {
-  const savedCallback = useRef();
+  const savedCallback = useRef()
 
   // 保存新回调
   useEffect(() => {
-    savedCallback.current = callback;
-  });
+    savedCallback.current = callback
+  })
 
   // 建立 interval
   useEffect(() => {
     function tick() {
-      savedCallback.current();
+      savedCallback.current()
     }
     
     if (delay !== null) {
       if(isRunRightNow) tick()
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
+      let id = setInterval(tick, delay)
+      return () => clearInterval(id)
     }
-  }, [delay]);
+  }, [delay])
 }
 
 function useCheckServerConnect(line, serverName, setIsErr, delay) {
@@ -56,7 +56,18 @@ function useCheckServerConnect(line, serverName, setIsErr, delay) {
   }, delay)
 }
 
+function usePrevious(value) {
+  const ref = useRef()
+
+  useEffect(() => {
+    ref.current = value //assign the value of ref to the argument
+  }, [value]) //this code will run when the value of 'value' changes
+
+  return ref.current //in the end, return the current ref value.
+}
+
 module.exports = {
   useInterval,
-  useCheckServerConnect
+  useCheckServerConnect,
+  usePrevious
 }

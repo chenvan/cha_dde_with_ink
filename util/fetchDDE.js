@@ -18,6 +18,8 @@ function transformForTest(itemName) {
     // 具体的
     if(transformMap.has(itemName)) return transformMap.get(itemName)
     // 不具体的
+    if(itemName.includes("DM_Right")) return "R18C2"
+    if(itemName.includes("DM_Left")) return "R19C2" // 要比 switch 先
     if(itemName.includes("Batch")) return "R6C2"
     if(itemName.includes("BrandName")) return "R5C2"
     if(itemName.includes("FluxSP")) return "R2C2"
@@ -25,11 +27,11 @@ function transformForTest(itemName) {
     if(itemName.includes("Total")) return "R4C2"
     if(itemName.includes("Switch")) return "R8C2"
     if(itemName.includes("Minute")) return "R7C2"
-    if(itemName.includes("Second")) return "R9C2"
     if(itemName.includes("Read_Trim")) return "R10C2"
     if(itemName.includes("Write_Trim")) return "R11C2"
     if(itemName.includes("FT_DP5_B1")) return "R17C2"
     if(itemName.includes("InWeight")) return "R13C2"
+    
     // default
     return "R1C2"
 } 

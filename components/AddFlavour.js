@@ -10,9 +10,10 @@ const { MoistureMeter } = require("../util/checkParaUtil")
 const { logger } = require("../util/logger")
 const Context = require('./Context')
 const { Text } = require('ink')
-const { useInterval } = require("../util/customHook")
+const { useInterval, useCheckServerConnect } = require("../util/customHook")
 
 const { Device } = importJsx('./Device.js')
+const { CabinetIn } = importJsx('./Cabinet.js')
 const WeightBell = importJsx('./WeightBell.js')
 const State = importJsx('./State.js')
 
@@ -25,10 +26,6 @@ const AddFlavour = () => {
   const {setIsErr, serverName, line} = useContext(Context)
 
   const moistureMeter = useRef([])
-  const minute = useRef({
-    now: 0,
-    last: undefined
-  })
 
   useEffect(() => {
 
@@ -43,9 +40,6 @@ const AddFlavour = () => {
         await Promise.all([
           setAdvise(serverName, config[line].id.itemName, result => {
             setId(result.data.slice(0, -3))
-          }),
-          setAdvise(serverName, "$Minute", result => {
-            minute.current.now = parseInt(result.data, 10)
           }),
           moistureMeter.current[0].initM(serverName, config[line]["moistureMeter"]["入口水分仪"]),
           moistureMeter.current[1].initM(serverName, config[line]["moistureMeter"]["出口水分仪"])
@@ -78,13 +72,15 @@ const AddFlavour = () => {
     }
   }, state === "获取参数" ? 10 * 1000 : null)
 
-  useInterval(() => {
-    if(minute.current.now === minute.current.last) {
-      setIsErr(true)
-      logger.error(`${line} 连接中断`)
-    }
-    minute.current.last = minute.current.now
-  }, 1000 * 60 * 2)
+  // useInterval(() => {
+  //   if(minute.current.now === minute.current.last) {
+  //     setIsErr(true)
+  //     logger.error(`${line} 连接中断`)
+  //   }
+  //   minute.current.last = minute.current.now
+  // }, 1000 * 60 * 2)
+
+  useCheckServerConnect(line, serverName, setIsErr, 1000 * 60 * 2)
 
   useEffect(() => {
     if(state === "待机") { 
@@ -125,6 +121,7 @@ const AddFlavour = () => {
                 }
               )
             }
+            { config[line].cabinetIn && <CabinetIn config={config[line].cabinetIn}/> }
           </>
         )
       }
