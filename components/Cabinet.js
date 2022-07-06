@@ -130,27 +130,14 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
   停止 -> 转柜 -> 寻柜 -> 监控 -> 停止
 */
 
-const dirnMap = {
-  "right": "右",
-  "left": "左"
-}
-
-const inverseDirnMap = {
-  "right": "左",
-  "left": "右"
-}
-
 const CabinetIn = ({config}) => {
-
-  // 可以写这里吗
-  const inverseDirection = {
-    "right": config.direction.left,
-    "left": config.direction.right
-  }
 
   const [state, setState] = useState("停止")
   const [cabinetNr, setCabinetNr] = useState("")
-  const [shouldDIRN, setShouldDIRN] = useState()
+  const [rSQ, setRSQ] = useState(0)
+  const [lSQ, setLSQ] = useState(0)
+  const [currentDIRN, setCurrentDIRN] = useState(0)
+  const [shouldDIRN, setShouldDIRN] = useState(0)
   const {setIsErr, serverName, line} = useContext(Context)
   
   const timeIdRef = useRef({
@@ -159,100 +146,11 @@ const CabinetIn = ({config}) => {
   })
 
   const prevCabinetNr = usePrevious(cabinetNr)
-  
-  const SQHandlerFactory = poistion => { 
-
-    return ({data}) => {
-      let sqState = parseInt(data, 10)
-
-      if(sqState === 1) {
-
-        setShouldDIRN(poistion === "right" ? config.direction.left : config.direction.right)
-
-        if (state === "寻柜") {
-          setState("监控")
-        } 
-        
-        if (state === "监控") {
-
-          timeIdRef.current.carMove = setTimeout(() => {
-            speakTwice(`${line} 分配车冲出${dirnMap[poistion]}限位`)
-            logger.warn(`${line} 分配车冲出${dirnMap[poistion]}限位`)
-            timeIdRef.current.carMove = undefined
-          }, config.delay.carMove * 1000)
-        }
-
-        if(state === "寻柜" || state === "监控") {
-          clearTimeout(timeIdRef.current.findSQ)
-
-          timeIdRef.current.findSQ = setTimeout(() => {
-            speakTwice(`${line} 分配车没有在规定时间找到${inverseDirnMap[poistion]}限位`)
-            logger.warn(`${line} 分配车没有在规定时间找到${inverseDirnMap[poistion]}限位`)
-          }, config.delay.findSQ * 1000)
-        }
-      }
-    }
-  }
-
-  const setSQMon = async () => {
-
-    // console.log(`setMon ${cabinetNr}`)
-    // console.log(`${config[cabinetNr].right}`)
-    // console.log(`${config[cabinetNr].left}`)
-
-    await Promise.all([
-      setAdvise(serverName, config[cabinetNr].right, SQHandlerFactory("right")),
-      setAdvise(serverName, config[cabinetNr].left, SQHandlerFactory("left"))
-    ])
-  }
-
-  const setCarMon = async () => {
-    await setAdvise(serverName, config[cabinetNr].car, ({data}) => {
-      let currentDIRN = parseInt(data, 10)
-      
-      if(state === "转柜" && (currentDIRN === config.direction.right || currentDIRN === config.direction.left)) {
-        setState("寻柜")
-      } else if(state === "监控") {
-        if(timeIdRef.current.carMove && currentDIRN === shouldDIRN) {
-          clearTimeout(timeIdRef.current.carMove)
-          timeIdRef.current.carMove = undefined
-        // } else if (currentDIRN === inverseDirection(shouldDIRN)) {
-        //   // 这个会一直叫
-        //   speakTwice(`${line} 分配车冲出${poistion}限位`)
-        //   logger.warn(`${line} 分配车冲出${poistion}限位`)
-        //   timeIdRef.current.carMove = undefined
-        }
-      }
-    })
-  }
-
-  const cancelAllMon = async () => {
-    // console.log(`cancel ${config[prevCabinetNr].right} ${config[prevCabinetNr].left}`)
-
-    if(timeIdRef.current.carMove) {
-      clearTimeout(timeIdRef.current.carMove)
-      timeIdRef.current.carMove = undefined
-    }
-
-    if(timeIdRef.current.findSQ) {
-      clearTimeout(timeIdRef.current.findSQ)
-      timeIdRef.current.findSQ = undefined
-    }
-
-    await Promise.all([
-      cancelAdvise(serverName, config[prevCabinetNr].left),
-      cancelAdvise(serverName, config[prevCabinetNr].right),
-      cancelAdvise(serverName, config[prevCabinetNr].car)
-    ])
-  }
 
   useEffect(() => {
     const init = async () => {
       try {
-        await setAdvise(serverName, config["inputNr"].itemName, result => {
-          setCabinetNr(parseInt(result.data, 10))
-        })
-
+        await setAdvise(serverName, config["inputNr"].itemName, ({data}) => setCabinetNr(parseInt(data, 10)))
       } catch (err) {
         setIsErr(true)
         logger.error(`${line} 建立进柜监听出错`, err)
@@ -266,26 +164,104 @@ const CabinetIn = ({config}) => {
     if(config.hasOwnProperty(cabinetNr)) {
       setState("转柜")
     } else { // 空柜似乎是0
+      console.log(`current: ${cabinetNr} prev: ${prevCabinetNr}`)
+
       setState("停止")
+
+      if(config.hasOwnProperty(prevCabinetNr)) {
+        // 某些状态下, 应该如何取消 advise\
+        // 取消整个 component?
+        Promise.all([
+          cancelAdvise(serverName, config[prevCabinetNr].left),
+          cancelAdvise(serverName, config[prevCabinetNr].right),
+          cancelAdvise(serverName, config[prevCabinetNr].car)
+        ]).catch(err => {
+          console.log(err)
+        })
+      }
     }
   }, [cabinetNr])
 
 
   useEffect(() => {
-    if(state === "转柜") {
-      setCarMon()
-    }else if(state === "寻柜") {
+    const stateChangeHandler = async () => {
+      if(state === "转柜") {
+        await setAdvise(serverName, config[cabinetNr].car, ({data}) => setCurrentDIRN(parseInt(data, 10)))
+      
+      }else if(state === "寻柜") {
+        
+        timeIdRef.current.findSQ = setTimeout(() => {
+          speakTwice(`${line} 规定时间未完成寻柜`)
+          logger.warn(`${line} 规定时间未完成寻柜`)
+        }, config.delay.findSQ * 1000)
+
+  
+        await Promise.all([
+          setAdvise(serverName, config[cabinetNr].right, ({data}) => setRSQ(parseInt(data, 10))),
+          setAdvise(serverName, config[cabinetNr].left, ({data}) => setLSQ(parseInt(data, 10)))
+        ])
+
+      } else if(state === "停止") {
+
+        if(timeIdRef.current.carMove) {
+          clearTimeout(timeIdRef.current.carMove)
+          timeIdRef.current.carMove = undefined
+        }
+    
+        if(timeIdRef.current.findSQ) {
+          clearTimeout(timeIdRef.current.findSQ)
+          timeIdRef.current.findSQ = undefined
+        }
+      }
+    }
+
+    // console.log(`state: ${state} current: ${cabinetNr} prev: ${prevCabinetNr}`)
+    stateChangeHandler()
+    
+  }, [state, cabinetNr])
+
+
+  useEffect(() => {
+    
+    if((state === "寻柜" || state === "监控") && (rSQ === 1 || lSQ === 1)) {
+      if(state === "寻柜") setState("监控")
+      
+      // 有机会会触发两次 car 的 settimeout
+      if(timeIdRef.current.carMove == undefined) {
+        // 防止分配跑车感应到限位开关后, 不停下或者停下来后, 一直不往回走
+        timeIdRef.current.carMove = setTimeout(() => {
+          speakTwice(`${line} 分配车冲出${rSQ === 1 ? "右" : "左"}限位`)
+          logger.warn(`${line} 分配车冲出${rSQ === 1 ? "右" : "左"}限位`)
+          timeIdRef.current.carMove = undefined
+        }, config.delay.carMove * 1000)
+
+        // console.log("set car timeout", timeIdRef.current.carMove)
+      }
+      
+      setShouldDIRN(rSQ ? config.direction.left : config.direction.right)
+      
+      clearTimeout(timeIdRef.current.findSQ)
+
+      // 防止限位开关损坏使分配跑车无法感应到
       timeIdRef.current.findSQ = setTimeout(() => {
-        speakTwice(`${line} 规定时间未完成寻柜`)
-        logger.warn(`${line} 规定时间未完成寻柜`)
+        speakTwice(`${line} 分配跑车没有在规定时间找到${rSQ === 1 ? "左" : "右"}限位`)
+        logger.warn(`${line} 分配跑车没有在规定时间找到${rSQ === 1 ? "左" : "右"}限位`)
       }, config.delay.findSQ * 1000)
 
-      setSQMon()
-    } else if (state === "停止" && config.hasOwnProperty(prevCabinetNr)) {
-      cancelAllMon() 
+      
     }
-  }, [state])
+  }, [state, rSQ, lSQ])
 
+  useEffect(() => {
+    if(state === "转柜" && (currentDIRN === config.direction.right || currentDIRN === config.direction.left)) {
+      setState("寻柜")
+    } else if(state === "监控") {
+      if(timeIdRef.current.carMove && (currentDIRN === shouldDIRN)) {
+        clearTimeout(timeIdRef.current.carMove)
+        timeIdRef.current.carMove = undefined
+      }
+    }
+  }, [state, currentDIRN, shouldDIRN])
 
   return (
     <>
@@ -295,10 +271,10 @@ const CabinetIn = ({config}) => {
         <Text>{`: ${cabinetNr % 10}`}</Text>
       </Text>
       <Text>
-        {`左: ${config.direction.left}, 右: ${config.direction.right}`}
+        {`布料车应行方向(左: ${config.direction.left}, 右: ${config.direction.right}): ${shouldDIRN}`}
       </Text>
       <Text>
-        {`现在: ${shouldDIRN}`}
+        {`布料车现行方向: ${currentDIRN}`}
       </Text>
     </>
   )

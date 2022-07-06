@@ -14,5 +14,6 @@
   "Galaxy:ZY2_YPSpice_JK.ProductUnit.SLOut1_Now": "R14C2",
   "Galaxy:ZY1_YPSpice_JK.ProductUnit.SLOut1_Now": "R15C2",
   "Galaxy:ZY2KT.Topic_ZS6.FT_DP1_M1_STATE": "R16C2",
-  "Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn1_Now": "R9C2"
+  "Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn1_Now": "R9C2",
+  "Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState": "R20C2"
 }
