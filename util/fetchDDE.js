@@ -48,27 +48,16 @@ async function fetchDDE (serverName, itemName, valueType) {
 }
 
 async function request(serverName, itemName) {
-    // try {
 
-        let value
-        let client = await connectedGroup.get(serverName)
+    let value
+    let client = await connectedGroup.get(serverName)
 
-        for (let i = 0; i < 3; i++) {
-            value = await client.request(topicName, transformItemName(itemName))
-            if (value !== "") break
-        }
-        
-        return value
-    // } catch(err) {
-    //     if (err.message === "Not connected") {
-    //         // 运行时, 出现以下两种情况需要重新连接
-    //         // 1. NetDDEServer没打开 
-    //         // 2. Intouch View 没打开
-    //         connectedGroup.delete(serverName)
-    //     }
-
-    //     throw err
-    // }
+    for (let i = 0; i < 3; i++) {
+        value = await client.request(topicName, transformItemName(itemName))
+        if (value !== "") break
+    }
+    
+    return value
 }
 
 
@@ -88,7 +77,6 @@ async function cancelAdvise(serverName, itemName) {
         if(connectedGroup.has(serverName)) {
             let client = await connectedGroup.get(serverName)
             await client.stopAdvise(topicName, transformItemName(itemName), Constants.dataType.CF_TEXT)
-            logger.info(`${serverName} ${itemName} cancel advise success`)
         }
     } catch (err) {
         logger.error(`${serverName} ${itemName} cancel advise fail`, err)
