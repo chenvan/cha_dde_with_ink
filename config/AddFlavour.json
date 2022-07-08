@@ -41,7 +41,11 @@
         "暂存柜进柜电眼": {
           "itemName": "Galaxy:ZY2_YPOutSilo_JK.Feed_YX225.Switch.Full",
           "maxDurationConfig": {
-            "0": 60
+            "0": {
+              "refDuration": 60,
+              "refSetting": 6800,
+              "refFactor": 200
+            }
           },
           "detectState": 0
         }

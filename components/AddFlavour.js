@@ -72,14 +72,6 @@ const AddFlavour = () => {
     }
   }, state === "获取参数" ? 10 * 1000 : null)
 
-  // useInterval(() => {
-  //   if(minute.current.now === minute.current.last) {
-  //     setIsErr(true)
-  //     logger.error(`${line} 连接中断`)
-  //   }
-  //   minute.current.last = minute.current.now
-  // }, 1000 * 60 * 2)
-
   useCheckServerConnect(line, serverName, setIsErr, 1000 * 60 * 2)
 
   useEffect(() => {
