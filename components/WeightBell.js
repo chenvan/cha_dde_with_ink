@@ -160,7 +160,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
       <Text>
         <Text>{`${name}`}</Text>
         <State state={state} />
-        <Text color="blue">{` <${cutoff !== undefined ? cutoff : ""}>`}</Text>
+        <Text color="#c4a000">{` ${cutoff !== undefined ? "[" + cutoff + "]" : ""}`}</Text>
         <Text>{`: 设定 / 实际 / 累计: ${setting} / ${real} / ${accu}`}</Text>
       </Text>
       {
@@ -194,7 +194,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
             let data = {
               ...deviceConfig,
               "deviceName": deviceName,
-              "wbSetting": Math.floor(setting / 100) * 100
+              "wbSetting": setting
             }
 
             return (

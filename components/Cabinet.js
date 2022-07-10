@@ -269,11 +269,9 @@ const SupplyCar = ({itemNames, delay, direction}) => {
         <State state={state} />
       </Text>
       <Text>
-        {`布料车应行方向(左: ${direction.left}, 右: ${direction.right}): ${shouldDIRN}`}
+        {`应行方向(左: ${direction.left}, 右: ${direction.right}): ${shouldDIRN}`}
       </Text>
-      <Text>
-        {`布料车现行方向: ${currentDIRN}`}
-      </Text>
+      <Text>{`现行方向: ${currentDIRN}`}</Text>
     </>
   )
 }

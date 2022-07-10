@@ -7,17 +7,22 @@ const State = ({state}) => {
 
   useEffect(() => {
     if(state === "监控") {
-      setColor('green')
+      setColor('#4e9a06')
     }else if(state === "停止监控") {
-      setColor('red')
+      setColor('#cc0000')
     }else {
       setColor('white')
     } 
   }, [state])
 
   return (
-    <Text color={color}>
-      {`(${state})`}
+    
+    // <Text color={color}>
+    //   {`>${state}`}
+    // </Text>
+    <Text>
+      <Text>{">"}</Text>
+      <Text color={color}>{state}</Text>
     </Text>
   )
 }

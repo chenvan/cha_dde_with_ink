@@ -40,12 +40,10 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
   useEffect(() => {
     // 如果没有指定的状态, 那么设备的状态就只由 parentState 决定
     // detectState 在组件创建时就已经确定, 即使转牌号后也一样
-
     if(detectState === undefined) {
       if(parentState === "监控") {
         setState("监控")
-        // 更新最后更新时间
-        setLastUpdateMoment(Date.now())
+        setLastUpdateMoment(Date.now()) // 更新最后更新时间
       } else {
         setState("停止")
       }
@@ -67,15 +65,16 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
   }, [deviceState, parentState])
 
   useEffect(() => {
+
+  }, [wbSetting])
+
+  useEffect(() => {
     if(state === "监控") {
       if(maxDurationConfig.hasOwnProperty(deviceState)) {
-        // 有没有变更时间的可能
         if(maxDurationConfig[deviceState].hasOwnProperty("refDuration")) {
-          // if(wbSetting !== 0) {
-            let {refDuration, refSetting, refFactor} = maxDurationConfig[deviceState]
-            let adjustMaxDuration = refDuration + (refSetting - wbSetting) / refFactor
-            setMaxDuration(adjustMaxDuration)
-          // }
+          let {refDuration, refSetting, refFactor} = maxDurationConfig[deviceState]
+          let adjustMaxDuration = refDuration + (refSetting - wbSetting) / refFactor
+          setMaxDuration(adjustMaxDuration)
         } else {
           setMaxDuration(maxDurationConfig[deviceState])
         }
@@ -101,14 +100,36 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
     <Text>
       <Text>{`${deviceName}`}</Text>
       <State state={state} />
-      <Text>{` [${detectState !== undefined ?  detectState + " " : ""}${deviceState}] `}</Text>
+      {/* <Text>{` [${detectState !== undefined ?  detectState + " " : ""}${deviceState}] `}</Text> */}
+      <DeviceState detectState={detectState}  deviceState={deviceState}/>
       {CutoffComp}
       <Text>{": "}</Text>
       {
         state === "监控" && 
-            <TimeComparator backgroundColor={isWarning? "red" : "black"} maxDuration={maxDuration} duration={duration} isWarning={isWarning} />
+            <TimeComparator backgroundColor={isWarning? "#cc0000" : "black"} maxDuration={maxDuration} duration={duration} isWarning={isWarning} />
       }
     </Text>
+  )
+}
+
+const DeviceState = ({detectState, deviceState}) => {
+
+  const [ color, setColor] = useState("$cc0000")
+
+  useEffect(() => {
+    if(detectState !== undefined) {
+      if(detectState === deviceState) {
+        setColor("#cc0000")
+      } else {
+        setColor("#d3d7cf")
+      }
+    }
+  }, [deviceState])
+
+  return (
+    <>
+      <Text color={color}>{` '${deviceState}`}</Text>
+    </>
   )
 }
 
@@ -154,7 +175,7 @@ const StateCtrlByWbAccuSkin = ({brandName, wbAccu, parentState, cutoff, offsetCo
           children, 
           {
             parentState: state, 
-            CutoffComp: <Text color="blue">{`<${cutoff !== undefined ? cutoff - offset : ""}>`}</Text>
+            CutoffComp: <Text color="#c4a000">{`${cutoff !== undefined ? " [" + (cutoff - offset) + "]" : ""}`}</Text>
           }
         )
       }
