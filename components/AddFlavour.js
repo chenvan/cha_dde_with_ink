@@ -113,7 +113,12 @@ const AddFlavour = () => {
                 }
               )
             }
-            { config[line].cabinetIn && <CabinetIn config={config[line].cabinetIn}/> }
+            { config[line].cabinetIn && (
+                <CabinetIn 
+                  config={config[line].cabinetIn} 
+                />
+              )
+            }
           </>
         )
       }

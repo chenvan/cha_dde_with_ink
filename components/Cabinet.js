@@ -125,12 +125,140 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
   )
 }
 
+/*
+  两个出柜号
+*/
+const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
+
+  const [currCabNr, setCurrCabNr] = useState(0)
+  const [currCabNrAlt, setCurrCabNrAlt] = useState(0)
+  const [nextCabNr, setNextCabNr] = useState(0)
+  const [nextCabNrAlt, setNextCabNrAlt] = useState(0)
+  const {setIsErr, serverName, line} = useContext(Context)
+  const mountedRef = useRef(false)
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        // mountedRef.current = true 
+        await Promise.all([
+          setAdvise(serverName, config["outputNr_"].curr, result => {
+            setCurrCabNr(parseInt(result.data, 10))
+          }),
+          setAdvise(serverName, config["outputNr_"].currAlt, result => {
+            setCurrCabNrAlt(parseInt(result.data, 10))
+          }),
+          setAdvise(serverName, config["outputNr_"].next, result => {
+            setNextCabNr(parseInt(result.data, 10))
+          }),
+          setAdvise(serverName, config["outputNr_"].nextAlt, result => {
+            setNextCabNrAlt(parseInt(result.data, 10))
+          })
+        ])
+      } catch (err) {
+        setIsErr(true)
+        logger.error(`${line} 建立出柜监听出错`, err)
+      }
+    }
+
+    init()
+    // return () => mountedRef.current = false
+  }, [])
+
+
+  // // 引起报错
+  // useEffect(() => {
+  //   // 需要延时，否则烘丝转批是会报出柜没转高速
+  //   setTimeout(() => {
+  //     if(mountedRef.current) {
+  //       setIsMon(isCabMon)
+  //     }
+  //   }, 1000 * 5)
+  // }, [isCabMon])
+
+  // 半柜电眼的监控
+  return (
+    <>
+      { 
+        config.func.isHalfEyeMon && config.hasOwnProperty(currCabNr) && (
+          <HalfEyeMon 
+            key={currCabNr}
+            config={config[currCabNr]}
+            wbAccu={wbAccu}
+          />
+        )
+      }
+      {
+        config.func.isFreqMon && (
+          <>
+            { 
+              config.hasOwnProperty(currCabNr) && (
+                <OutputFreq 
+                  key={currCabNr}
+                  config={config[currCabNr]}
+                />
+              )
+            }
+            {
+              config.hasOwnProperty(currCabNrAlt) && (
+                <OutputFreq 
+                  key={currCabNrAlt}
+                  config={config[currCabNrAlt]}
+                />
+              )
+            }
+          </>
+        )
+      }
+      {
+        config.func.isDeadLineMon && (
+          <>
+            {
+              config.hasOwnProperty(nextCabNr) && (
+                <DeadLineMon 
+                  key={nextCabNr}
+                  config={config[nextCabNr]}
+                />
+              )
+            }
+            {
+              config.hasOwnProperty(nextCabNrAlt) && (
+                <DeadLineMon 
+                  key={nextCabNrAlt}
+                  config={config[nextCabNrAlt]}
+                />
+              )
+            }
+          </>
+        )
+      }
+    </>
+  )
+}
+
+const DeadLineMon = ({config}) => {
+
+}
+
+
+const OutputFreq = ({config}) => {
+
+}
+
+const HalfEyeMon = ({config, wbAccu}) => {
+  
+  return (
+    <>
+      <Text></Text>
+    </>
+  )
+}
+
+
 const CabinetIn = ({config}) => {
 
   const [cabinetNr, setCabinetNr] = useState("")
   const {setIsErr, serverName, line} = useContext(Context)
-  
-  
 
   useEffect(() => {
     const init = async () => {
@@ -154,6 +282,7 @@ const CabinetIn = ({config}) => {
       {
         config.hasOwnProperty(cabinetNr) && (
           <SupplyCar 
+            key={cabinetNr}
             itemNames={config[cabinetNr]} 
             delay={config.delay} 
             direction={config.direction} 
