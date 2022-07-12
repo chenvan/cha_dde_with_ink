@@ -189,12 +189,12 @@
     },
     "cabinetIn": {
       "delay": {
-        "carMove": 10,
-        "findSQ": 30
+        "carMove": 55,
+        "findSQ": 300
       },
       "direction": {
-        "right": 1,
-        "left": 2
+        "right": 2,
+        "left": 1
       },
       "inputNr": {
         "itemName": "Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn1_Now"
@@ -335,7 +335,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 400,
+            "diff": 350,
             "lowFreq": 21,
             "total": 6800
           }

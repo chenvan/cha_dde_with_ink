@@ -100,7 +100,6 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
     <Text>
       <Text>{`${deviceName}`}</Text>
       <State state={state} />
-      {/* <Text>{` [${detectState !== undefined ?  detectState + " " : ""}${deviceState}] `}</Text> */}
       <DeviceState detectState={detectState}  deviceState={deviceState}/>
       {CutoffComp}
       <Text>{": "}</Text>

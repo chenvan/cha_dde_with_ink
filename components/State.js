@@ -20,10 +20,7 @@ const State = ({state}) => {
     // <Text color={color}>
     //   {`>${state}`}
     // </Text>
-    <Text>
-      <Text>{">"}</Text>
-      <Text color={color}>{state}</Text>
-    </Text>
+    <Text color={color}>{`(${state})`}</Text>
   )
 }
 

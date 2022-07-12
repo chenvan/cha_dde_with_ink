@@ -25,6 +25,11 @@ console color
 
 Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn1_Now
 Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn2_Now
+
+Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState
+Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState
+(状态1是往1-6柜, 状态2是往15-20柜)
+
 Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Right_1
 Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Left_1
 Galaxy:ZY3_InSilo1_JK.CabinetIn_1203.CabInSwitch.DM_Right_1
@@ -46,3 +51,24 @@ Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.DM_Left
 Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.DM_Right
 Galaxy:ZY2_YPCylinder_JK.CabinetIn_2105.CabInSwitch.DM_Left
 Galaxy:ZY2_YPCylinder_JK.CabinetIn_2105.CabInSwitch.DM_Right
+
+
+HDT秤的ServerName与电眼的ServerName不一致
+
+
+HDT暂存柜电眼
+HMI4
+64
+Galaxy:ZX3_OutSilo2_JK.Feed_CP342_1.Switch.Tran
+Galaxy:ZX3_OutSilo2_JK.Feed_CP342_1.Switch.FrontLow
+
+96
+Galaxy:ZX3_OutSilo1_JK.Feed_CP337_1.Switch.Tran
+Galaxy:ZX3_OutSilo1_JK.Feed_CP337_1.Switch.FrontLow
+
+HDT秤
+Galaxy:ZX2_YSKiln_JK.Balance_CP344.Flux
+Galaxy:ZX2_YSKiln_JK.Balance_CP344.FluxSP
+Galaxy:ZX2_YSKiln_JK.Balance_CP344.Total
+
+
