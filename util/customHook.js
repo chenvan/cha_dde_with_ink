@@ -18,8 +18,8 @@ function useInterval(callback, delay, isRunRightNow = false) {
     }
     
     if (delay !== null) {
-      if(isRunRightNow) tick()
       let id = setInterval(tick, delay)
+      if(isRunRightNow) tick()
       return () => clearInterval(id)
     }
   }, [delay])

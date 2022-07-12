@@ -104,7 +104,7 @@ const Device = ({deviceName, maxDurationConfig, itemName, parentState, detectSta
     } else if(tempDuration <= maxDuration || state === "停止") {
       if(isWarning) setIsWarning(false)
     }
-  }, state === "监控" ? 1000 : null)
+  }, state === "监控" ? 1000 : null, true)
 
   return (
     <Text>

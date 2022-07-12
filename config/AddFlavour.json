@@ -51,9 +51,20 @@
         }
       },
       "cabinetOut": {
+        "func": {
+          "isHalfEyeMon": true,
+          "isDeadlineMon": true,
+          "isFreqMon": true
+        },
         "outputNr": {
           "itemName": "Galaxy:ZY2_YPSpice_JK.ProductUnit.SLOut1_Now"
         },
+        "outputNr_": {
+          "curr": "Galaxy:ZY2_YPSpice_JK.ProductUnit.SLOut1_Now",
+          "currAlt": "",
+          "next": "",
+          "nextAlt": ""
+        },  
         "2101": {
           "halfEye":{
             "itemName": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.Middle_1",
@@ -79,6 +90,18 @@
             "diff": 450,
             "lowFreq": 21,
             "total": 6800
+          },
+          "halfEye_": {
+
+          },
+          "freq": {
+            "low": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabOut.Bottom.LowFreq",
+            "high": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabOut.Bottom.HighFreq"
+          },
+          "info": {
+            "brandName": "",
+            "inMode": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabInfo.InMode",
+            "total": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabInfo.InWeight"
           }
         },
         "2102": {

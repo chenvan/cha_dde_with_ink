@@ -1,3 +1,8 @@
+# 2022/7/12
+- [x] 1. SupplyCar 需要清晰的 ui 以方便调试
+
+- [] 2. SupplyCar 也有 "Can't perform a React state update on an unmounted component" 的警告
+
 # 2022/7/10
 - [x] 1. 电眼能根据设定流量调整监控时间
 
@@ -9,7 +14,7 @@
 - [] 1. HDT 提升带电眼监控
 
 # 2022/7/2
-- [] 1. 重新设计界面, 更正颜色
+- [x] 1. 重新设计界面, 更正颜色
 
 - [] 2. 是否能使用 react error boundary
 
@@ -31,7 +36,7 @@
 - [x] 3. 回潮与加料用相同的serverName, 但是由于是不同的组件, 因此会是两个不同的 client. server cache 时只存最后的 client.  修正的方法是 cache 不存 client, 而是存 promise. 这样避免了 conectServer 内异步执行的语句, 使得回潮与加料是同一个 client 
 
 # 2022/6/24
-- [] 1. 96回潮切片的电眼是否抄错了
+- [] 1. 检查96回潮切片的电眼是否抄错了
 
 # 2022/6/22
 - [x] 1. 使用Excel + netdde serve 做测试方案
@@ -144,7 +149,7 @@
 
 # 2022/3/2
 
-- [] 1. 完善 log 的信息
+- ~~[] 1. 完善 log 的信息~~
 
 - ~~[] 2. 如何确认 ummount 的时候成功的 cancel advice~~ (取消, 见3月3号的待办)
 
