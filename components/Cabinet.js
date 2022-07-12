@@ -304,10 +304,18 @@ const SupplyCar = ({itemNames, delay, direction}) => {
   const [currentDIRN, setCurrentDIRN] = useState()
   const [shouldDIRN, setShouldDIRN] = useState()
   const {setIsErr, serverName, line} = useContext(Context)
+  const [timeCounter, setTimeCounter] = useState(0)
+  const [maxTime, setMaxTime] = useState(0)
+  const [isWarned, setIsWarned] = useState(false)
   
   const timeIdRef = useRef({
     findSQ: undefined,
     carMove: undefined
+  })
+
+  const invDIRNRef = useRef({
+    [direction.right]: direction.left,
+    [direction.left]: direction.right
   })
 
   useEffect(() => {
@@ -343,10 +351,9 @@ const SupplyCar = ({itemNames, delay, direction}) => {
 
 
   useEffect(() => {
-    
     if((state === "寻柜" || state === "监控") && (rSQ === 1 || lSQ === 1)) {
       if(state === "寻柜") setState("监控")
-      
+      // 可能不需要这么写
       // 有机会触发两次 car 的 settimeout
       if(timeIdRef.current.carMove == undefined) {
         // 防止分配跑车感应到限位开关后, 不停下或者停下来后, 一直不往回走
@@ -373,9 +380,17 @@ const SupplyCar = ({itemNames, delay, direction}) => {
     if(state === "停止" && (currentDIRN === direction.right || currentDIRN === direction.left)) {
       setState("寻柜")
     } else if(state === "监控") {
+      console.log(currentDIRN, invDIRNRef.current[shouldDIRN])
       if(timeIdRef.current.carMove && (currentDIRN === shouldDIRN)) {
         clearTimeout(timeIdRef.current.carMove)
         timeIdRef.current.carMove = undefined
+      } else if(!isWarned && currentDIRN === invDIRNRef.current[shouldDIRN]) {
+        // 反方向行走
+        setIsWarned(true)
+        speakTwice(`${line} 分配车反向行驶`)
+        logger.warn(`${line} 分配车反向行驶, 应向${shouldDIRN}, 实际${currentDIRN}`)
+      } else if(isWarned && currentDIRN === shouldDIRN) {
+        setIsWarned(false)
       }
     }
   }, [state, currentDIRN, shouldDIRN])
@@ -389,18 +404,75 @@ const SupplyCar = ({itemNames, delay, direction}) => {
     }
   }, [state])
 
-  
+  // 计算时间
+  useInterval(() => {
+    setTimeCounter(prevConter => prevConter + 1)
+  }, state === "监控" ? 1000 : null)
+
+  // reset time counter
+  useEffect(() => {
+    if(state === "监控") {
+      if(rSQ === 1 || lSQ === 1) {
+        if(timeCounter > maxTime) {
+          setMaxTime(timeCounter)
+        }
+        setTimeCounter(0)
+      } else {
+        // 记录在限位停留的时间
+        console.log(`${line}布料车在限位停留时间: ${timeCounter}`)
+      }
+    } else {
+      setTimeCounter(0)
+    }
+  }, [rSQ, lSQ])
+
 
   return (
     <>
       <Text>
         <Text>{`布料车`}</Text>
         <State state={state} />
+        <Text>{` 计时器: ${timeCounter}(${maxTime})`}</Text>
       </Text>
-      <Text>
-        {`方向(左: ${direction.left}, 右: ${direction.right}): 应行 > ${shouldDIRN}, 现行 >  ${currentDIRN}`}
-      </Text>
-      <Text>{`右限位: ${rSQ}, 左限位: ${lSQ}`}</Text>
+      <SupplyCarUI 
+        config={direction}
+        shouldDIRN={shouldDIRN}
+        currDIRN={currentDIRN}
+        rSQ={rSQ}
+        lSQ={lSQ}
+      />
+    </>
+  )
+}
+
+const SupplyCarUI = ({config, shouldDIRN, currDIRN, rSQ, lSQ}) => {
+  const [shoudDirnUI, setShoudDirnUI] = useState("   ")
+  const [currDirnUI, setCurrDirnUI] = useState("   ")
+
+  useEffect(() => {
+    if(shouldDIRN === config.left) {
+      setShoudDirnUI("-->")
+    } else if(shouldDIRN === config.right) {
+      setShoudDirnUI("<--")
+    } else {
+      setShoudDirnUI("   ")
+    }
+  }, [shouldDIRN])
+
+  useEffect(() => {
+    if(currDIRN === config.left) {
+      setCurrDirnUI("-->")
+    } else if(currDIRN === config.right) {
+      setCurrDirnUI("<--")
+    } else {
+      setCurrDirnUI("   ")
+    }
+  }, [currDIRN])
+
+  return (
+    <>
+      <Text>{`L ${shoudDirnUI} R`}</Text>
+      <Text>{`${rSQ} ${currDirnUI} ${lSQ}`}</Text>
     </>
   )
 }
