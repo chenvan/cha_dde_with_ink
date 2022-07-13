@@ -4,7 +4,7 @@ const VoiceTips = require("../config/VoiceTips.json")
 const Tail = require("../config/WeightBellTail.json")
 
 const React = require("react")
-const { useState, useEffect, useContext, useRef } = require("react")
+const { useState, useEffect, useContext } = require("react")
 const importJsx = require('import-jsx')
 const { Text } = require("ink")
 
@@ -29,9 +29,6 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
   const {setIsErr, serverName, line} = useContext(Context)
 
   const [isWarning, setIsWarning] = useState(false)
-  
-  const readyTimeIdList = useRef([])
-  const runningTimeIdList = useRef([])
 
   useEffect(() => {
     const init = async () => {
@@ -63,7 +60,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
     if(real === 0 ) setState("停止监控")
 
     // 检查流量波动
-    // 没有 cutoff 的话, 最后尾料时肯定会报流量波动,
+    // 没有 cutoff 的话, 最后尾料时肯定会报流量波动
     if(cutoff) { 
       if(Math.abs(setting - real) < 0.1 * setting && isWarning ) {
         setIsWarning(false)
@@ -92,18 +89,31 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
   }, state === "待机" ? 5 * 1000 : null)
 
   useEffect(() => {
+    let timeId
+
     if(parentState === "待机" ) {
       setState("待机")
     }else if(parentState === "停止") {
       setState("停止")
+    }else if(parentState === "监控" && name.includes("薄片") && setting > 0) { // 检查薄片秤是否启动
+      timeId = setTimeout(() => {
+        if(real === 0) {
+          speakTwice(`${line} ${name} 没有启动`)
+          logger.warn(`${line} ${name} 没有启动`)
+        } 
+      }, 1000 * 90)
+    }
+
+    return () => {
+      if(timeId) clearTimeout(timeId)
     }
   }, [parentState])
 
 
   useEffect(() => {
+    let timeIdList
     try {
       if (state === "待机") {
-        
         // 秤的截止点  
         if(Tail[line][name]["cutoff"].hasOwnProperty(brandName)) {
           setCutoff(Tail[line][name]["cutoff"][brandName] * 0.98)
@@ -113,7 +123,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
         
         if (setting !==0 && accu === 0 && setParentState !== undefined) {
           // 主秤, 且累计量等于0, 加载准备语音 (这里暗含设定量不为0的先决条件)
-          if(VoiceTips.hasOwnProperty(line)) readyTimeIdList.current = setReadyVoiceTips(VoiceTips[line].ready, brandName)
+          if(VoiceTips.hasOwnProperty(line)) timeIdList = setReadyVoiceTips(VoiceTips[line].ready, brandName)
         } else if(setting === 0 || (setting !== 0 && real === 0 && accu > 0)) {
           // 秤的设定量为0时, 表示秤不需要监控
           // 秤有累积量, 设定量不为0, 但实际流量为0时, 表示断流
@@ -124,7 +134,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
 
       } else if(state === "停止监控") {
         if(setParentState !== undefined) {
-          runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
+          // runningTimeIdList.current = clearVoiceTips(runningTimeIdList.current)
           setParentState(state)
         }
       } else if(state === "监控") {
@@ -133,25 +143,18 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
 
         // 主秤
         if(setParentState !== undefined) {
-          if(VoiceTips.hasOwnProperty(line)) runningTimeIdList.current = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu)
+          if(VoiceTips.hasOwnProperty(line)) timeIdList = setRunningVoiceTips(VoiceTips[line].running, brandName, setting, accu)
           setParentState(state)
         }
-
-        // 对薄片秤检测是否投入生产
-        if(name.includes("薄片")) {
-          setTimeout(() => {
-            if(setting > 0 && real === 0) {
-              speakTwice(`${line} ${name} 没有启动`)
-              logger.warn(`${line} ${name} 没有启动`)
-            } 
-          }, 1000 * 90)
-        }
-
-      } else if(state === "停止") {
-        
       }
     } catch (err) {
       logger.error(`${line} ${name} 状态转换出现错误`, err)
+    }
+
+    return () => {
+      if(timeIdList !== undefined) { 
+        clearVoiceTips(timeIdList)
+      }
     }
   }, [state])
 
