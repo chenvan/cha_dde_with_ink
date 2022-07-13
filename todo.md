@@ -3,6 +3,8 @@
 
 - [] 2. SupplyCar 也有 "Can't perform a React state update on an unmounted component" 的警告
 
+- [] 3. 对布料车的行进进行全程监控, 而非只监控两个限位区域
+
 # 2022/7/10
 - [x] 1. 电眼能根据设定流量调整监控时间
 
