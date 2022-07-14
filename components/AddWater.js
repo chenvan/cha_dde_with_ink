@@ -12,6 +12,7 @@ const Context = require('./Context')
 const { useInterval } = require("../util/customHook")
 
 const { Device } = importJsx('./Device.js')
+const { CabinetIn } = importJsx('./Cabinet.js')
 const WeightBell = importJsx('./WeightBell.js')
 const State = importJsx('./State.js')
 
@@ -121,6 +122,12 @@ const AddWater = () => {
 
                   return <Device key={deviceName} {...data} />
                 }
+              )
+            }
+            { config[line].cabinetIn && (
+                <CabinetIn 
+                  config={config[line].cabinetIn} 
+                />
               )
             }
           </>

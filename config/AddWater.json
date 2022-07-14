@@ -65,6 +65,50 @@
           }
         }
       }
+    },
+    "cabinetIn": {
+      "delay": {
+        "carMove": 63,
+        "findSQ": 450
+      },
+      "direction": {
+        "right": 2,
+        "left": 1,
+        "stay": 16
+      },
+      "inputNr": {
+        "itemName": "Galaxy:ZY2_YPCylinder_JK.ProductUnit.SLIn1_Now"
+      },
+      "2101": {
+        "right": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.DM_Right",
+        "left": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.DM_Left",
+        "car": "Galaxy:ZY2_YPCylinder_JK.Assign_YX220.Vechile.Motor.MotorState"
+      },
+      "2102": {
+        "right": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.DM_Right",
+        "left": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.DM_Left",
+        "car": "Galaxy:ZY2_YPCylinder_JK.Assign_YX220.Vechile.Motor.MotorState"
+      },
+      "2103": {
+        "right": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.DM_Right",
+        "left": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.DM_Left",
+        "car": "Galaxy:ZY2_YPCylinder_JK.Assign_YX220.Vechile.Motor.MotorState"
+      },
+      "2104": {
+        "right": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.DM_Right",
+        "left": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.DM_Left",
+        "car": "Galaxy:ZY2_YPCylinder_JK.Assign_YX220.Vechile.Motor.MotorState"
+      },
+      "2105": {
+        "right": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2105.CabInSwitch.DM_Right",
+        "left": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2105.CabInSwitch.DM_Left",
+        "car": "Galaxy:ZY2_YPCylinder_JK.Assign_YX220.Vechile.Motor.MotorState"
+      },
+      "2106": {
+        "right": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2105.CabInSwitch.DM_Right",
+        "left": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2105.CabInSwitch.DM_Left",
+        "car": "Galaxy:ZY2_YPCylinder_JK.Assign_YX220.Vechile.Motor.MotorState"
+      }
     }
   },
   "九六回潮": {

@@ -189,8 +189,8 @@
     },
     "cabinetIn": {
       "delay": {
-        "carMove": 63,
-        "findSQ": 290
+        "carMove": 60,
+        "findSQ": 235
       },
       "direction": {
         "right": 2,
@@ -336,7 +336,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 350,
+            "diff": 200,
             "lowFreq": 21,
             "total": 6800
           }
@@ -363,7 +363,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 350,
+            "diff": 200,
             "lowFreq": 21,
             "total": 6800
           }
@@ -390,7 +390,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 350,
+            "diff": 200,
             "lowFreq": 21,
             "total": 6800
           }
@@ -417,7 +417,7 @@
             "valueType": "int"
           },
           "reference": {
-            "diff": 350,
+            "diff": 200,
             "lowFreq": 21,
             "total": 6800
           }
