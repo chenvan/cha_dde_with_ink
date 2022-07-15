@@ -15,7 +15,7 @@ const State = importJsx('./State.js')
 const CabinetOut = ({config, wbAccu, isCabMon}) => {
   const cabinetTotal = useRef(0)
 
-  const [cabinetNr, setCabinetNr] = useState("")
+  const [cabinetNr, setCabinetNr] = useState(0)
   const [state, setState] = useState("停止")
   const {setIsErr, serverName, line} = useContext(Context)
   const [isMon, setIsMon] = useState(false)
@@ -37,15 +37,17 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
 
   useEffect(() => {
     // 需要延时，否则烘丝转批是会报出柜没转高速
+    // 加料段, isCabMon 是 undefined
     let timeId = setTimeout(() => {
       setIsMon(isCabMon)
     }, 1000 * 5)
 
     return () => clearTimeout(timeId)
+
   }, [isCabMon])
 
   useEffect(() => {
-    if(cabinetNr === "") {
+    if(cabinetNr === 0) {
       if (state === "监控") {
         speakTwice(`${line} 监控状态下, 出柜号发生更换`)
         logger.warn(`${line} 监控状态下, 出柜号发生更换`)
@@ -60,6 +62,7 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
 
   useInterval(async () => {
     try {
+      // 96 线出现的问题
       cabinetTotal.current = await fetchDDE(
         serverName,
         config[cabinetNr]["total"].itemName,
@@ -71,7 +74,7 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
       // 检查出柜频率
 
     } catch (err) {
-      logger.error(`${line} 出柜获取总量出错`, err)
+      logger.error(`${line} ${cabinetNr} 出柜获取总量出错`, err)
     }
   }, state === "待机" ? 10 * 1000 : null)
 
@@ -79,8 +82,11 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
   useEffect(() => {
     const checkHalfEye = async () => {
       if(state === "监控" && isMon !== false && config.hasOwnProperty(cabinetNr) && cabinetTotal.current - wbAccu < config[cabinetNr].reference.diff) {
-        // console.log(`${wbAccu}, 出柜号: ${cabinetNr}, 状态: ${state}, 监控: ${isMon}`)
+        
+        logger.info(`checkHalfEye ${state} ${isMon} ${wbAccu}`)
+        
         try{
+          // 这个耗费的时间太长, 导致还没检查完成并且修改状态后, 函数继续执行了几遍
           let halfEyeState = await fetchDDE(
             serverName, 
             config[cabinetNr]["halfEye"].itemName,
@@ -127,11 +133,22 @@ const CabinetOut = ({config, wbAccu, isCabMon}) => {
 const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
 
   const [currCabNr, setCurrCabNr] = useState(0)
-  const [currCabNrAlt, setCurrCabNrAlt] = useState(0)
-  const [nextCabNr, setNextCabNr] = useState(0)
-  const [nextCabNrAlt, setNextCabNrAlt] = useState(0)
-  const {setIsErr, serverName, line} = useContext(Context)
-  const mountedRef = useRef(false)
+  // const [currCabNrAlt, setCurrCabNrAlt] = useState(0)
+  // const [nextCabNr, setNextCabNr] = useState(0)
+  // const [nextCabNrAlt, setNextCabNrAlt] = useState(0)
+  // const {setIsErr, serverName, line} = useContext(Context)
+  // const mountedRef = useRef(false)
+  const [isHalfEyeMon, setIsHalfEyeMon] = useState(false)
+
+  useEffect(() => {
+    // 需要延时，否则烘丝转批是会报出柜没转高速
+    // 加料段, isCabMon 是 undefined
+    let timeId = setTimeout(() => {
+      setIsHalfEyeMon(isCabMon)
+    }, 1000 * 5)
+
+    return () => clearTimeout(timeId)
+  }, [isCabMon])
 
   useEffect(() => {
     const init = async () => {
@@ -141,15 +158,15 @@ const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
           setAdvise(serverName, config["outputNr_"].curr, result => {
             setCurrCabNr(parseInt(result.data, 10))
           }),
-          setAdvise(serverName, config["outputNr_"].currAlt, result => {
-            setCurrCabNrAlt(parseInt(result.data, 10))
-          }),
-          setAdvise(serverName, config["outputNr_"].next, result => {
-            setNextCabNr(parseInt(result.data, 10))
-          }),
-          setAdvise(serverName, config["outputNr_"].nextAlt, result => {
-            setNextCabNrAlt(parseInt(result.data, 10))
-          })
+          // setAdvise(serverName, config["outputNr_"].currAlt, result => {
+          //   setCurrCabNrAlt(parseInt(result.data, 10))
+          // }),
+          // setAdvise(serverName, config["outputNr_"].next, result => {
+          //   setNextCabNr(parseInt(result.data, 10))
+          // }),
+          // setAdvise(serverName, config["outputNr_"].nextAlt, result => {
+          //   setNextCabNrAlt(parseInt(result.data, 10))
+          // })
         ])
       } catch (err) {
         setIsErr(true)
@@ -162,29 +179,19 @@ const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
   }, [])
 
 
-  // // 引起报错
-  // useEffect(() => {
-  //   // 需要延时，否则烘丝转批是会报出柜没转高速
-  //   setTimeout(() => {
-  //     if(mountedRef.current) {
-  //       setIsMon(isCabMon)
-  //     }
-  //   }, 1000 * 5)
-  // }, [isCabMon])
-
   // 半柜电眼的监控
   return (
     <>
       { 
-        config.func.isHalfEyeMon && config.hasOwnProperty(currCabNr) && (
+        config.hasOwnProperty(currCabNr) && isHalfEyeMon !== false && (
           <HalfEyeMon 
             key={currCabNr}
-            config={config[currCabNr]}
+            config={config[currCabNr].halfEyeMon}
             wbAccu={wbAccu}
           />
         )
       }
-      {
+      {/* {
         config.func.isFreqMon && (
           <>
             { 
@@ -227,7 +234,7 @@ const CabinetOut_ = ({config, wbAccu, isCabMon}) => {
             }
           </>
         )
-      }
+      } */}
     </>
   )
 }
@@ -243,10 +250,49 @@ const OutputFreq = ({config}) => {
 
 const HalfEyeMon = ({config, wbAccu}) => {
   
+  const [halfEye, setHalfEye] = useState()
+  const [total, setTotal] = useState()
+  const [isChecking, setIsChecking] = useState(true)
+  const {setIsErr, serverName, line} = useContext(Context)
+
+  useEffect(() => {
+    let init = async () => {
+      try {
+        await Promise.all([
+          setAdvise(serverName, config.halfEye, ({data}) => setHalfEye(parseInt(data, 10))),
+          setAdvise(serverName, config.total, ({data}) => setTotal(parseInt(data, 10)))
+        ])
+      } catch (err) {
+        setIsErr(true)
+        logger.error(`${line} 建立出柜监听出错`, err)
+      }
+    }
+  
+    init()
+
+    return () => {
+      Promise.all([
+        cancelAdvise(serverName, config.halfEye),
+        cancelAdvise(serverName, confg.total)
+      ]).catch(err => {
+        logger.error(err)
+      })
+    }
+  }, [])
+
+  useInterval(() => {
+    if(total - wbAccu < config.diff) {
+      setIsChecking(false)
+      if(halfEye === 1) {
+        speakTwice(`${line} 出柜未转高速`)
+        logger.warn(`${line} 出柜未转高速`)
+      }
+    }
+  }, isChecking ? 10 * 1000 : null)
+
+
   return (
-    <>
-      <Text></Text>
-    </>
+    <Text> {`半眼状态(${isChecking ? "监控中" : "监控完成"}): ${halfEye}`}</Text>
   )
 }
 
@@ -360,37 +406,6 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
     }
   }, [])
 
-  // 对限位的监控
-  useEffect(() => {
-    let timeId
-    
-    logger.info(`${line} 限位 ${state} ${rSQ} ${lSQ}`)
-
-    if(state === "寻柜" && (rSQ === 1 || lSQ === 1)) {
-      setState("监控")
-    } else if(state === "监控" && (rSQ === 0 && lSQ === 0)) {
-      // 防止限位开关损坏使分配跑车无法感应到
-      // 用 rSQ, lSQ 的下降沿触发 setTimeout
-      timeId = setTimeout(() => {
-        speakTwice(`${line} 分配车没有在规定时间找到限位`)
-        logger.warn(`${line} 分配车没有在规定时间找到${shouldDIRN === direction.left ? "左" : "右"}限位`)
-      }, delay.findSQ * 1000)
-
-      setFindSQTime(0) // 重置 FindSQ 计时
-    } else if(state === "监控" && (rSQ === 1 || lSQ === 1)) {
-      setShouldDIRN(rSQ ? direction.left : direction.right)
-      // 记录 findSQ 最大时间
-      if(findSQTime > findSQMaxTime) {
-        setFindSQMaxTime(findSQTime)
-      }
-    }
-    
-    return () => {
-      // 用 rSQ, lSQ 的上升沿清掉 setTimeout
-      if(timeId) clearTimeout(timeId)
-    }
-  }, [state, rSQ, lSQ]) // 不加 state 的话, 第一次碰到 SQ 只会把状态变成 监控，
-
   // 对分配车的监控
   useEffect(() => {
     let timeId
@@ -427,6 +442,37 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
       if(timeId) clearTimeout(timeId)
     }
   }, [state, currentDIRN])
+
+  // 对限位的监控
+  useEffect(() => {
+    let timeId
+    
+    logger.info(`${line} 限位 ${state} ${rSQ} ${lSQ}`)
+
+    if(state === "寻柜" && (rSQ === 1 || lSQ === 1)) {
+      setState("监控")
+    } else if(state === "监控" && (rSQ === 0 && lSQ === 0)) {
+      // 防止限位开关损坏使分配跑车无法感应到
+      // 用 rSQ, lSQ 的下降沿触发 setTimeout
+      timeId = setTimeout(() => {
+        speakTwice(`${line} 分配车没有在规定时间找到限位`)
+        logger.warn(`${line} 分配车没有在规定时间找到${shouldDIRN === direction.left ? "左" : "右"}限位`)
+      }, delay.findSQ * 1000)
+
+      setFindSQTime(0) // 重置 FindSQ 计时
+    } else if(state === "监控" && (rSQ === 1 || lSQ === 1)) {
+      setShouldDIRN(rSQ ? direction.left : direction.right)
+      // 记录 findSQ 最大时间
+      if(findSQTime > findSQMaxTime) {
+        setFindSQMaxTime(findSQTime)
+      }
+    }
+    
+    return () => {
+      // 用 rSQ, lSQ 的上升沿清掉 setTimeout
+      if(timeId) clearTimeout(timeId)
+    }
+  }, [state, rSQ, lSQ]) // 不加 state 的话, 第一次碰到 SQ 只会把状态变成 监控，
 
   useEffect(() => {
     let timeId

@@ -101,7 +101,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
           speakTwice(`${line} ${name} 没有启动`)
           logger.warn(`${line} ${name} 没有启动`)
         } 
-      }, 1000 * 90)
+      }, 1000 * 60 * 2)
     }
 
     return () => {

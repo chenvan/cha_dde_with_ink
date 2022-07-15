@@ -91,8 +91,10 @@
             "lowFreq": 21,
             "total": 6800
           },
-          "halfEye_": {
-
+          "halfEyeMon": {
+            "halfEye": "Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.Middle_1",
+            "total": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabInfo.InWeight",
+            "diff": 450
           },
           "freq": {
             "low": "Galaxy:ZY2_YPOutSilo_JK.CabinetOut_2101.CabOut.Bottom.LowFreq",
