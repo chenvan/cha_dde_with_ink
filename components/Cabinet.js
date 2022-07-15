@@ -254,6 +254,7 @@ const HalfEyeMon = ({config, wbAccu}) => {
 const CabinetIn = ({config}) => {
 
   const [cabinetNr, setCabinetNr] = useState(0)
+  const [cabInMode, setCabInMode] = useState(0)
   const [initFindSQTimeFac, setInitFindSQTimeFac] = useState(10)
 
   const {setIsErr, serverName, line} = useContext(Context)
@@ -262,7 +263,11 @@ const CabinetIn = ({config}) => {
   useEffect(() => {
     const init = async () => {
       try {
-        await setAdvise(serverName, config["inputNr"].itemName, ({data}) => setCabinetNr(parseInt(data, 10)))
+        
+        await Promise.all([
+          setAdvise(serverName, config["inputNr"].itemName, ({data}) => setCabinetNr(parseInt(data, 10))),
+        
+        ])
       } catch (err) {
         setIsErr(true)
         logger.error(`${line} 建立进柜监听出错`, err)
@@ -311,7 +316,7 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
   const [state, setState] = useState("停止")
   const [rSQ, setRSQ] = useState(0)
   const [lSQ, setLSQ] = useState(0)
-  const [currentDIRN, setCurrentDIRN] = useState()
+  const [currentDIRN, setCurrentDIRN] = useState(0)
   const [shouldDIRN, setShouldDIRN] = useState()
   const {setIsErr, serverName, line} = useContext(Context)
   const [findSQTime, setFindSQTime] = useState(0)
@@ -319,7 +324,6 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
   const [findSQMaxTime, setFindSQMaxTime] = useState(0)
   const [carMoveMaxTime, setCarMoveMaxTime] = useState(0)
   const [isWarned, setIsWarned] = useState(false)
-
 
   const invDIRNRef = useRef({
     [direction.right]: direction.left,
@@ -351,52 +355,74 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
       ]).catch(err => {
         logger.error(err)
       })
+
+      logger.info("supplyCar unmounted")
     }
   }, [])
 
   // 对限位的监控
   useEffect(() => {
     let timeId
-    if((state === "寻柜" || state === "监控") && (rSQ === 1 || lSQ === 1)) {
+    
+    logger.info(`${line} 限位 ${state} ${rSQ} ${lSQ}`)
 
+    if(state === "寻柜" && (rSQ === 1 || lSQ === 1)) {
+      setState("监控")
+    } else if(state === "监控" && (rSQ === 0 && lSQ === 0)) {
       // 防止限位开关损坏使分配跑车无法感应到
+      // 用 rSQ, lSQ 的下降沿触发 setTimeout
       timeId = setTimeout(() => {
-        speakTwice(`${line} 分配跑车没有在规定时间找到${rSQ === 1 ? "左" : "右"}限位`)
-        logger.warn(`${line} 分配跑车没有在规定时间找到${rSQ === 1 ? "左" : "右"}限位`)
+        speakTwice(`${line} 分配车没有在规定时间找到限位`)
+        logger.warn(`${line} 分配车没有在规定时间找到${shouldDIRN === direction.left ? "左" : "右"}限位`)
       }, delay.findSQ * 1000)
-      
-      if(state === "寻柜") setState("监控")
-      // shouldDIRN 要在 state 更新后才更新，否则会出现分配车反向行驶的警告
+
+      setFindSQTime(0) // 重置 FindSQ 计时
+    } else if(state === "监控" && (rSQ === 1 || lSQ === 1)) {
       setShouldDIRN(rSQ ? direction.left : direction.right)
+      // 记录 findSQ 最大时间
+      if(findSQTime > findSQMaxTime) {
+        setFindSQMaxTime(findSQTime)
+      }
     }
     
     return () => {
+      // 用 rSQ, lSQ 的上升沿清掉 setTimeout
       if(timeId) clearTimeout(timeId)
     }
-  }, [state, rSQ, lSQ])
+  }, [state, rSQ, lSQ]) // 不加 state 的话, 第一次碰到 SQ 只会把状态变成 监控，
 
   // 对分配车的监控
   useEffect(() => {
     let timeId
+    
+    logger.info(`${line} 车 ${state} ${currentDIRN}`)
+
     if(state === "停止" && (currentDIRN === direction.right || currentDIRN === direction.left)) {
       setState("寻柜")
     } else if(state === "监控") {
       if(currentDIRN === direction.stay) {
+        // 用 stay 的上升沿触发 setTimeout
         timeId = setTimeout(() => {
-          speakTwice(`${line} 分配车未按规定${shouldDIRN === 1 ? "左" : "右"}行`)
-          logger.warn(`${line} 分配车未按规定${shouldDIRN === 1 ? "左" : "右"}行`)
+          speakTwice(`${line} 分配车长时间停留`)
+          logger.warn(`${line} 分配车长时间停留，未按规定${shouldDIRN === 1 ? "左" : "右"}行`)
         }, delay.carMove * 1000)
+
+        setCarMoveTime(0) // 重置 carMove 计时
       } else if(!isWarned && currentDIRN === invDIRNRef.current[shouldDIRN]) { 
         // shouldDIRN 会先改变而 currDIRN 还没变， 所以会触发一次错误
-        // 反方向行走
+        // 错误方向行走
         setIsWarned(true)
         speakTwice(`${line} 分配车反向行驶`)
         logger.warn(`${line} 分配车反向行驶, 应向${shouldDIRN}, 实际${currentDIRN}`)
-      } else if(isWarned && currentDIRN === shouldDIRN) {
-        setIsWarned(false)
+      } else if(currentDIRN === shouldDIRN) {
+        if(isWarned) { setIsWarned(false) }
+        // 记录 carMove 最大时间
+        if(carMoveTime > carMoveMaxTime) {
+          setCarMoveMaxTime(carMoveTime)
+        }
       }
     }
-
+    
     return () => {
       if(timeId) clearTimeout(timeId)
     }
@@ -405,15 +431,15 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
   useEffect(() => {
     let timeId
     if(state === "寻柜") {
-      console.log(`init time factor: ${initFindSQTimeFac}`)
+      logger.info(`init time factor: ${initFindSQTimeFac}`)
       timeId = setTimeout(() => {
         speakTwice(`${line} 规定时间未完成寻柜`)
         logger.warn(`${line} 规定时间未完成寻柜`)
       }, initFindSQTimeFac * delay.findSQ * 1000 / 8)
+    }
 
-      return () => {
-        if(timeId) clearTimeout(timeId)
-      }
+    return () => {
+      if(timeId) clearTimeout(timeId)
     }
   }, [state])
 
@@ -422,34 +448,6 @@ const SupplyCar = ({itemNames, delay, direction, initFindSQTimeFac}) => {
     setFindSQTime(prevConter => prevConter + 1)
     setCarMoveTime(prevConter => prevConter + 1)
   }, state === "监控" ? 1000 : null)
-
-  // reset SQ timer
-  useEffect(() => {
-    if(state === "监控") {
-      if(rSQ === 1 || lSQ === 1) {
-        if(findSQTime > findSQMaxTime) {
-          setFindSQMaxTime(findSQTime)
-        }
-        setFindSQTime(0)
-      }
-    } else {
-      setFindSQTime(0)
-    }
-  }, [rSQ, lSQ])
-
-  //reset car timer
-  useEffect(() => {
-    if(state === "监控") {
-      if(currentDIRN === direction.stay) {
-        if(carMoveTime > carMoveMaxTime) {
-          setCarMoveMaxTime(carMoveTime)
-        }
-        setCarMoveTime(0)
-      }
-    } else {
-      setCarMoveTime(0)
-    }
-  }, [currentDIRN])
 
 
   return (

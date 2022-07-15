@@ -27,8 +27,6 @@ Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn1_Now
 Galaxy:ZY3_InSilo2_JK.ProductUnit.SLIn2_Now
 
 Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState
-Galaxy:ZY3_InSilo2_JK.Assign_GZ102A.Vechile.Motor.MotorState
-(状态1是往1-6柜, 状态2是往15-20柜)
 
 Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Right_1
 Galaxy:ZY3_InSilo1_JK.CabinetIn_1201.CabInSwitch.DM_Left_1
@@ -37,14 +35,18 @@ Galaxy:ZY3_InSilo1_JK.CabinetIn_1203.CabInSwitch.DM_Left_1
 Galaxy:ZY3_InSilo1_JK.CabinetIn_1205.CabInSwitch.DM_Right_1
 Galaxy:ZY3_InSilo1_JK.CabinetIn_1205.CabInSwitch.DM_Left_1
 Galaxy:ZY3_InSilo2_JK.CabinetIn_1215.CabInSwitch.DM_Right_1
-Galaxy:ZY3_InSilo1_JK.CabinetIn_1215.CabInSwitch.DM_Left_1
+Galaxy:ZY3_InSilo2_JK.CabinetIn_1215.CabInSwitch.DM_Left_1
 Galaxy:ZY3_InSilo2_JK.CabinetIn_1217.CabInSwitch.DM_Right_1
-Galaxy:ZY3_InSilo1_JK.CabinetIn_1217.CabInSwitch.DM_Left_1
+Galaxy:ZY3_InSilo2_JK.CabinetIn_1217.CabInSwitch.DM_Left_1
 Galaxy:ZY3_InSilo2_JK.CabinetIn_1219.CabInSwitch.DM_Right_1
-Galaxy:ZY3_InSilo1_JK.CabinetIn_1219.CabInSwitch.DM_Left_1
+Galaxy:ZY3_InSilo2_JK.CabinetIn_1219.CabInSwitch.DM_Left_1
+
 
 Galaxy:ZY2_YPCylinder_JK.ProductUnit.SLIn1_Now
 Galaxy:ZY2_YPCylinder_JK.ProductUnit.SLIn2_Now
+
+Galaxy:ZY2_YPCylinder_JK.Assign_YX220.Vechile.Motor.MotorState
+
 Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.DM_Left
 Galaxy:ZY2_YPCylinder_JK.CabinetIn_2101.CabInSwitch.DM_Right
 Galaxy:ZY2_YPCylinder_JK.CabinetIn_2103.CabInSwitch.DM_Left
