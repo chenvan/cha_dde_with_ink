@@ -14,6 +14,7 @@ let infix = process.env.NODE_ENV === "test" ? ".test." : ".prod."
 
 let errFileName = ''.concat('error', infix, 'log')
 let warnFileName = ''.concat('warn', infix, 'log')
+let exceptionFileName = ''.concat('exception', infix, 'log')
 
 class CustomConsole extends transports.Console {
     constructor(options = {}) {
@@ -69,6 +70,13 @@ const logger = createLogger({
             maxsize: 10000000,
         })
     ],
+    exceptionHandlers: [
+        new transports.File({
+            filename: path.join(root, "logs", exceptionFileName), 
+            level: 'error', 
+            maxsize: 10000000,
+        })
+    ]
 })
 
 module.exports = {
