@@ -37,6 +37,7 @@ const WeightBell = ({name, config, parentState, brandName, setParentState, isCab
       try {
         await Promise.all([
           setAdvise(serverName, config.setting, result => {
+            // console.log(Number(result.data))
             setSetting(parseInt(result.data, 10))
           }),
           setAdvise(serverName, config.real, result => {

@@ -1,5 +1,4 @@
 const { NetDDEClient, Constants } = require('netdde')
-const { cli } = require('winston/lib/winston/config')
 const  itemNameMapForTest = require("../test/itemNameMap.json")
 const { logger } = require("./logger")
 

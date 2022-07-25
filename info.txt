@@ -75,3 +75,4 @@ Galaxy:ZX2_YSKiln_JK.Balance_CP344.FluxSP
 Galaxy:ZX2_YSKiln_JK.Balance_CP344.Total
 
 
+GB2312
